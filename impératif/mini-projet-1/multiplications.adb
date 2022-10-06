@@ -2,25 +2,18 @@ with Ada.Text_IO;         use Ada.Text_IO;
 with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
 with Alea;
 
-
 procedure Multiplications is
-    Table           : Integer;
-    Answer          : Integer;
-    Errors          : Integer;
-    Continue        : Boolean;
-    Item            : Integer;
-    Answer_Continue : Character;
-    Questions       : Integer;
-    Question : Integer;
-    Already_Asked: Boolean;
+    Table             : Integer;
+    Answer            : Integer;
+    Errors            : Integer;
+    Continue          : Boolean;
+    Item              : Integer;
+    Answer_Continue   : Character;
+    Previous_Question : Integer;
 
-    package randomtableitem is
-        new alea(1, 10);
-    use RandomTableItem;
+    package randomtableitem is new Alea (1, 10);
+    use randomtableitem;
 begin
-    -- On stocke les questions déjà posées dans un entier où chaque dizaine correspond à une question, avec 0 qui correspond à 10:
-    -- si les questions ×2, ×5, ×10 et ×8 on été posées, Questions = 8052
-    Questions := 0;
     loop
         -- Demander la table à réviser
         Put ("Table à réviser : ");
@@ -35,27 +28,12 @@ begin
         Errors := 0;
         for i in 0 .. 9 loop
             loop
-
-                Get_Random_Number(Item);
-                if i = 0 then
-                    Already_Asked := false;
-                else
-                    -- Chercher à travers toutes les questions posées
-                    for Question_Index in 0 .. i loop
-                        Question := Questions / (10 ** Question_Index);
-                        if Question = 0 then
-                            Question := 10;
-                        end if;
-                        Already_Asked := Already_Asked or Question = Item;
-                    end loop;
-                end if;
-                exit when not Already_Asked;
+                Get_Random_Number (Item);
+                exit when i = 0 or Item /= Previous_Question;
             end loop;
 
             --  Enregistrer la question posée
-            if Item /= 10 then 
-                Questions := Questions + (10 ** i) * Item;
-            end if;
+            Previous_Question := Item;
 
             -- Réviser la valeur d'une multiplication
             Put ("(M" & Integer'Image (i) & ") " & Integer'Image (Table) &
