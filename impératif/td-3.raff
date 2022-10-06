@@ -1,0 +1,77 @@
+-- 1.1
+Type
+	Direction = (NORD, SUD, EST, OUEST)
+
+	Position = Enregistrement
+		x: Entier
+		y: Entier
+	FinEnregistrement
+
+	RobotType1 = Enregistrement
+		position: Position
+		direction: Direction
+	FinEnregistrement
+
+-- 1.2
+	Case = (LIBRE, OBSTACLE)
+	Environnement = Tableau[Min_x .. Max_x, Min_y .. Max_y] De Case
+
+Constante
+	Min_x = -10
+	Max_x = 20
+	Min_y = -20
+	Max_y = 30
+
+-- 1.3
+
+Objectif: faire avancer le robot vers l'ouest tant que possible
+
+Paramètres:
+	robot: Robot 
+	env: Environnement
+
+Préconditions:
+	robot.position.x ∈ ⟦Min_x, Max_x⟧
+	robot.position.y ∈ ⟦Min_y, Max_y⟧
+
+Post-conditions:
+	robot.direction = robot.direction'old
+	robot.position.y = robot.position.y'old
+	robot.position.x >= robot.position.x'old
+	PourChaque x dans robot.position.x'old .. robot.position.x : env[x, robot.position.y] = LIBRE
+
+Procedure avancer_tant_que_possible(robot in out Robot, env in Environnement)
+	R0: Mouvoir tant que possible un robot
+
+	R1: Comment <<Mouvoir tant que possible un robot>> ?
+		TantQue Le deplacement est possible Faire	robot: in Robot, env: in Environnement
+			Avancer le robot vers l'est		robot: in out Robot
+		FinTQ
+
+	R2: Comment [determiner] <<Le deplacement est possible>> ?
+		Resultat <- robot.position.x < Max_x EtAlors env(robot.position.x+1, robot.positio.y) = LIBRE
+
+	R2: Comment <<Avancer le robot vers l'est>> ?
+		robot.position.x <- robot.position.x + 1
+
+-- 2
+
+Parametres:
+	t: Tableau De Entier
+
+Preconditions: aucune
+Post-conditions: aucune
+
+Procedure Ecrire_tableau_entiers(t in Tableau[deb, fin] De Entier)
+	R0: Afficher un tableau d'entiers
+
+	R1: Comment <<Afficher un tableau d'entiers>> ?
+		Ecrire("[")
+		Pour i = deb..fin Faire
+			Ecrire(t(i))
+			Si i < fin Alors
+				Ecrire(", ")
+			FinSi
+		FinPour
+		Ecrire("]")
+		

@@ -1,0 +1,288 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[bookmarks]{hyperref}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb, stmaryrd}
+\usepackage[dvipsnames, svgnames]{xcolor}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\cor}[1]{{\color{DarkGreen} #1}}
+
+\begin{document}
+
+\section{Régression linéaire simple}
+
+\section{Courbe étalon}
+
+\section{U.S. Census}
+
+\subsection{}
+
+\[
+	(P) \begin{cases}
+		\min r(\beta_0, \beta_1, \beta_2, \beta_3) = \frac{1}{2} \sum_{k=0}^{10}  \left\| \underbrace{y_{1900+10k}}_{\text{donnée expérimentale}} - \underbrace{y(1900+10k)}_{\text{modèle}}  \right\|^2  \\
+		(\beta_0, \beta_1, \beta_2, \beta_3) \in \mathbb{R}^4
+	\end{cases}
+\] 
+\[
+	\cor{
+	r: \begin{cases}
+		\R^{4} &\to \R^{11} \\
+		\beta &\mapsto \begin{pmatrix} r_1(\beta) \\ | \\ r_{11}(\beta) \end{pmatrix} 
+	\end{cases} \qquad \text{avec} \quad r_i(\beta) = y_i - (\beta_0 + \beta_1 t_i + \beta_2 t_i^2 + \beta_3 t_i^3)
+	}
+\] 
+
+
+\subsection{}
+
+\[
+	(P) \begin{cases}
+		\min f(\beta) &= \frac{1}{2} \|r(\beta)\|^2 = \frac{1}{2} \|y-X\beta\|^2 \\
+		\beta &\in \mathbb{R}^4
+	\end{cases}
+\] 
+
+où
+
+\begin{itemize}
+	\item $\beta$ est le quadruplet des paramètres du modèle $(\beta_0, \beta_1, \beta_2, \beta_3)$.
+	\item $y = \begin{pmatrix} 75.995 \\ 91.972 \\ 105.711 \\ \vdots \\ 281.422 \end{pmatrix}$
+	\item $X = \begin{pmatrix} 1 & 1900 & 1900^2 & 1900^3 \\ 1 & 1910 & 1910^2 & 1910^3 \\ 1&1920&1920^2 & 1920^3 \\ \ldots & \ldots & \ldots & \ldots \\ 1 & 2000 & 2000^2 & 2000^3 \end{pmatrix} $
+\end{itemize}
+
+\section{Maintenance d'un réseau de distribution}
+
+\subsection{}
+
+\[
+	(P) \begin{cases}
+		\min r(\beta) &= \min \frac{1}{2} \sum_{k=1}^{25} \left\| y_k - y({x_1}_k, {x_2}_k) \right\|^2 \\
+		\beta &\in \mathbb{R}^3
+	\end{cases}
+\] 
+
+\[
+	\cor{
+		r: \begin{cases}
+			\R^2 &\to \R^{25} \\
+			(x_1, x_2) &\mapsto \begin{pmatrix} r_1(x_1, x_2) \\ \vdots \\ r_{25}(x_1, x_2) \end{pmatrix} 
+		\end{cases}
+		\qquad \text{avec} \quad r_i: (x_1, x_2) \mapsto y_i - (\beta_0 + \beta_1 x_{1, i} + \beta_2 x_{2, i})
+	}
+\] 
+
+\subsection{}
+
+\[
+	(P) \begin{cases}
+		\min f(\beta) &= \frac{1}{2} \|r(\beta)\|^2 = \frac{1}{2} \|y-X\beta\|^2 \\
+		\beta &\in \mathbb{R}^3
+	\end{cases}
+\] 
+
+où
+
+\begin{itemize}
+	\item $\beta$ est le triplet des paramètres du modèle $(\beta_0, \beta_1, \beta_2)$.
+	\item $y = \begin{pmatrix} 16.68 \\ 11.50 \\ 12.03 \\ \vdots \\ 10.75 \end{pmatrix} \in \mathbb{R}^{25}$
+	\item $X = \begin{pmatrix} 1 & 7 & 560 \\ 1 & 3 & 220 \\ 1 & 3 & 340 \\ 1 & 4 & 80 \\ \vdots & \vdots & \vdots \\ 1 & 4 & 150 \end{pmatrix} $
+\end{itemize}
+
+\section{Production d'une éolienne}
+
+\subsection{}
+
+\begin{align*}
+	y(x, \beta) &= \begin{cases}
+		\beta_1 &\text{si}\quad x \le 5 \\
+		\beta_2 &\text{si}\quad x\ge 15 \\
+		\beta_3 + \beta_4x &\text{sinon}
+	\end{cases} \\
+\end{align*}
+
+$\beta$ est donc de dimension 4.
+
+\subsection{}
+
+\[
+	(P) \begin{cases}
+		\min r(\beta) = \min \frac{1}{2} \sum_{k=1}^{20} \|y_k - y(k, \beta)\|^2 \\
+		\beta \in \mathbb{R}^{4}
+	\end{cases}
+\] 
+
+Ce problème est linéaire:
+
+\[
+	(P) \begin{cases}
+		\min f(\beta) &= \frac{1}{2} \|r(\beta)\|^2 = \frac{1}{2} \|y-X\beta\|^2 \\
+		\beta &\in \mathbb{R}^4
+	\end{cases}
+\] 
+
+où
+
+\begin{itemize}
+	\item $\beta$ est le triplet des paramètres du modèle $(\beta_1, \beta_2, \beta_3, \beta_4)$.
+	\item $y = \begin{pmatrix} 10.0 \\ 10.0 \\ 10.01 \\ \vdots \\ 55.0 \end{pmatrix} \in \mathbb{R}^{20}$
+	\item $
+			X = \begin{pmatrix} 
+				1 & 0 & 0 & 0 \\
+				1 & 0 & 0 & 0 \\
+				1 & 0 & 0 & 0 \\
+				1 & 0 & 0 & 0 \\
+				1 & 0 & 0 & 0 \\
+				0 & 0 & 1 & 6 \\
+				0 & 0 & 1 & 7 \\
+				0 & 0 & 1 & 8 \\
+				\vdots & \vdots & \vdots & \vdots \\
+				0 & 0 & 1 & 15 \\
+				0 & 1 & 0 & 0 \\
+				0 & 1 & 0 & 0 \\
+				0 & 1 & 0 & 0 \\
+				0 & 1 & 0 & 0 \\
+				0 & 1 & 0 & 0 \\
+			\end{pmatrix} 
+$
+\end{itemize}
+
+\cor{On pourrait aussi avoir que deux paramètres
+
+	\[
+		y(x, \beta) = \begin{cases}
+			\beta_1 &\text{si } x \le 5 \\
+			\beta_2 &\text{si } x \ge 15 \\
+			\frac{\beta_2 - \beta_1}{10}(x-5) + \beta_1 &\text{sinon}
+		\end{cases}
+	\] 
+
+	ou encore mieux:
+	
+	\[
+		y(x, \beta) = \begin{cases}
+			\beta_3 + 5\beta_4 &\text{si} x\le 5 \\
+			\beta_3 + 15\beta_4 &\text{si } x\ge 15 \\
+			\beta_3 + \beta_4x &\text{sinon}
+		\end{cases}
+	\] 
+}
+
+\section{Géoréférence d'une image satellite}
+
+\subsection{}
+
+Les paramètres $(\gamma_i)_{i\in \llbracket 0, 5 \rrbracket}$ modélisent $x$, les données sont donc les $(x_i)_{i\in \llbracket 1, 23 \rrbracket}$.
+
+\subsection{}
+
+\[
+	(P) \begin{cases}
+		\min x(\gamma) &= \frac{1}{2} \|r(\beta)\|^2 = \frac{1}{2} \|x-X\gamma\|^2 \\
+		\gamma &\in \mathbb{R}^6
+	\end{cases}
+\] 
+
+où
+
+\begin{itemize}
+	\item $\gamma$ est le 6-uplet des paramètres du modèle $(\gamma_0, \ldots, \gamma_5)$.
+	\item $x = (x_i)_{i\in \llbracket 1, 23 \rrbracket}$
+	\item \[
+			X = \begin{pmatrix}
+				1 & x_1' & y_1' & x_1'^2 & x_1' y_1' & y_1'^2 \\
+				1 & x_2' & y_2' & x_2'^2 & x_2' y_2' & y_2'^2 \\
+				\vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\
+				1 & x_{23}' & y_{23}' & x_{23}'^2 & x_{23}' y_{23}' & y_{23}'^2 \\
+			\end{pmatrix} 
+	\] 
+\end{itemize}
+
+\subsection{}
+
+Les paramètres $(\delta_i)_{i\in \llbracket 0, 5 \rrbracket}$ modélisent $y$, les données sont donc les $(y_i)_{i\in \llbracket 1, 23 \rrbracket}$.
+
+\[
+	(P) \begin{cases}
+		\min y(\delta) &= \frac{1}{2} \|r(\beta)\|^2 = \frac{1}{2} \|y-X\delta\|^2 \\
+		\delta &\in \mathbb{R}^6
+	\end{cases}
+\] 
+
+où
+
+\begin{itemize}
+	\item $\delta$ est le 6-uplet des paramètres du modèle $(\delta_0, \ldots, \delta_5)$.
+	\item $y = (y_i)_{i\in \llbracket 1, 23 \rrbracket}$
+	\item \[
+			X = \begin{pmatrix}
+				1 & x_1' & y_1' & x_1'^2 & x_1' y_1' & y_1'^2 \\
+				1 & x_2' & y_2' & x_2'^2 & x_2' y_2' & y_2'^2 \\
+				\vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\
+				1 & x_{23}' & y_{23}' & x_{23}'^2 & x_{23}' y_{23}' & y_{23}'^2 \\
+			\end{pmatrix} 
+	\] 
+\end{itemize}
+
+\section{Réservoir cylindrique}
+
+\subsection{}
+
+\[
+	(P) \begin{cases}
+		\min_{\beta\in \mathbb{R}^2}& (-V(\beta)) \\
+		\beta &= (\underbrace{r}_\text{rayon de la base}, \underbrace{h}_\text{hauteur}) \\
+		2\pi r h &< S_{\text{lat}} \\
+		2\pi r h + 4 \pi r &< S_\text{tot}
+	\end{cases}
+\] 
+\section{Octogone entre reufs}
+
+\subsection{}
+
+La position est $\vec{x_i}$ avec $i\in \llbracket 1, p \rrbracket$.
+On pose $\xi = (x_i)_{i\in \llbracket 1, p \rrbracket } \min_{(i, j) \in \llbracket 1, p \rrbracket^2 \setminus \{(a, a), a \in \llbracket 1, p\rrbracket\}   } \|x_i - x_j\|$
+
+\[
+	(P) \begin{cases}
+		\max \xi \qquad \text{ou} \min (-\xi) \\
+		\forall i\in \llbracket 1, p\rrbracket,\ \|x_i - a\| < \delta
+	\end{cases}
+\] 
+
+\section{Neurone}
+
+\subsection{}
+
+
+\[
+	(P) \begin{cases}
+		\min r(\beta) \\
+		\beta \in \R^{n+1}
+	\end{cases}
+\] 
+
+Avec
+\[
+	r: \begin{cases}
+		\R^{n+1} &\to \R^{n} \\
+		\beta &\mapsto (y_k - g(x_k \sqcup \beta))_{k\in \llbracket 1, n \rrbracket}
+	\end{cases}
+\] 
+
+\subsection{}
+
+$g = \sigma \circ l$ or $\sigma$ n'est pas linéaire et $l$ l'est (selon $(w_1, \ldots, w_n, b)$), donc $g$ n'est {\bf pas} linéaire
+
+\subsection{}
+
+Si $\sigma = \operatorname{id}$, alors $g = \sum_{k=1}^{n} w_k x_k + b$, qui est linéaire selon $(w_1, \ldots, w_n, b)$:
+
+\begin{align*}
+	g(\lambda \beta + \gamma) &= \sum_{k=1}^{n} (\lambda w_{\beta, k} + w_{\gamma, k}) x_k + \lambda b_{\beta} + b_\gamma \\
+	&= \lambda \left( \sum_{k=1}^{n} w_{\beta, k} x_k + b_\beta \right) + \sum_{k=1}^{n} w_{\gamma, k} + b_\gamma \\
+	&= \lambda g(\beta) + g(\gamma) \\
+\end{align*}
+
+Donc $X = \begin{pmatrix} x_1 & x_2 & \ldots & x_n & 1 \\ \vdots & \vdots & \ddots & \vdots & \vdots \\ x_1 & x_2 & \ldots & x_n & 1 \end{pmatrix} $
+
+\end{document}

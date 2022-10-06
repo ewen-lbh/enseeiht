@@ -1,0 +1,59 @@
+R0: Comment «Réviser les tables de multiplication» ?
+    Continuer <-- VRAI
+    TantQue Continuer Faire
+	Demander la table à réviser				Table: out Entier
+	Réviser la valeur de chaque multiplication		Table: in Entier, Erreurs: out Entier
+	Afficher un message selon le nombre d'erreurs		Erreurs: in Entier
+	Demander à continuer					Continuer: out Booléen
+    FinTQ
+
+R1: Comment «Demander la table à réviser» ?
+    Écrire("Table à réviser : ")
+    Lire(Table)							Table: out Entier
+    Si Table < 1 OuSinon Table > 10 Alors
+    	Écrire("Impossible. La table doit être entre 0 et 10.")
+    	Demander la table à réviser				Table: in out Entier
+    FinSi
+
+R1: Comment «Réviser la valeur de chaque multiplication» ?
+    Erreurs <-- 0
+    Pour _ = 1 à 10 Faire 
+    	i <-- NombreAléatoireEntre(1, 10)
+    	Réviser la valeur d'une multiplication			i: in Entier, Erreurs: in out Entier
+    FinPour
+
+R1: Comment «Afficher un message selon le nombre d'erreurs» ?
+    Selon Erreurs Dans
+    	0 => Écrire("Aucune erreur. Excellent !")
+	1 => Écrire("Une seule erreur. Très bien.")
+	2..4 => 
+		Écrire("Seulement ")
+		Écrire(10-Erreurs)
+		Écrire(" bonne réponses. Il faut apprendre la table de ")
+		Écrire(Table)
+		Écrire(" !")
+	5..9 => 
+		Écrire(Erreurs)
+		Écrire(" erreurs. Il faut encore travailler la table de ")
+		Écrire(Table)
+		Écrire(".")
+	10 => Écrire("Tout est faux! Volontaire?")
+    FinSelon
+
+R1: Comment «Demander à continuer» ?
+    Écrire("On continue (o/n) ?")
+    Lire(Réponse) 					Réponse: out Caractère
+    Continuer <-- Caractère = 'o' OU Caractère = 'O' 
+
+R2: Comment «Réviser la valeur d'une multiplication» ?
+    Écrire("(M")
+    Écrire(i)
+    Écrire(") 7 * ")
+    Écrire(i)
+    Écrire(" ? ")
+    Lire(Réponse)					Réponse: out Entier
+    Si Réponse /= 7 * i Alors
+    	Erreurs <-- Erreurs + 1
+    FinSi
+
+

@@ -1,0 +1,156 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[bookmarks]{hyperref}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb}
+\newcommand{\R}{\mathbb{R}}
+\usepackage{cancel}
+\newcommand{\dx}{\mathrm{d}x}
+\newcommand{\dy}{\mathrm{d}y}
+\newcommand{\var}{\operatorname{Var}}
+
+\begin{document}
+
+\setcounter{section}{2}
+\section{Exercice 3}
+
+\subsection{}
+
+$f$ est une densité de probabilité donc
+
+\begin{align*}
+	\int_{\R} f &= 1 \\
+	\iff \int_0^1 kx^a \dx &= 1 \\
+	\iff k\left[ \frac{x^{a+1}}{a+1}  \right]_0^1 &= 1 \\
+	\iff k(\frac{1}{a+1} - 0) &= 1 \\
+	\iff k &=  a+1 \\
+\end{align*}
+
+\subsection{}
+
+\begin{align*}
+	E(X^n) &= \int_{\R} x^n kx^a \dx \\
+	       &= (a+1) \left[ \frac{x^{n+a+1}}{n+a+1} \right]_0^1 \\
+	       &= \frac{a+1}{n+a+1} \\
+\end{align*}
+
+\begin{align*}
+	E(X) &= \frac{a+1}{a+2} \\
+\end{align*}
+
+\begin{align*}
+	\var X &= E(X^2) - E(X)^2 \\
+	       &= \frac{a+1}{a+3} - \left(\frac{a+1}{a+2}\right)^2 \\
+	       &= \frac{}{} \\
+\end{align*}
+
+\subsection{}
+
+\begin{itemize}
+	\item Si $x<0$,  $F_X(x) = 0$
+	\item Si $x>1$, $F_X(x) = 1$
+	\item Sinon 
+\begin{align*}
+	F_X(x) &=   P(X<x) \\
+	&=  \int_0^x f \\
+	&=  k \int_0^x y^a \dy \\
+	&=  k \left[ \frac{y^{a+1}}{a+1} \right]_0^x \\
+	&=  \frac{(a+1)x^{a+1}}{a+1} \\
+	&= x^{a+1} \\
+\end{align*}
+\end{itemize}
+
+La fonction $-\ln$ est bijective de $]0, 1]$ dans $]0, 1]$. $Y$ admet donc une densité de probabilité $f_Y$
+
+\[
+	Y = -\ln X \iff X = e^{- Y}
+\] 
+
+
+Donc 
+\begin{align*}
+	f_Y(x) = f_X(e^{-x}) \left| \frac{\mathrm{d} (e^{-y})}{\dy} \right|
+	&= (a+1)e^{-(a+1)y} \mathbf{1}_{\R^{+}}(y)
+\end{align*}
+
+\subsection{}
+
+\begin{align*}
+	E(Y^n) &= \int_{\R^{+}} y^n f(y)\dy \\
+	       &= \int_{\R^{+}} y^n (a+1) e^{-(a+1)y}\dy \\
+	       &= \int_{\R^{+}} \left( \frac{u}{a+1} \right)^{n} \cancel{(a+1)} e^{-u} \frac{du}{\cancel{a+1}} \qquad \text{avec $u = (a+1)y$,  $dy = \frac{du}{a+1}$ car $(a+1)\operatorname{id}$  $\mathal{C}^{1}$ bijective} \\
+	       &= \frac{1}{(a+1)^n} \int_{\R^{+}} u^n e^{-u} \mathrm{d}u \\
+	       &= \frac{1}{(a+1)^n} \Gamma(n+1) \\
+	       &= \frac{n!}{(a+1)^n} \\
+\end{align*}
+
+\begin{align*}
+	E(Y) &= \frac{1}{a+1} \\
+	\var Y &= E(Y^2) - E(Y)^2 \\
+	       &= \frac{2}{(a+1)^2} - \frac{1}{(a+1)^2} \\
+	       &= \frac{1}{(a+1)^2} \\
+\end{align*}
+
+\subsection{}
+
+\[
+	Z = \left|X-\frac{1}{2}\right| \iff X = \begin{cases}
+			 \frac{1}{2} - X &\text{si } X \le  \frac{1}{2} \\
+			 X - \frac{1}{2 }&\text{sinon}
+		 \end{cases}
+\] 
+
+$x \mapsto |x-\frac{1}{2}|$ est bijective de $[0, \frac{1}{2]}$ et de $[\frac{1}{2}, 1]$ dans de $[0, \frac{1}{2}]$ et $[\frac{1}{2}, 1]$
+
+\paragraph{1re bijection}
+
+\begin{align*}
+	z &= \frac{1}{2}-x \implies  \\
+\end{align*}
+
+
+\ldots
+
+\[
+	f_Z(z) = (a+1) \left[(\frac{1}{2}-z)^a + (\frac{1}{2}+z)^a\right] \mathbf{1}_{[0, \frac{1}{2}]}
+\] 
+
+\setcounter{section}{4}
+\section{Files d'attente}
+
+$X \coprod Y$,  $X \sim \mathcal{E}(\lambda)$, $Y \sim \mathcal{E}(\mu)$ 
+
+\begin{align*}
+	F_T(t) &= P(T<t) \\
+	       &= P(\inf(X, Y)<t) \\
+	       &= 1-P(\inf(X, Y)\ge t) \\
+	       &= 1-P(X\ge t)P(Y\ge t) \qquad\text{car $X \coprod Y$} \\
+	       &= 1-F_X(t)F_Y(t) \\
+\end{align*}
+
+
+Or
+
+ \begin{align*}
+	F_T(t) &= \int_0^1 \lambda e^{-\lambda x} \dx \\
+	       &\vdots \\
+	       &= 1- e^{-(\lambda+\mu)t}  \\
+\end{align*}
+
+Donc $\forall (X, Y) \sim (\mathcal{E}(\lambda), \mathcal{E}(\mu)),\ X \coprod Y \implies \inf(X, Y) \sim \mathcal{E}(\lambda + \mu)$
+
+\subsection{}
+Notons $T_A$ (resp. $T_B$, $T_C$) le temps en service de $A$ (resp. $B$, $C$)
+
+\[
+	T_C = T = \inf(T_A, T_B)
+\] 
+
+\subsection{}
+Temps moyen dans le système de $C$:  
+\begin{align*}
+	Temps moyen d'attente + temps moyen en service &= E(T) + E(T_C) \\
+	&= \frac{1}{\lambda_A + \lambda_B} + \frac{1}{\lambda_C} \\
+\end{align*}
+
+\end{document}
