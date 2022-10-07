@@ -32,6 +32,8 @@ procedure Multiplications is
 	Max_Hesitation_Question : Integer;
 	-- seuil de tolérance d'écart entre l'hésitation moyenne et maximale avant l'affichage d'une recommendation de révision
 	Hesitation_Delta_Threshold : Duration := Duration (1);
+	-- nombre de questions à poser par table
+	Questions_Per_Table: Integer := 10;
 
 	package randomtableitem is new Alea (1, 10);
 	use randomtableitem;
@@ -50,7 +52,7 @@ begin
 		Max_Hesitation    := Duration (0);
 		Errors            := 0;
 		Previous_Question := 0;
-		for i in 0 .. 9 loop
+		for i in 0 .. (Questions_Per_Table - 1) loop
 			loop
 				Get_Random_Number (Item);
 				exit when i = 0 or Item /= Previous_Question;
@@ -90,7 +92,7 @@ begin
 			when 1 =>
 				Put_Line ("Une seule erreur. Très bien.");
 			when 2 .. 4 =>
-				Put ("Seulement " & Integer'Image (10 - Errors) &
+				Put ("Seulement " & Integer'Image (Questions_Per_Table - Errors) &
 					" bonne réponses. Il faut apprendre la table de " &
 					Integer'Image (Table) & " !");
 			when 5 .. 9 =>
