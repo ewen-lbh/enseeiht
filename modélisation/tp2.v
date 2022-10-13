@@ -66,10 +66,16 @@ Theorem T : (forall (e : H), exists (p : H), (P e p))    (* Tout enfant a un pè
      (forall (e : H), forall (gpp : H), ((GPP e gpp)     (* Le grand père paternel *)
           <-> exists (p : H), (P e p) /\ (P p gpp)))     (* est le père du père *)
      -> (forall (e : H), exists (gpp : H), (GPP e gpp)). (* alors tout enfant a un grand père paternel *)
-intros.
+intro H0. intro h.
 destruct H0.
-exists e.
-
+destruct H0 with h.
+destruct H0 with x.
+exists x0.
+apply H1.
+exists x.
+split.
+exact H2.
+exact H3.
 Qed.
 
 End LogiquePredicats.
