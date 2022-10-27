@@ -1,0 +1,35 @@
+theory Enquete
+
+predicate a
+predicate b
+predicate c
+
+predicate da = b /\ not c
+predicate db = a -> c
+predicate dc = not c /\ (a \/ b)
+
+(* 1. *)
+goal Q1: da /\ db /\ dc
+
+(* 2. *)
+goal Q2_1: da -> db
+goal Q2_2: da -> dc
+goal Q2_3: db  -> da
+goal Q2_4: db -> dc
+goal Q2_5: dc -> da
+goal Q2_6: dc -> db
+
+(* 3. *)
+goal Q3_1: not a /\ not b /\ not c -> not da
+goal Q3_2: not a /\ not b /\ not c -> not db
+goal Q3_3: not a /\ not b /\ not c -> not dc
+
+(* 4. *)
+goal Q4_1: da /\ db /\ dc -> a /\ not b /\ not c
+goal Q4_2: da /\ db /\ dc -> not a /\ b /\ not c
+goal Q4_3: da /\ db /\ dc -> not a /\ not b /\ c
+
+(* 5. *)
+(* horrible *)
+
+end

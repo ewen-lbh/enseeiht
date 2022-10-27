@@ -9,7 +9,6 @@
 <path name="predicat.mlw"/>
 <theory name="Predicat" proved="true">
  <goal name="THM08" proved="true">
- <proof prover="0" edited="predicat_Predicat_THM08_1.v"><result status="valid" time="0.36"/></proof>
  <proof prover="1"><result status="valid" time="0.00" steps="5"/></proof>
  </goal>
  <goal name="THM09" proved="true">
