@@ -1,0 +1,132 @@
+V "GNAT Lib v9"
+A -gnata
+P ZX
+
+RN
+RV NO_ALLOCATORS
+RV NO_DIRECT_BOOLEAN_OPERATORS
+RV NO_FLOATING_POINT
+RV NO_IO
+RV NO_IMPLICIT_CONDITIONALS
+RV NO_LOCAL_ALLOCATORS
+RV NO_RECURSION
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_UNCHECKED_DEALLOCATION
+RV NO_DEFAULT_INITIALIZATION
+RV SPARK_05
+
+U vecteurs_creux%b	vecteurs_creux.adb	80a6aa5e NE OO PK
+W ada%s			ada.ads			ada.ali
+W ada.float_text_io%s	a-flteio.ads		a-flteio.ali
+W ada.integer_text_io%s	a-inteio.ads		a-inteio.ali
+Z ada.tags%s		a-tags.adb		a-tags.ali
+W ada.text_io%s		a-textio.adb		a-textio.ali
+W ada.unchecked_deallocation%s
+Z system.assertions%s	s-assert.adb		s-assert.ali
+
+U vecteurs_creux%s	vecteurs_creux.ads	2351faaf EE NE OO PK
+
+D ada.ads		20210601075304 76789da1 ada%s
+D a-except.ads		20210601075304 291912d5 ada.exceptions%s
+D a-flteio.ads		20210601075304 e18a47a0 ada.float_text_io%s
+D a-inteio.ads		20210601075304 f64b89a4 ada.integer_text_io%s
+D a-ioexce.ads		20210601075304 e4a01f64 ada.io_exceptions%s
+D a-stream.ads		20210601075304 119b8fb3 ada.streams%s
+D a-tags.ads		20210601075304 491b781d ada.tags%s
+D a-textio.ads		20210601075304 881db35a ada.text_io%s
+D a-tiflio.ads		20210601075304 56fbda09 ada.text_io.float_io%s
+D a-tiinio.ads		20210601075304 aa04e5d6 ada.text_io.integer_io%s
+D a-unccon.ads		20210601075304 0e9b276f ada.unchecked_conversion%s
+D a-uncdea.ads		20210601075304 eff36322 ada.unchecked_deallocation%s
+D interfac.ads		20210601075304 5ab55268 interfaces%s
+D i-cstrea.ads		20210601075304 e53d8b8e interfaces.c_streams%s
+D system.ads		20210601075304 4635ec04 system%s
+D s-assert.ads		20210601075304 cd8d2c94 system.assertions%s
+D s-crtl.ads		20210601075304 0ebbdb71 system.crtl%s
+D s-exctab.ads		20210601075304 54135002 system.exception_table%s
+D s-ficobl.ads		20210601075304 078245e4 system.file_control_block%s
+D s-parame.ads		20210601075304 48ec542b system.parameters%s
+D s-secsta.ads		20210601075304 20bbe636 system.secondary_stack%s
+D s-soflin.ads		20210601075304 a7318a92 system.soft_links%s
+D s-stache.ads		20210601075304 a37c21ec system.stack_checking%s
+D s-stalib.ads		20210601075304 09bd3940 system.standard_library%s
+D s-stoele.ads		20210601075304 2dc34a04 system.storage_elements%s
+D s-traent.ads		20210601075304 005bf670 system.traceback_entries%s
+D s-unstyp.ads		20210601075304 34867c83 system.unsigned_types%s
+D s-wchcon.ads		20210601075304 1b7d22d2 system.wch_con%s
+D vecteurs_creux.ads	20221109101444 2351faaf vecteurs_creux%s
+D vecteurs_creux.adb	20221109110013 d3d84e8d vecteurs_creux%b
+X 1 ada.ads
+16K9*Ada 20e8 30|1r6 1r31 2r6 2r31 3r6 3r31 4r6 21r27
+X 3 a-flteio.ads
+20K13*Float_Text_IO[9|46] 30|3w10 3r35
+X 4 a-inteio.ads
+18K13*Integer_Text_IO[10|46] 30|2w10 2r35
+X 8 a-textio.ads
+49K13*Text_IO 471e16 30|1w10 1r35
+73I12*Field{integer}
+242U14*Put 30|132s13 135s13 137s13 139s13
+263U14*Put_Line 30|71s17
+X 9 a-tiflio.ads
+68U14*Put 30|138s13[3|20]
+70i7 Fore{8|73I12} 30|138r32[3|20]
+71i7 Aft{8|73I12} 30|138r43[3|20]
+72i7 Exp{8|73I12} 30|138r53[3|20]
+X 10 a-tiinio.ads
+66U14*Put 30|136s13[4|18]
+X 12 a-uncdea.ads
+20u15*Unchecked_Deallocation 30|4w10 21r31
+X 29 vecteurs_creux.ads
+9K9*Vecteurs_Creux 81E14 96l5 96e19 30|6b14 157l5 157t19
+11P14*T_Vecteur_Creux 15r40 20r39 24r34 28r46 33r46 38r40 46r51 50r51 55r44
+. 55r69 59r33 63r47 67r33 75r55 83c14 89r35 30|22r20 24r36 29r36 34r30 40r16
+. 42r19 55r16 66r20 68r25 100r47 106r47 113r21 113r46 119r29 124r44 129r29
+. 147r16
+15U19*Initialiser 15<32 30|24b15 27l9 27t20
+15p32 V{11P14} 16r34 30|24b28 26m9
+20U19*Detruire 20=29 30|29b15 32l9 32t17
+20p29 V{11P14} 30|29b25 31m15
+24V18*Est_Nul{boolean} 16s25 24>27 30|34b14 37l9 37t16
+24p27 V{11P14} 30|34b23 36r16
+28V18*Composante_Recursif{float} 28>39 28>64 30|54b14 60s20 63l9 63t28
+28p39 V{11P14} 30|55b9 58r21 59r28 60r41 62r16
+28i64 Indice{integer} 29r29 30|55b33 58r12 60r52
+33V18*Composante_Iteratif{float} 33>39 33>64 30|39b14 52l9 52t28
+33p39 V{11P14} 30|40b9 44r20
+33i64 Indice{integer} 34r29 30|40b33 45r15
+38U19*Modifier 38=29 39>40 40>44 30|65b15 96s25 98l9 98t17
+38p29 V{11P14} 30|66b9 70r26 73r20 74m25 75r25 77r23 78r25 80r23 80r44 81r25
+. 83r23 83r44 85r49 85r69 86r25 87r25 88r25 90r23 90r53 92r86 93r25 96r34
+39i40 Indice{integer} 41r24 30|66b37 75r45 77r34 80r55 83r55 86r41 90r42
+. 90r64 92r49 96r45 96r55
+40f44 Valeur{float} 30|66b58 75r63 78r41 87r41 92r67 96r63 96r73
+46V18*Sont_Egaux_Recursif{boolean} 46>39 46>43 30|100b14 104l9 104t28
+46p39 V1{11P14} 30|100b35
+46p43 V2{11P14} 30|100b39
+50V18*Sont_Egaux_Iteratif{boolean} 50>39 50>43 30|106b14 110l9 110t28
+50p39 V1{11P14} 30|106b35
+50p43 V2{11P14} 30|106b39
+55U19*Additionner 55=32 55>61 30|112b15 117l9 117t20
+55p32 V1{11P14} 30|113b9
+55p61 V2{11P14} 30|113b38
+59V18*Norme2{float} 59>26 30|119b14 122l9 122t15
+59p26 V{11P14} 30|119b22
+63V18*Produit_Scalaire{float} 63>36 63>40 30|124b14 127l9 127t25
+63p36 V1{11P14} 30|124b32
+63p40 V2{11P14} 30|124b36
+67U19*Afficher 67>29 30|70s17 129b15 142s13 144l9 144t17
+67p29 V{11P14} 30|129b25 131r12 136r18 138r18 142r23
+75V18*Nombre_Composantes_Non_Nulles{integer} 75>49 76r25 30|146b14 153s24
+. 155l9 155t38
+75p49 V{11P14} 30|147b9 150r12 153r55
+81R14 T_Cellule 83r40 85c14 94e27 30|22r9 74r34 84r38 91r38
+87i25*Indice{integer} 30|45r32 58r23 75m35 77r25 80r46 83r46 85m39 85r51
+. 86m31 90r33 90r55 92m39 136r24
+88f25*Valeur{float} 30|51r24 62r18 75m53 78m31 85m59 85r71 87m31 92m57 138r24
+89p25*Suivant{11P14} 30|46r36 49r32 59r30 60r43 75m71 80r25 81m31 83r25 85m79
+. 88m31 90r25 92m75 92r88 93m27 96m36 142r29 153r61
+X 30 vecteurs_creux.adb
+21U15 Free[12|20] 31s9
+42p9 Cellule{29|11P14} 44m9 45r24 46r28 49m13 49r24 51r16
+68p17 new_V{29|11P14} 81r42 84m25 85r25 88r42 91m25 92r25 93r38
+
