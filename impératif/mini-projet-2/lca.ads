@@ -60,7 +60,12 @@ package LCA is
 
 private
 
-	-- TODO : � compl�ter
-	
+	type T_Cellule is record
+		Cle: T_Cle;
+		Donnee: T_Donnee;
+		Suivante: T_LCA;
+	end record;
+
+	type T_LCA is access T_Cellule;
 
 end LCA;

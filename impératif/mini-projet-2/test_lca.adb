@@ -2,8 +2,8 @@ with Ada.Text_IO;           use Ada.Text_IO;
 with Ada.Integer_Text_IO;   use Ada.Integer_Text_IO;
 with SDA_Exceptions; 		use SDA_Exceptions;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
-	--! Les Unbounded_String ont une capacité variable, contrairement au String
-	--! pour lesquelles une capacité doit être fixée.
+	--! Les Unbounded_String ont une capacitï¿½ variable, contrairement au String
+	--! pour lesquelles une capacitï¿½ doit ï¿½tre fixï¿½e.
 with LCA;
 
 procedure Test_LCA is
@@ -13,22 +13,22 @@ procedure Test_LCA is
 	use LCA_String_Integer;
 
 
-	-- Retourner une chaîne avec des guillemets autour de S
+	-- Retourner une chaï¿½ne avec des guillemets autour de S
 	function Avec_Guillemets (S: Unbounded_String) return String is
 	begin
 		return '"' & To_String (S) & '"';
 	end;
 
-	-- Utiliser & entre String à gauche et Unbounded_String à droite.  Des
-	-- guillemets sont ajoutées autour de la Unbounded_String 
-	-- Il s'agit d'un masquage de l'opérateur `&` défini dans Strings.Unbounded
+	-- Utiliser & entre String ï¿½ gauche et Unbounded_String ï¿½ droite.  Des
+	-- guillemets sont ajoutï¿½es autour de la Unbounded_String 
+	-- Il s'agit d'un masquage de l'opï¿½rateur `&` dï¿½fini dans Strings.Unbounded
 	function "&" (Left: String; Right: Unbounded_String) return String is
 	begin
 		return Left & Avec_Guillemets (Right);
 	end;
 
 
-	-- Surcharge l'opérateur unaire "+" pour convertir une String
+	-- Surcharge l'opï¿½rateur unaire "+" pour convertir une String
 	-- en Unbounded_String.
 	-- Cette astuce permet de simplifier l'initialisation
 	-- de cles un peu plus loin.
@@ -64,9 +64,9 @@ procedure Test_LCA is
 
 
 	-- Initialiser l'annuaire avec les Donnees et Cles ci-dessus.
-	-- Attention, c'est à l'appelant de libérer la mémoire associée en
+	-- Attention, c'est ï¿½ l'appelant de libï¿½rer la mï¿½moire associï¿½e en
 	-- utilisant Vider.
-	-- Si Bavard est vrai, les insertions sont tracées (affichées).
+	-- Si Bavard est vrai, les insertions sont tracï¿½es (affichï¿½es).
 	procedure Construire_Exemple_Sujet (Annuaire : out T_LCA; Bavard: Boolean := False) is
 	begin
 		Initialiser (Annuaire);
@@ -77,7 +77,7 @@ procedure Test_LCA is
 			Enregistrer (Annuaire, Cles (I), Donnees (I));
 
 			if Bavard then
-				Put_Line ("Après insertion de la clé " & Cles (I));
+				Put_Line ("Aprï¿½s insertion de la clï¿½ " & Cles (I));
 				Afficher (Annuaire); New_Line;
 			else
 				null;
@@ -106,7 +106,7 @@ procedure Test_LCA is
 	end Tester_Exemple_Sujet;
 
 
-	-- Tester suppression en commençant par les derniers éléments ajoutés
+	-- Tester suppression en commenï¿½ant par les derniers ï¿½lï¿½ments ajoutï¿½s
 	procedure Tester_Supprimer_Inverse is
 		Annuaire : T_LCA;
 	begin
@@ -118,7 +118,7 @@ procedure Test_LCA is
 
 			Supprimer (Annuaire, Cles (I));
 
-			Put_Line ("Après suppression de " & Cles (I) & " :");
+			Put_Line ("Aprï¿½s suppression de " & Cles (I) & " :");
 			Afficher (Annuaire); New_Line;
 
 			for J in 1..I-1 loop
@@ -135,7 +135,7 @@ procedure Test_LCA is
 	end Tester_Supprimer_Inverse;
 
 
-	-- Tester suppression en commençant les les premiers éléments ajoutés
+	-- Tester suppression en commenï¿½ant les les premiers ï¿½lï¿½ments ajoutï¿½s
 	procedure Tester_Supprimer is
 		Annuaire : T_LCA;
 	begin
@@ -145,9 +145,7 @@ procedure Test_LCA is
 
 		for I in 1..Nb_Cles loop
 			Put_Line ("Suppression de " & Cles (I) & " :");
-
 			Supprimer (Annuaire, Cles (I));
-
 			Afficher (Annuaire); New_Line;
 
 			for J in 1..I loop
@@ -166,7 +164,7 @@ procedure Test_LCA is
 
 	procedure Tester_Supprimer_Un_Element is
 
-		-- Tester supprimer sur un élément, celui à Indice dans Cles.
+		-- Tester supprimer sur un ï¿½lï¿½ment, celui ï¿½ Indice dans Cles.
 		procedure Tester_Supprimer_Un_Element (Indice: in Integer) is
 			Annuaire : T_LCA;
 		begin
@@ -199,7 +197,7 @@ procedure Test_LCA is
 
 	procedure Tester_Remplacer_Un_Element is
 
-		-- Tester enregistrer sur un élément présent, celui à Indice dans Cles.
+		-- Tester enregistrer sur un ï¿½lï¿½ment prï¿½sent, celui ï¿½ Indice dans Cles.
 		procedure Tester_Remplacer_Un_Element (Indice: in Integer; Nouveau: in Integer) is
 			Annuaire : T_LCA;
 		begin
@@ -341,6 +339,7 @@ procedure Test_LCA is
 		procedure Sommer_Len4_Erreur (Cle: Unbounded_String; Donnee: Integer) is
 			Nouvelle_Exception: Exception;
 		begin
+			Put_Line(Cle);
 			if Length (Cle) = 4 then
 				Put (" + ");
 				Put (Donnee, 2);
@@ -369,14 +368,24 @@ procedure Test_LCA is
 
 begin
 	Tester_Exemple_Sujet;
+	Put_Line("OK: Exemple_Sujet");
 	Tester_Supprimer_Inverse;
+	Put_Line("OK: Supprimer_Inverse");
 	Tester_Supprimer;
+	Put_Line("OK: Supprimer");
 	Tester_Supprimer_Un_Element;
+	Put_Line("OK: Supprimer_Un_Element");
 	Tester_Remplacer_Un_Element;
+	Put_Line("OK: Remplacer_Un_Element");
 	Tester_Supprimer_Erreur;
+	Put_Line("OK: Supprimer_Erreur");
 	Tester_La_Donnee_Erreur;
+	Put_Line("OK: La_Donnee_Erreur");
 	Tester_Pour_chaque;
+	Put_Line("OK: Pour_chaque");
 	Tester_Pour_chaque_Somme_Si_Cle_Commence_Par_Q;
+	Put_Line("OK: Pour_chaque_Somme_Si_Cle_Commence_Par_Q");
 	Tester_Pour_chaque_Somme_Len4_Erreur;
+	Put_Line("OK: Pour_chaque_Somme_Len4_Erreur");
 	Put_Line ("Fin des tests : OK.");
 end Test_LCA;
