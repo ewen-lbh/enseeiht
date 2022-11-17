@@ -115,6 +115,9 @@ package body LCA is
             Traiter (Sda.Cle, Sda.Donnee);
             Pour_Chaque (Sda.Suivante);
         end if;
+    exception
+        when others =>
+            Pour_Chaque (Sda.Suivante);
     end Pour_Chaque;
 
 end LCA;
