@@ -1,0 +1,66 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[bookmarks]{hyperref}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb}
+\usepackage{minted}
+
+\begin{document}
+
+\section{Architecture}
+
+On utilise le concept des modules. Caractéristiques:
+
+\begin{itemize}
+	\item Spécification
+	\item Implémentation
+\end{itemize}
+
+\section{Spécifier la pile}
+
+Structure de données stockant plusieurs éléments avec une insertion en first-in first-out, comme une pile de DS à noter \#abbrugiati
+
+\begin{minted}{ada}
+package Piles is
+	type Pile is limited private;
+
+	procedure Initialiser(pile out Pile) with
+		Post => Est_Vide(pile);
+	
+	function Est_Vide(pile in Pile) return Boolean;
+
+	function Sommet(pile: in Pile) return Character with
+		Pre => not Est_Vide(pile);
+	
+	function Empiler(pile in out Pile; element in Character) with
+		Post => Sommet(pile) = element;
+	
+	function Depiler(pile in out Pile) with
+		Pre => Not Est_Vide(Pile);
+		-- Post => Taille(Pile'new) = Taille(Pile'old) - 1;
+	
+	function Detruire(pile in out Pile):
+
+end package Piles;
+
+
+\end{minted}
+
+\section{Tester la pile}
+
+\begin{minted}{ada}
+with Piles; use Piles;
+
+procedure Test_Piles is
+	pile: Pile;
+begin
+	Initialiser(pile);
+	Empiler(pile, 'o'); Empiler(pile, 'k'); Empiler(pile, '?');
+	pragma assert Sommet(p) = '?';
+	Depiler(pile); Depiler(pile); Depiler(pile);
+	pragma assert Est_Vide(pile);
+end procedure Test_Piles;
+\end{minted}
+
+
+\end{document}

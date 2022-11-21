@@ -21,8 +21,9 @@ package body LCA is
     begin
         if Est_Vide (Sda) then
             return 0;
+        else
+            return Taille (Sda.Suivante) + 1;
         end if;
-        return Taille (Sda.Suivante) + 1;
     end Taille;
 
     procedure Enregistrer
@@ -115,6 +116,9 @@ package body LCA is
             Traiter (Sda.Cle, Sda.Donnee);
             Pour_Chaque (Sda.Suivante);
         end if;
+    exception
+        when others =>
+            Pour_Chaque (Sda.Suivante);
     end Pour_Chaque;
 
 end LCA;

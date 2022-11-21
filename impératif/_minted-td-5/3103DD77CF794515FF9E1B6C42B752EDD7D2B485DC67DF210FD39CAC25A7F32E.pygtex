@@ -1,0 +1,25 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kd}{package} \PYG{n+nc}{Piles} \PYG{k+kr}{is}
+	\PYG{k+kd}{type} \PYG{k+kt}{Pile} \PYG{k+kr}{is} \PYG{k+kr}{limited} \PYG{k+kd}{private}\PYG{p}{;}
+
+	\PYG{k+kd}{procedure} \PYG{n+nf}{Initialiser}\PYG{p}{(}\PYG{n+nv}{pile} \PYG{n+nv}{out} \PYG{n+nv}{Pile}\PYG{p}{)} \PYG{k+kn}{with}
+		\PYG{n+nn}{Post} \PYG{p}{=\PYGZgt{}} \PYG{n}{Est\PYGZus{}Vide}\PYG{p}{(}\PYG{n}{pile}\PYG{p}{);}
+	
+	\PYG{k+kd}{function} \PYG{n+nf}{Est\PYGZus{}Vide}\PYG{p}{(}\PYG{n+nv}{pile} \PYG{n+nv}{in} \PYG{n+nv}{Pile}\PYG{p}{)} \PYG{k+kr}{return} \PYG{k+kt}{Boolean}\PYG{p}{;}
+
+	\PYG{k+kd}{function} \PYG{n+nf}{Sommet}\PYG{p}{(}\PYG{n+nv}{pile}\PYG{p}{: }\PYG{n+nv}{in} \PYG{n+nv}{Pile}\PYG{p}{)} \PYG{k+kr}{return} \PYG{k+kt}{Character} \PYG{k+kn}{with}
+		\PYG{n+nn}{Pre} \PYG{p}{=\PYGZgt{}} \PYG{o+ow}{not} \PYG{n}{Est\PYGZus{}Vide}\PYG{p}{(}\PYG{n}{pile}\PYG{p}{);}
+	
+	\PYG{k+kd}{function} \PYG{n+nf}{Empiler}\PYG{p}{(}\PYG{n+nv}{pile} \PYG{n+nv}{in} \PYG{n+nv}{out} \PYG{n+nv}{Pile}\PYG{p}{;} \PYG{n+nv}{element} \PYG{n+nv}{in} \PYG{n+nv}{Character}\PYG{p}{)} \PYG{k+kn}{with}
+		\PYG{n+nn}{Post} \PYG{p}{=\PYGZgt{}} \PYG{n}{Sommet}\PYG{p}{(}\PYG{n}{pile}\PYG{p}{)} \PYG{o}{=} \PYG{n}{element}\PYG{p}{;}
+	
+	\PYG{k+kd}{function} \PYG{n+nf}{Depiler}\PYG{p}{(}\PYG{n+nv}{pile} \PYG{n+nv}{in} \PYG{n+nv}{out} \PYG{n+nv}{Pile}\PYG{p}{)} \PYG{k+kn}{with}
+		\PYG{n+nn}{Pre} \PYG{p}{=\PYGZgt{}} \PYG{o+ow}{Not} \PYG{n}{Est\PYGZus{}Vide}\PYG{p}{(}\PYG{n}{Pile}\PYG{p}{);}
+		\PYG{c+c1}{\PYGZhy{}\PYGZhy{} Post =\PYGZgt{} Taille(Pile\PYGZsq{}new) = Taille(Pile\PYGZsq{}old) \PYGZhy{} 1;}
+	
+	\PYG{k+kd}{function} \PYG{n+nf}{Detruire}\PYG{p}{(}\PYG{n+nv}{pile} \PYG{n+nv}{in} \PYG{n+nv}{out} \PYG{n+nv}{Pile}\PYG{p}{):}
+
+\PYG{k+kr}{end} \PYG{n+nf}{package} \PYG{n+nf}{Piles}\PYG{p}{;}
+
+
+\end{Verbatim}

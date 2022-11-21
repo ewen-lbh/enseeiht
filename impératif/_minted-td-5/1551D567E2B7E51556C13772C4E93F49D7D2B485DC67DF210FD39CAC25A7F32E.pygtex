@@ -1,0 +1,13 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{with} \PYG{n+nn}{Piles}\PYG{p}{;} \PYG{k+kn}{use} \PYG{n+nn}{Piles}\PYG{p}{;}
+
+\PYG{k+kd}{procedure} \PYG{n+nf}{Test\PYGZus{}Piles} \PYG{k+kr}{is}
+	\PYG{n}{pile}\PYG{p}{:} \PYG{n}{Pile}\PYG{p}{;}
+\PYG{k+kr}{begin}
+	\PYG{n}{Initialiser}\PYG{p}{(}\PYG{n}{pile}\PYG{p}{);}
+	\PYG{n}{Empiler}\PYG{p}{(}\PYG{n}{pile}\PYG{p}{,} \PYG{p}{\PYGZsq{}}\PYG{n+na}{o}\PYG{p}{\PYGZsq{});} \PYG{n}{Empiler}\PYG{p}{(}\PYG{n}{pile}\PYG{p}{,} \PYG{p}{\PYGZsq{}}\PYG{n+na}{k}\PYG{p}{\PYGZsq{});} \PYG{n}{Empiler}\PYG{p}{(}\PYG{n}{pile}\PYG{p}{,} \PYG{l+s+sCharacter}{\PYGZsq{}?\PYGZsq{}}\PYG{p}{);}
+	\PYG{k+kr}{pragma} \PYG{c+cp}{assert} \PYG{n}{Sommet}\PYG{p}{(}\PYG{n}{p}\PYG{p}{)} \PYG{o}{=} \PYG{l+s+sCharacter}{\PYGZsq{}?\PYGZsq{}}\PYG{p}{;}
+	\PYG{n}{Depiler}\PYG{p}{(}\PYG{n}{pile}\PYG{p}{);} \PYG{n}{Depiler}\PYG{p}{(}\PYG{n}{pile}\PYG{p}{);} \PYG{n}{Depiler}\PYG{p}{(}\PYG{n}{pile}\PYG{p}{);}
+	\PYG{k+kr}{pragma} \PYG{c+cp}{assert} \PYG{n}{Est\PYGZus{}Vide}\PYG{p}{(}\PYG{n}{pile}\PYG{p}{);}
+\PYG{k+kr}{end} \PYG{n+nf}{procedure} \PYG{n+nf}{Test\PYGZus{}Piles}\PYG{p}{;}
+\end{Verbatim}
