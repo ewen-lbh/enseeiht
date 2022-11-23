@@ -71,6 +71,8 @@ package body LCA is
     begin
         if Est_Vide (Sda) then
             raise Cle_Absente_Exception;
+        else 
+            Null;
         end if;
 
         if Sda.Cle = Cle then
