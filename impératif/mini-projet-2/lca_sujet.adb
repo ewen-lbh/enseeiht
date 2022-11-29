@@ -11,7 +11,7 @@ procedure LCA_Sujet is
     begin
         Put (To_String (Cle));
         Put (":");
-        Put (Integer'Image(Donnee));
+        Put (Integer'Image (Donnee));
         Put_Line (",");
     end Afficher_Cellule;
 
@@ -20,5 +20,6 @@ begin
     Initialiser (dict);
     Enregistrer (dict, To_Unbounded_String ("un"), 1);
     Enregistrer (dict, To_Unbounded_String ("deux"), 2);
-    Afficher(dict);
+    Afficher (dict);
+    Vider (dict);
 end LCA_Sujet;

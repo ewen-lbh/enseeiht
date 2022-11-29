@@ -41,7 +41,7 @@ Indiquer ici les résultats obtenus.
 
 ## Qualité du générateur aléatoire
 
-Indiquer les conclusions quant é la qualité du générateur aléatoire.
+Indiquer les conclusions quant à la qualité du générateur aléatoire.
 
 ...
 

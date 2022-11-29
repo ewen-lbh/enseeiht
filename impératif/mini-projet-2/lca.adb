@@ -19,7 +19,7 @@ package body LCA is
 
     function Taille (Sda : in T_LCA) return Integer is
     begin
-        if Est_Vide (Sda) then
+        if Sda = null then
             return 0;
         else
             return Taille (Sda.Suivante) + 1;
@@ -31,7 +31,7 @@ package body LCA is
     is
         nouvel_enregistrement : T_Cellule;
     begin
-        if Est_Vide (Sda) then
+        if Sda = null then
             Sda :=
                new T_Cellule'(Cle => Cle, Donnee => Donnee, Suivante => null);
         elsif Sda.Cle = Cle then
@@ -58,7 +58,7 @@ package body LCA is
 
     function Cle_Presente (Sda : in T_LCA; Cle : in T_Cle) return Boolean is
     begin
-        if Est_Vide (Sda) then
+        if Sda = null then
             return False;
         elsif Sda.Cle = Cle then
             return True;
@@ -69,10 +69,10 @@ package body LCA is
 
     function La_Donnee (Sda : in T_LCA; Cle : in T_Cle) return T_Donnee is
     begin
-        if Est_Vide (Sda) then
+        if Sda = null then
             raise Cle_Absente_Exception;
-        else 
-            Null;
+        else
+            null;
         end if;
 
         if Sda.Cle = Cle then
@@ -84,15 +84,11 @@ package body LCA is
 
     procedure Supprimer (Sda : in out T_LCA; Cle : in T_Cle) is
     begin
-        if Est_Vide (Sda) then
+        if Sda = null then
             raise Cle_Absente_Exception;
         elsif Sda.Cle = Cle then
-            if Est_Vide (Sda.Suivante) then
-                Sda := null;
-            else
-                Sda := Sda.Suivante;
-            end if;
-        elsif Est_Vide (Sda.Suivante) then
+            Sda := Sda.Suivante;
+        elsif Sda.Suivante = null then
             if Sda.Cle = Cle then
                 Sda := null;
             else
@@ -107,12 +103,17 @@ package body LCA is
 
     procedure Vider (Sda : in out T_LCA) is
     begin
-        Free (Sda);
+        if Sda.Suivante = null then
+            Free (Sda);
+            Sda := null;
+        else
+            Vider (Sda.Suivante);
+        end if;
     end Vider;
 
     procedure Pour_Chaque (Sda : in T_LCA) is
     begin
-        if Est_Vide (Sda) then
+        if Sda = null then
             null;
         else
             Traiter (Sda.Cle, Sda.Donnee);
