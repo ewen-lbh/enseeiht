@@ -29,7 +29,6 @@ package body LCA is
     procedure Enregistrer
        (Sda : in out T_LCA; Cle : in T_Cle; Donnee : in T_Donnee)
     is
-        nouvel_enregistrement : T_Cellule;
     begin
         if Sda = null then
             Sda :=
@@ -103,12 +102,12 @@ package body LCA is
 
     procedure Vider (Sda : in out T_LCA) is
     begin
-        if Sda.Suivante = null then
-            Free (Sda);
-            Sda := null;
-        else
+        if Sda /= null then
             Vider (Sda.Suivante);
+        else
+            null;
         end if;
+        Free (Sda);
     end Vider;
 
     procedure Pour_Chaque (Sda : in T_LCA) is
