@@ -1,0 +1,50 @@
+close all;
+clear all;
+
+f0 = 1100;
+Fe_1 = 10000;
+Te = 1/Fe_1;
+N = 90;
+t_1 = 0:Te:(N-1)*Te;
+
+x_1 = cos(2*pi*f0*t_1);
+
+% figure; 
+% plot(t, x_1);
+% xlabel("frequency"); ylabel("amplitude");
+
+Fe_2 = 1000;
+Te = 1/Fe_2;
+t_2 = 0:Te:(N-1)*Te;
+x_2 = cos(2*pi*f0*t_2);
+% figure; plot(t, x_2);
+
+% freq = 1.0976e+3 erreur car non respect critère de Shanon
+
+figure(1)
+X_1 = fftshift(fft(x_1));
+semilogy(linspace(-Fe_1/2, Fe_1/2, N), abs(X_1));
+title("FFT(x_1)")
+hold on
+N_0pad = 2^nextpow2(length(X_1));
+X_1_0pad = fftshift(fft(x_1, N_0pad));
+semilogy(linspace(-Fe_1/2, Fe_1/2, N_0pad), abs(X_1_0pad))
+
+figure(2)
+X_2 = fftshift(fft(x_2));
+semilogy(linspace(-Fe_1/2, Fe_1/2, N), abs(X_2));
+title("FFT(x_2)")
+
+figure(3)
+R_x = 1/N*conv(x_1, conj(flip(x_1)));
+N_0pad = 2^nextpow2(length(R_x));
+correlogramme = abs(fft(R_x, N_0pad));
+N_0pad = 2^nextpow2(length(correlogramme));
+periodogramme = 1/N*abs(fft(x_1, N_0pad)).^2;
+DSP_x = pwelch(x_1, [], [], [], Fe_1, "twosided");
+semilogy(linspace(-Fe_1/2, Fe_1/2, length(periodogramme)), fftshift(periodogramme), "k")
+hold on
+semilogy(linspace(-Fe_1/2, Fe_1/2, length(correlogramme)), fftshift(periodogramme), "b")
+hold on
+semilogy(linspace(-Fe_1/2, Fe_1/2, length(DSP_x)), fftshift(DSP_x), "r")
+
