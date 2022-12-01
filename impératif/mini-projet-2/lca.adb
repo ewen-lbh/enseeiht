@@ -29,30 +29,21 @@ package body LCA is
     procedure Enregistrer
        (Sda : in out T_LCA; Cle : in T_Cle; Donnee : in T_Donnee)
     is
+        sda_old: T_LCA;
     begin
+        sda_old := Sda;
         if Sda = null then
             Sda :=
                new T_Cellule'(Cle => Cle, Donnee => Donnee, Suivante => null);
-        elsif Sda.Cle = Cle then
+            Free (sda_old);
+        elsif Sda.all.Cle = Cle then
             Sda :=
                new T_Cellule'
-                  (Cle => Cle, Donnee => Donnee, Suivante => Sda.Suivante);
+                  (Cle => Cle, Donnee => Donnee, Suivante => Sda.all.Suivante);
+            Free(sda_old);
         else
-            Enregistrer (Sda.Suivante, Cle, Donnee);
+            Enregistrer (Sda.all.Suivante, Cle, Donnee);
         end if;
-        --  elsif Est_Vide (Sda.Suivante) then
-        --      if Sda.Cle = Cle then
-        --          Sda := new T_Cellule'(Cle => Cle, Donnee => Donnee, Suivante => Sda.Suivante);
-        --      else
-        --          Sda.Suivante :=
-        --      end if;
-        --      Sda.Suivante := new T_Cellule;
-        --      Initialiser (Sda.Suivante);
-        --      Sda.Suivante :=
-        --         new T_Cellule'(Cle => Cle, Donnee => Donnee, Suivante => null);
-        --  else
-        --      Enregistrer (Sda.Suivante, Cle, Donnee);
-        --  end if;
     end Enregistrer;
 
     function Cle_Presente (Sda : in T_LCA; Cle : in T_Cle) return Boolean is
@@ -75,29 +66,30 @@ package body LCA is
         end if;
 
         if Sda.Cle = Cle then
-            return Sda.Donnee;
+            return Sda.all.Donnee;
         else
             return La_Donnee (Sda.Suivante, Cle);
         end if;
     end La_Donnee;
 
     procedure Supprimer (Sda : in out T_LCA; Cle : in T_Cle) is
+        old_sda: T_LCA;
+        tmp: T_LCA;
     begin
-        if Sda = null then
+        old_sda := Sda;
+        if not Cle_Presente(Sda, Cle) then
             raise Cle_Absente_Exception;
-        elsif Sda.Cle = Cle then
-            Sda := Sda.Suivante;
-        elsif Sda.Suivante = null then
-            if Sda.Cle = Cle then
-                Sda := null;
-            else
-                raise Cle_Absente_Exception;
+        elsif Sda.all.Cle = Cle then
+            Sda := Sda.all.Suivante;
+            Free(old_sda);
+        else 
+            while old_sda.all.Suivante.all.Cle /= Cle loop
+                old_sda := old_sda.all.Suivante;
+            end loop;
+            tmp := old_sda.all.Suivante.all.Suivante;
+            Free(old_sda.all.Suivante);
+            old_sda.all.Suivante := tmp;
             end if;
-        elsif Sda.Suivante.Cle = Cle then
-            Sda.Suivante := Sda.Suivante.Suivante;
-        else
-            Supprimer (Sda.Suivante, Cle);
-        end if;
     end Supprimer;
 
     procedure Vider (Sda : in out T_LCA) is

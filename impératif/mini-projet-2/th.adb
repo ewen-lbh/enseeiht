@@ -5,13 +5,22 @@ with Ada.Unchecked_Deallocation;
 package body TH is
 
     procedure Initialiser (Th : out T_TH) is
+
     begin
-        null;
+        for i in Th'Range loop
+            TH_LCA.Initialiser (Sda => Th (i));
+        end loop;
     end Initialiser;
 
     function Est_Vide (Th : T_TH) return Boolean is
+        vide : Boolean := True;
     begin
-        return Th'Length = 0;
+        for i in Th'Range loop
+            if not TH_LCA.Est_Vide (Th (i)) then
+                vide := False;
+            end if;
+        end loop;
+        return vide;
     end Est_Vide;
 
     function Taille (Th : in T_TH) return Integer is

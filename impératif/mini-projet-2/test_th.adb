@@ -393,5 +393,4 @@ begin
 	Tester_Pour_chaque_Somme_Len4_Erreur;
 	Put_Line("OK: Pour_chaque_Somme_Len4_Erreur");
 	Put_Line ("Fin des tests : OK.");
-	Vider(Annuaie)
 end Test_TH;
