@@ -14,7 +14,7 @@ procedure Test_TH is
     end Hash;
 
 	package TH_String_Integer is
-		new TH (T_Cle => Unbounded_String, T_Donnee => Integer, Borne => 40, Hash => Hash);
+		new TH (T_Cle => Unbounded_String, T_Donnee => Integer, Borne => 11, Hash => Hash);
 	use TH_String_Integer;
 
 
