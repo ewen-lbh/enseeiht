@@ -18,9 +18,6 @@ pandoc --toc -N -o LISEZ-MOI.pdf LISEZ-MOI.txt
 
 ## Question 1.4
 
-**Indiquer les inconvénients/avantages d'une implantation par listes chaînées
-d'une SDA.**
-
 ### Inconvénients
 
 - `La_Donnee`, `Enregistrer`, `Cle_Presente` sont en `O(taille)`
@@ -34,41 +31,21 @@ d'une SDA.**
 
 ## Performance comparée de LCA et TH
 
-Indiquer ici les résultats obtenus.
 
-...
 
 
 ## Qualité du générateur aléatoire
 
-Indiquer les conclusions quant à la qualité du générateur aléatoire.
-
-...
-
-
+Le générateur aléatoire
 
 # Principales difficultés rencontrées
 
-Indiquer ici les principales difficultés rencontrées lors de la réalisation de
-ce projet et comment elles ont été surmontées ou contournées.
-
-...
-
+La remontée à la cause de leaks trouvées par valgrind a été plutôt complexe. L'utilisation du flag `--leak-check` à `full` m'a aidé à trouver la ligne en cause.
 
 
 # Informations complémentaires
 
-Indiquer ici les informations qui pourraient aider à la compréhension du
-travail réalisé.
-
-Cette partie peut être vide.
-
-...
-
-
 
 # Bilan personnel
 
-Quel bilan personnel tirez vous de ce mini-projet ?
-
-...
+La gestion manuelle de la mémoire à travers des appels à `Free` et à des détecteurs de _leak_s est pour moi une expérience nouvelle et enrichissante.

@@ -14,7 +14,7 @@ procedure Test_TH is
     end Hash;
 
 	package TH_String_Integer is
-		new TH (T_Cle => Unbounded_String, T_Donnee => Integer, Borne => 40, Hash => Hash);
+		new TH (T_Cle => Unbounded_String, T_Donnee => Integer, Borne => 11, Hash => Hash);
 	use TH_String_Integer;
 
 
@@ -393,5 +393,4 @@ begin
 	Tester_Pour_chaque_Somme_Len4_Erreur;
 	Put_Line("OK: Pour_chaque_Somme_Len4_Erreur");
 	Put_Line ("Fin des tests : OK.");
-	Vider(Annuaie)
 end Test_TH;
