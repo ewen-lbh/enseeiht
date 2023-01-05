@@ -38,19 +38,26 @@ title("Densité spectrale de puissance")
 
 hold on;
 
+% Attention, la définition Matlab de sinc prend déjà en compte pi. Voir section "More about" de https://fr.mathworks.com/help/signal/ref/sinc.html
+% De plus la fonction dirac de matlab est la fonction 'continue' (donc vaut inf en 0), il ne faut donc pas l'utiliser de cette façon.
+% Pour dirac tu peux faire quelque chose comme :
+% dsp2(find(f==0)) = dsp2(find(f==0)) + 1
+% ce qui change uniquement la valeur de dsp2 où f==0
 dsp2=0.25*Ts*(sinc(pi*f*Ts).^2)+0.25*dirac(f);
 semilogy(f, dsp2, 'r')
 legend("Pratique", "Théorique")
 
 % 3.2.1
 nexttile(layout)
-
+% t est mal défini : Tu commences à 1s, et tu termines à Nbits*Ts=100*0.003333=0.3333 secondes
+% Il faut changer les bornes du linspace (attention à bien avoir des points
+% tous les Te) ou alors définir simplement t comme t=0:Te:(Nbits*Ns-1)*Te
 t = linspace(1, Nbits*Ts, Nbits*Ns);
 size(t)
 size(nrz)
 frequence_0 = 6000; % 1180;
 frequence_1 = 2000; % 980;
-module = nrz .* cos(2*pi.*frequence_1.*t+phi1) + (1-nrz) .* cos(2*pi.*frequence_0.*t+phi0);
+module = nrz .* cos(2*pi*frequence_1*t+phi1) + (1-nrz) .* cos(2*pi*frequence_0*t+phi0);
 size(module)
 
 % 3.2.2
@@ -66,6 +73,8 @@ nexttile(layout)
 
 dsp4=abs(fft(module)).^2;
 f=linspace(-Fe/2, Fe/2, length(dsp4));
+% Attention, fft calcule la transformée de Fourier entre 0 et Fe, 
+% pas -Fe/2 et Fe/2
 semilogy(f, dsp4)
 xlabel("Fréquence [Hz]")
 ylabel("Amplitude")
@@ -77,6 +86,8 @@ hold on;
 % 3.2.4
 dsp3=pwelch(module, [], [], [], Fe, 'twosided');
 f=linspace(-Fe/2, Fe/2, length(dsp3));
+% Attention, welch calcule la transformée de Fourier entre 0 et Fe, 
+% pas -Fe/2 et Fe/2
 semilogy(f, dsp3)
 legend("Théorique", "Expérimentale")
 
@@ -97,6 +108,10 @@ f = linspace(-Fe/2, Fe/2, length(module_bruite));
 ordre_2 = 61
 t_ordre_2 = -(ordre_2 - 1) / 2 * Te : Te : (ordre_2 - 1)/2 * Te
 fc = (frequence_0 + frequence_1) / 2
+% Attention, h doit être exprimé en fréquences normalisées
+% A l'intérieur du sinc c'est bon car tu fais apparaitre Te=1/Fe dans t_ordre_2
+% Mais pour le module de h ce n'est pas bon (d'ailleurs h est sensé être
+% adimensionnel et dans ton cas il est exprimé en Hz)
 h = 2 * fc * sinc(2 * fc * t_ordre_2)
 H = fft(h, 4096)
 
