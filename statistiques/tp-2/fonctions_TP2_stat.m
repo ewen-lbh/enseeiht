@@ -129,11 +129,15 @@ function [a_Dyx,b_Dyx] = estimation_Dyx_MCP(x_donnees_bruitees,y_donnees_bruitee
     % on veut AX = B
     % avec X = [a_k b_k], A matrice qui donne AX = Pi(ak xi + bk) et B vecteur des Pi yi
     % et apres X = B\A
-    A = [ P_i*x_i Pi ]
-    B = [ P_i*y_i ]
+    % A = [ P_i*x_i Pi ]
+    % B = [ P_i*y_i ]
 
-    X = B\A
-    
+    A = [probas_classe .* x_donnees_bruitees, probas_classe];
+    B = probas_classe .* y_donnees_bruitees;
+
+    X = B\A;
+    a_Dyx = X(1);
+    b_Dyx = X(2);
 end
 
 % Fonction iteration_estimation_Dyx_EM (exercice_4.m) ---------------------
@@ -142,5 +146,5 @@ function [probas_classe_1,proportion_1,a_1,b_1,probas_classe_2,proportion_2,a_2,
          proportion_1,a_1,b_1,proportion_2,a_2,b_2)
 
 
-
+        
 end
