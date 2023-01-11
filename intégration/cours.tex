@@ -1,0 +1,245 @@
+%! TEX root = cours.tex
+\documentclass{article}
+\usepackage{cancel}
+\usepackage{amsmath, amssymb, amsfonts}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\dx}{\mathrm{d}x}
+
+\begin{document}
+	\section{Produit d'une distribution et d'une fonction}
+
+	\begin{align*}
+		\left<T_{f'}, \phi \right> &= \int_\R f'(x) \phi(x) \dx \\
+					   &= \cancel{\left[ f(x) \phi(x) \right]_{-\infty}^\infty} - \int_\R f(x) \phi'(x) \dx \\
+					   &= -\left<T_f, \underbrace{\phi'}_{\in \mathcal{D}(\R)} \right>\\
+	\end{align*}
+
+	On a $T \in \mathcal{D}'(\R)$
+
+	\begin{align*}
+		\left<T', \phi \right> &=  -\left<T, \phi' \right> \\
+		\text{donc}\quad \left<T'', \phi \right> &= \left<T, \phi'' \right> \\
+		\text{par récurrence ok}
+	\end{align*}
+
+	Donc \emph{une distribution est toujours $\infty$-ment dérivable} 
+
+	\subsection{Exemples}
+	\begin{description}
+		\item[Distribution constante] 
+			On prend $f = x\mapsto c$ avec $c \in \R$.
+
+			\begin{align*}
+				\forall \phi, \left<T_f', \phi \right> &= -\left<T_f, \phi' \right> \\
+				&= -c \int_\R \phi' \\
+				&= -c [\phi]_{-\infty}^\infty \\
+				&= 0 \\
+			\text{donc } T_f' &= 0 \\
+			\end{align*}
+		\item[Heavyside] 
+			On prend $h = \mathbb{1}_{\R^+}$
+			% TODO inclure figure 
+			\begin{align*}
+				\left<T_h', \phi \right> &=  - \left<T_f, \phi' \right>\\
+				&= -\int_{\R} h \cdot \phi' \\
+				&= -\int_0^\infty \phi' \\
+				&= -[\phi]_0^\infty \\
+				&=  -(-\phi(0))\\
+				&= \left<\delta, \phi \right> \forall \phi \\
+			\implies T_h' &= \delta \\
+			\end{align*}
+	\end{description}
+
+	\section{Lien distribution de la dérivée et dérivée de la distribution}
+	
+	\begin{theorem}
+		Avec $f\in \mathcal{C}^1(\R)$, on a 
+		\[
+			T_f' = T_{f'}
+		\] 
+		
+		Avec $f\in L_{\text{loc}}^1(\R)$ telle que 
+		\begin{itemize}
+			\item $\exists (a_n)_{n\in \Z} \in \R^\Z, f \in \mathcal{C}^1(]a_n, a_{n+1}[) \forall n\in \Z$
+			\item $\forall n \in \Z, f(a_n^+) - f(a_n^-) < \infty$ (discontinuités d'amplitude finie)
+		\end{itemize}
+
+		Alors
+
+		\[
+			T_f' = F_{f'} + \sum_{n\in \Z} (f(a_n^+) - f(a_n^-)) \delta_{a_n}
+		\] 
+	\end{theorem}
+
+	\begin{proof}
+		\begin{align*}
+		\left<T_f', \phi \right> &= -\left<T_f, \phi \right> \\
+		&= - \int_{\R} f \cdot \phi'\\
+		&= -\int_{-\infty}^a f\phi' - \int_a^{+\infty} f\phi' \\
+		&= -[f\phi]_{-\infty}^a + \int_{-\infty}^a f'\phi - [f\phi]_a^{+\infty} + \int_a^{+\infty} f'\phi \\
+		&= -f(a^-) \phi(a) - (-f(a^+) \phi(a)) + \int_\R f' \phi \\
+		&= T_{f'} + (\underbrace{f(a^-) - f(a^+)}_{\text{amplitude de la discontinuité en $a$: $\sigma_a$}}) \delta_a \\
+		\end{align*}
+	\end{proof}
+
+	\begin{definition}[Convergence dans $\mathcal{D}'(\R)$]
+		\begin{align*}
+			\forall \phi\in \mathcal{D}(\R), \left<T_n, \phi \right> \xrightarrow[n\to +\infty]{} \left<T, \phi \right>
+		\end{align*}
+	\end{definition}
+
+	\subsection{Exemples}
+
+	\begin{description}
+		\item[$f_n(x) = n \mathbb{1}_{[-\frac{1}{2n}, \frac{1}{2n}]}(a)$] 
+
+			On prend $\phi\in \mathcal{D}(\R)$.
+		\begin{align*}
+			|\left<T_{f_n}, \phi \right> - \left<\delta, \phi \right>| &= \left|\int_\R f_n  \cdot \phi - \left( \underbrace{\int_\R f}_{1} \right) \phi(0)\right| \\
+			&= \left|\int_\R f_n(x) (\phi(x) - \phi(0)) \dx \right|\\
+			&\le n \int_{-\frac{1}{2n}}^{\frac{1}{2n}} | \phi(x) - \phi(0)| \dx\\
+		\end{align*}
+
+		Or \[
+			\left| \frac{\phi(x) - \phi(0)}{x-0} \right| \le  M \quad \text{ pour } |x| \le \varepsilon
+		\] 
+
+		Donc \begin{align*}
+			n \int_{-\frac{1}{2n}}^{\frac{1}{2n}} | \phi(x) - \phi(0)| \dx &\le n \int_{-\frac{1}{2n}}^{\frac{1}{2n}} M|x| \dx \\
+										       &\le \frac{M}{4n} \\
+										       &\xrightarrow[n\to \infty]{} 0
+		\end{align*}
+
+		Enfin:
+
+		\[
+			T_{f_n} \xrightarrow[n \to \infty]{\mathcal{D}'} \delta
+
+			
+		\] 
+
+		\item[Somme de diracs] 
+			% TODO figure
+			Soit $f\in L^1(\R)$ tel que $\int_\R f = 1$
+
+			Soit $f_n(x) = nf(nx)$ 
+
+			\begin{align*}
+				\int_\R f_n &= \int_{\R} nf(nx) \phi(x) \dx \\
+					    &= \int_\R \underbrace{f(y) \phi(\frac{y}{n})}_{g_n(y)} \mathrm{d}y \\
+			\end{align*}
+
+			On fait une convergence dominée:
+
+			\begin{itemize}
+				\item $g_n(y) \xrightarrow[n\to \infty]{} f(y) \phi(0)$ 
+				\item $|g_n(y)| < \underbrace{\|\phi\|_{\infty} |f(y)|}_{\in L'(\R)}$ 
+			\end{itemize}
+
+			\begin{align*}
+				\left<T_{f_n}, \phi\right> &\xrightarrow[n\to \infty]{} \int_\R f(y) \phi(0) \mathrm{d}y \\
+				&= \phi(0) \\
+				&= \left<\delta, \phi \right> \\
+			\end{align*}
+
+			Donc \begin{align*}
+				T_{f_n} \xrightarrow[n\to \infty]{\mathcal{D}'} \delta
+			\end{align*}
+
+		\item[] 
+			\begin{align*}
+				\left<T_{f_n}, \phi \right> &= \int_\R \sin(2 \pi x) \phi(x) \dx \\
+							    &= -\operatorname{Im} \hat{\phi} (x) \\
+							    &\xrightarrow[n\to \infty]{\mathcal{D}'} 0
+			\end{align*}
+
+			\begin{theorem}[Convergence dans $L^p(\R)$ et dans $\mathcal{D}'(\R)$]
+				Soit $(f_n)_{n\in \N}$ une suite de fonctions qui converge vers $f$ dans $L^p(\R)$.
+
+				Alors 
+
+				\[
+					T_{f_n} \xrightarrow[n\to \infty]{\mathcal{D}'(\R)} T_f
+				\] 
+				
+			\end{theorem}
+
+			\begin{proof}
+				Pour $p=2$
+				\begin{align*}
+					\left| \left<T_{f_n}, \phi \right> - \left<T_f, \phi \right>\right| &= \left| \int_{\R} f_n(x) \phi(x) \dx - \int_\R f(x) \phi(x) \dx \right| \\
+													    &\le \int_\R |f_n(x) - f(x)| |\phi(x)| \dx \\
+													    &\le \|f_n - f\|_{L^2} \|\phi\|_{L^2} \quad&\text{Cauchy-Schwarz}
+													    &\xrightarrow[n\to \infty]{} 0
+				\end{align*}
+
+				Pour $p$ quelconque
+
+				Soit $p$ tel que $\frac{1}{p} + \frac{1}{q} = 1$
+
+				On a la majoration par  \[
+					\underbrace{\|f_n - f\|_{L^p}}_{\xrightarrow[n\to \infty]{} 0} \|\phi\|_{L^q}
+				\] 
+
+			\end{proof}
+
+			\begin{theorem}[Convergence ponctuelle et dans $\mathcal{D}'(\R)$]
+				Soit $(f_n)_{n\in \N}$ une suite de fonctions qui converge simplement vers $f$, i.e. $f_n(x) \xrightarrow[n\to \infty]{} f(x) \text{p.p.}$
+
+				Si 
+
+				\[
+					\exists g\in L_{\text{loc}}^1(\R), \forall n, |f_n(x)| \le g(x) \text{p.p.}
+				\] 
+
+				Alors
+
+				\[
+					T_{f_n} \xrightarrow[n\to \infty]{\mathcal{D}'(\R)} T_f
+				\] 
+				
+			\end{theorem}
+
+			\begin{proof}
+				On a 
+
+				\begin{align*}
+					\left<T_{f_n}, \phi \right> &= \int_{\R} \underbrace{f_n(x) \phi(x)}_{g_n(x)} \dx \\
+				\end{align*}
+
+				Avec 
+				\begin{itemize}
+					\item $g_n(x) \xrightarrow[n\to \infty]{} f(x)\phi(x)$
+					\item $ |g_n(x)| &\le g(x) |\phi(x)| \in L'$
+				\end{itemize}
+
+				\begin{align*}
+					\int_\R g(x) |\phi(x)| \dx &= \int_\R g(x) |\phi(x)| \dx \\
+								   &\le \|\phi\|_{\infty} \underbrace{\int_\R g}_{<\infty}
+				\end{align*}
+			\end{proof}
+
+			\section{Convergence des dérivées}
+
+			\begin{theorem}
+				On a 
+				\[
+					T_n \xrightarrow[n\to \infty]{\mathcal{D}'(\R)} T \implies \forall k\in N, T_n^{(k)} \xrightarrow[n\to \infty]{\mathcal{D}'(\R)} T^{(k)}
+				\] 
+			\end{theorem}
+			
+			
+
+
+
+
+
+	\end{description}
+
+	
+
+	
+	
+\end{document}
+
+
