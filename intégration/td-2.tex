@@ -1,0 +1,183 @@
+\documentclass{article}
+\usepackage{cancel}
+\usepackage{xcolor}
+\usepackage{amsmath, amsfonts}
+\usepackage[bb=dsserif, bbscaled=1.25]{mathalpha}
+\usepackage{tikz}
+\renewcommand{\d}{\mathrm{d}}
+\newcommand{\cF}{\mathcal{F}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\cC}{\mathcal{C}}
+\newcommand{\sinc}{\operatorname{sinc}}
+\newcommand{\id}{\operatorname{id}}
+
+\title{TD 2 Intégration}
+
+\begin{document}
+
+\maketitle
+
+\section{Exercice 2}
+
+On pose $h = \mathbb{1}_{\R^{+}}$ et $h_{\sigma} = \mathbb{1}_{\R^-}$ son symmétrisé
+
+		\begin{center}
+			
+	\begin{tikzpicture}[scale=0.5]
+	\draw[->] (-10, 0) -- (10, 0);
+	\draw[->] (0, -1) -- (0, 10);
+	\draw[green] (-10, 1) -- (0, 1);
+	\draw[green] (0, 5) -- (10, 5) node[above]{$h$};
+	\draw[brown] (-10, 5) -- (0, 5);
+	\draw[brown] (0, 1) -- (10, 1) node[above]{$h_{\sigma}$};
+\end{tikzpicture}
+		\end{center}
+
+\begin{enumerate}
+	\item 
+
+		\begin{align*}
+			\forall \phi, \left<T_h', \phi \right> &= - \left<T_h, \phi' \right> \\
+			&= - \int_{\R} h  \cdot \phi' \\
+			&= - \int_{\R^{+}} \phi' \\
+			&= -(0 - \phi(0)) \quad&\text{$\phi(+\infty) = 0$ car $\phi$ est à support compact} \\
+			&= \phi(0) \\
+			&= \left<\delta, \phi \right> \\
+		\end{align*}
+
+		Donc $T_{h}' = \delta$ (par abus de notation: $h' = \delta$).
+
+		
+		\begin{align*}
+			\forall \phi, \left<T_{h_\sigma}', \phi \right> &= - \left<T_{h_\sigma}, \phi' \right> \\
+			&= - \int_{\R} h_\sigma  \cdot \phi' \\
+			&= - \int_{\R^{-}} \phi' \\
+			&= -(\phi(0) - 0) \quad&\text{$\phi(-\infty) = 0$ car $\phi$ est à support compact} \\
+			&= -\phi(0) \\
+			&= \left<-\delta, \phi \right> \\
+		\end{align*}
+
+		Donc $T_{h}' = -\delta$ (par abus de notation: $h' = -\delta$).
+
+		\begin{align*}
+			\forall \phi, \left<T_{| \cdot  |}', \phi \right> &=  - \left<T_{| \cdot |}, \phi' \right> \\
+			&= -\int_\R |x| \phi'(x) \d x \\
+			&= -\int_{-\infty}^0 -x \phi'(x) \d x - \int_0^{+\infty} x \phi'(x) \d x \\
+			&= +\left(\cancel{\left[ x \phi(x) \right]}_{x=-\infty}^0 - \int_{\infty}^{0} \phi\right) - \left(\cancel{\left[ x \phi(x) \right]}_{x=0}^{+\infty} - \int_{0}^{+\infty} \phi  \right) \\
+			&= \int_{-\infty}^0 -\phi + \int_0^{+\infty} \phi \\
+			&= \int_{\R} (\underbrace{h - h_\sigma}_{\text{sgn}})  \cdot  \phi \\
+		\end{align*}
+
+		Donc $| \cdot |' = h - h_{\sigma}$
+
+		On aurait pu le dire direct car $| \cdot |$ est $\cC^1$ par morceaux, donc les dérivées des distributions et des fonctions correspondent. 
+
+		Pareil pour $| \cdot |''$: c'est $\cC^1$ par morceaux donc
+
+		\begin{align*}
+			| \cdot |'' &= h' - h_\sigma' \\
+			    &= \delta - (-\delta) \\
+			    &= 2\delta \\
+		\end{align*}
+
+\item	
+	\emph{Si $f \in \cC^{\infty}$ et $T$ un distribution, montrer que l'on a
+	 \[
+		 (fT)' = f' \cdot T + f \cdot T'
+ \] }
+	{\bf On peut pas faire d'intégrale car $T$ n'est pas forcément régulière}
+
+	\begin{align*}
+		\forall \phi, \left<(fT)', \phi \right> &= - \left<fT, \phi' \right> \\
+		&= -\left<T, f\phi' \right> \\
+		&= -\left<T, (f\phi)' - f'\phi \right> \\
+		&= -\left<T, (f\phi)' \right> + \left<T, f'\phi \right> \\
+		&= -\left<T, (f\phi)' - f' \phi \right> \\
+		&= -\left<T, (f\phi)' \right> + \left<T, f'\phi \right> \\
+		&= \left<fT', \phi \right> - \left<f'T, \phi \right> \\
+		&= \left<fT' + f'T, \phi \right> \\
+	\end{align*}
+
+	D'où $(fT)' = fT' + f'T$
+
+\item
+
+	\begin{align*}
+		T' &= | \cdot |' \sin + | \cdot | \sin' \\
+		&= (h - h_\sigma) \sin + | \cdot | \cos \\
+		T'' &= (h-h_\sigma)' \sin + (h-h_\sigma) \sin' + | \cdot |' \cos + | \cdot | \cos' \\
+		    &= 2\underbrace{\delta \sin}_{\underbrace{\sin(0) \delta}_0} + 2(h-h_\sigma) \cos +  | \cdot | \sin \\
+		    &= 2(h-h_\sigma) \cos - | \cdot | \sin \\
+	\end{align*}
+\end{enumerate}
+
+\section{Exercice 3}
+
+\paragraph{ \emph{Démontrer la formule} }
+
+\[
+	x^m \delta^{(n)} = (-1)^m \frac{n!}{(n-m)!} \delta^{(n-m)} \quad m \le n
+\] 
+
+\begin{align*}
+	\forall \phi, \left<\id^m \delta, \phi \right> &= \left<\delta^{(n)}, \id^m \phi \right> \\
+	&= (-1)^n \left< \delta, (\id^m \phi)^{(n)} \right> \\
+	&= (-1)^n (x^m \phi)^{(n)}(0) \\
+	&= (-1)^n \sum_{k=0}^{n} \begin{pmatrix} n \\k \end{pmatrix} (\id^m)^{(k)}(0) \phi^{(n-k)}(0) \\
+	&= (-1)^n n! \begin{pmatrix} n \\n \end{pmatrix} \phi^{(n-m)}(0) \quad&\text{car $(\id^m)^{(k)}(0) = 0$ pour $k \neq  0$} \\
+	&= (-1)^n \frac{n!}{(n-m)!} \left<\delta, \phi^{(n-m)} \right> \\
+	&= (-1)^n \frac{n!}{(n-m)!} (-1)^{n-m} \left<\delta^{(n-m)}, \phi \right> \\
+	\implies CQFD.
+\end{align*}
+
+
+
+\paragraph{\emph{Qu'obtient-on pour $m = n$?}}
+
+On a 
+\[
+	x^n \delta^{(n)} = (-1)^n n! \delta 
+\] 
+
+\begin{remarque}
+	Pour $n=1$:  $\id \delta' = -\delta$
+\end{remarque}
+
+\paragraph{ \emph{En déduire que la distibution $T = c_0 \delta + \cdots + c_{n-1} \delta^{(n-1)}$  pour $(c_i)_i \in \R$ est solution de l'équation $x^n T = 0$ }}
+
+
+\begin{align*}
+	\forall \phi, \left<x^n \delta^{(k)}, \phi \right> &= \left<\delta^{(k)}, x^n \phi \right> \\
+	&=(-1)^k \left<\delta, (x^n \phi)^{(k)} \right> \\
+	&= (-1)^k \sum_{j=0}^{k} \begin{pmatrix} k\\j \end{pmatrix} (x^n)^{(j)}(0) \phi^{(k-j)}(0) \\
+	&=0 \quad \forall k<n \\
+\end{align*}
+
+Or la somme définissant $T$ s'arrête à $k = n - 1 < n$, donc  $x^nT = 0$.
+
+
+\section{Exercice 3}
+
+\begin{remarque}
+	Une fonction périodique 
+
+	\begin{tikzpicture}[scale=0.25]
+		\draw[->] (-20, 0) -- (20, 0);
+		\draw[->] (0, -1) -- (0, 10);
+		\draw (-20, 0) -- (-18, 5);
+		\draw (-18, 5) -- (-12, 5);
+		\draw (-12, 5) -- (-10, 0) node [below]{$T$};
+		\draw (-10, 0) -- (-8, 5);
+		\draw (-8, 5) -- (-2, 5);
+		\draw (-2, 5) -- (0, 0);
+	\end{tikzpicture}
+
+	\begin{align*}
+		x(t) &= \sum_{k=-\infty}^{+\infty} n(t-kT) \\
+		&= \sum_{k=-\infty}^{+\infty} (n \ast \delta_{kT})(t) \\
+	\end{align*}
+\end{remarque}
+
+
+\end{document}
