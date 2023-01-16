@@ -1,0 +1,194 @@
+\documentclass{article}
+\usepackage{amsmath, amsfonts}
+\usepackage[bb=dsserif, bbscaled=1.25]{mathalpha}
+\renewcommand{\d}{\mathrm{d}}
+\newcommand{\cF}{\mathcal{F}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\cC}{\mathcal{C}}
+\newcommand{\sinc}{\operatorname{sinc}}
+\newcommand{\id}{\operatorname{id}}
+
+\title{TD 1 Intégration}
+
+\begin{document}
+
+\maketitle
+
+fkoudohode@laas.fr
+
+\section{Exercice 2}
+
+Dans cet exercice, on calcule la transformée de Fourier de $x(t) = e^{-at^2}$ ($a>0$ ) en résolvant une équation différentielle.
+Vérifier que $X$ est solutionde l'équation différentielle
+\[
+	\frac{\d X}{\d f}(f) = 2 \frac{\pi^2}{a} fX(f)
+\] 
+
+En déduire que 
+\[
+	X(f) = \sqrt{\frac{\pi}{a}} e^{-\pi^2 \frac{f^2}{a}}
+\] 
+	
+
+On rappelle que $\int_{-\infty}^{+\infty} e^{-at^2} \d t = \sqrt{\frac{\pi}{a}} $.
+
+\paragraph{Correction}
+
+Soit $X = \cF(x)$
+
+\begin{align*}
+	X(f)  &= \int_\R x(t) e^{-2i\pi ft} \d t \\
+	&= \int_\R g(f, t) \d t
+\end{align*}
+
+$g \in \cC^1$ et
+
+\begin{itemize}
+	\item $\frac{\partial g}{\partial f}(f, t) = -2i\pi t e^{-at^2} e^{-2i\pi ft}$
+	\item $\left| \frac{\partial g}{\partial f}(f, t) \right| \le  2\pi |f| e^{-af^2}$
+\end{itemize}
+
+$ \frac{\partial g}{\partial f}  $ est absoluement intégrable donc intégrable. D'après le théorème de dérivation de fonction définie par intégration
+
+\begin{align*}
+	X'(f) &= \int_\R \frac{\partial g}{\partial f}(f, t) \d t \\
+	&= -2i\pi \int_\R t e^{-at^2} e^{-2i\pi ft} \d t\\
+	&= (-2i\pi) \int_\R \left( \frac{e^{-at^2}}{-2a} \right) ' e^{-2i\pi tf} \d t \\
+	&= (-2i\pi) \left( \underbrace{\left[ \frac{e^{-at^2}}{-2a} e^{-2i\pi tf} \right]_{-\infty}^{+\infty}}_{0} - \int_\R \frac{e^{-at^2}}{-2a} 2i\pi f e^{-2i\pi ft} \d t \right)  \\
+	&= \frac{(-2i\pi)^2}{2a} f \int_\R e^{-at^2} e^{-2i\pi ft} \d t\\
+	&= - \frac{4\pi^2}{2a} f X(f) \\
+	&= -2 \frac{\pi^2}{a} f X(f) \\
+\end{align*}
+
+On pose $X(f) = K e^{-\int 2 \frac{\pi^2}{a} f \d f} = Ke^{-\frac{\pi^2}{a} f^2}$
+
+Or $X(0) = K$ donc $K = \int_\R e^{-at^2} \d t = \sqrt{\frac{\pi}{a}} $
+
+D'où
+
+\[
+	X(f) = \sqrt{\frac{\pi}{a}}  e^{-\frac{\pi^2}{a} f^2}
+\] 
+
+\section{Exercice 4}
+
+On suppose $f$ solution de 
+\[
+	f'' - 4\pi^2 \id^2 f = 4 \pi f
+\] .
+
+Montrons 
+\[
+	\widehat{f}'' - 4 \pi^2 \id^2 \widehat{f} = 4 \pi \widehat{f}\quad(\ast)
+\] 
+
+Or on sait \[
+	\widehat{f}'' = (-2i \pi \id)^2 \widehat{f} \quad \text{i.e.} \quad \widehat{f} = \frac{1}{-4 \pi^2 \id^2} \widehat{f}''
+\] 
+
+On remplace dans $(\ast)$ et ok.
+
+ \section{Exercice 5}
+
+
+Calculons 
+ \begin{align*}
+	 \widehat{f} = \cF\big[t \mapsto \mathbb{1}_{]-1, 1[}(t) (1 - t^2)\big]
+ \end{align*}
+
+ \begin{align*}
+ 	\widehat{f}(t) &= \int_{-1}^{1} (1-x^2) e^{-2i\pi x t} \d x \\
+		   &= \left[ (1-x^2) \frac{e^{-2i \pi xt}}{-2i \pi t} \right]_{-1}^{1} - \int_{-1}^{1} -2x \left( \frac{e^{-2i \pi t x}}{-2i \pi t}  \right) \d x \quad&\text{IPP} \\
+		   &= \frac{2}{-2i \pi t} \int_{-1}^1 x e^{-2i \pi t x} \d x \\
+		   &= \frac{2}{-2i \pi t} \left( \left[ x \frac{e^{-2i\pi tx}}{-2i \pi t} \right]_{-1}^1 - \int_{-1}^1 \frac{e^{-2i\pi tx}}{-2i\pi t} \d x \right) \quad&\text{IPP} \\
+		   &= \frac{2}{(-2i \pi t)^2} (e^{-2i\pi t} + e^{2i\pi t}) - \frac{2}{(-2i \pi t)^3} (e^{-2i \pi t} - e^{2 i \pi t}) \\
+		   &= \frac{4 \cos(2 \pi t)}{-4 \pi ^2 t^2} + \frac{4i \sin(2 \pi t)}{8i \pi^3 t^3} \quad&\text{Euler} \\
+		   &= - \frac{\cos(2 \pi t)}{\pi^2 t^2} + \frac{\sin(2 \pi t)}{2 \pi^3 t^3} \\
+ \end{align*}
+
+ \begin{align*}
+ 	\int_0^{\infty} \frac{u \cos u - \sin u}{u^3} \cos(ut) \d u \\
+ \end{align*}
+
+\begin{align*}
+	f(t) &= \cF^{-1}(\widehat{f})(t) \\
+	&= \int_\R \widehat{f}(x) e^{2i\pi t x} \d x \\
+	&= \int_\R \underbrace{\frac{-2 \pi t \cos(2 \pi t) + \sin(2 \pi t)}{2 \pi^3 x^3}}_{g(x)} e^{2i \pi t x} \d x \\
+\end{align*}
+
+On a $g$ paire donc la partie imaginaire de l'intégrande est impaire, donc $\int_{\R} g(x) i\sin(2 \pi t x) \d x = 0$ (car l'intervalle $\R$ est symmétrique)
+\paragraph{}
+
+Ainsi:
+
+\begin{align*}
+	f(t) &= \Re \int_\R g(x) \cos(2 \pi t x) \d x \\
+	&= 2 \int_{\R^{+}} g(x) \cos(2 \pi t x) \d x \\
+	&= 2 \int_{\R^{+}} \ldots \d x \\
+	&= -2 \int_{\R^{+}} \frac{u \cos u - \sin u}{u^3 / 4} \cos(ut) \frac{\d u}{2 \pi  } \quad&u = 2 \pi x \\
+	&= -\frac{8}{2\pi} \int_0^{\infty} \frac{u \cos u - \sin u}{u ^3} \cos(ut) \d u \\
+\end{align*}
+
+Donc 
+\[
+	\int_0^{\infty} \frac{u \cos u - \sin u}{u^3} \cos(ut) \d u = -\frac{\pi}{4} f(t)
+\] 
+
+
+\section{Exercice 6}
+
+Montrons
+\[
+	\int_\R \sinc ^3(t) = \frac{3\pi}{4}
+\] 
+
+On pose $f = \mathbb{1}_{[-a, a]}$.
+
+On a 
+\begin{align*}
+	\widehat{f}(x) &= \int_{-a}^{a} f(x) e^{-2i \pi x t} \d t \\
+		   &= \left[ \frac{e^{-2i \pi t x}}{- 2 i \pi x} \right]_{-a}^a \\
+		   &= \quad \ldots \\
+		   &= \frac{\sin(2 \pi a x)}{\pi x} \quad&a = \frac{1}{\sqrt{\pi} } \\
+		\iff \pi \widehat{f}(x) &= \sinc(x) \in L^1 \\
+\end{align*}
+
+\begin{align*}
+	g(x) &= (1 - \frac{2}{A}|x|) \mathbb{1}_{[-\frac{A}{2}, \frac{A}{2}]} \\
+	\widehat{g}(x) &= \frac{\sin^2(\pi t \frac{A}{2})}{A \pi^2 t^2} \quad& A = \frac{2}{\pi} \\
+	&= \frac{\sin^2 t}{\pi t^2} \\
+	\iff \widehat{\pi g}(x) = \frac{\sin^2 t}{t^2} \in L^2
+\end{align*}
+
+\begin{align*}
+	\int_\R \sinc ^3 &= \int_\R \sinc(t) \sinc^2(t) \d t \\
+		 &= \int_\R \widehat{(\pi \mathbb{1}_{[ - \frac{1}{2\pi}, \frac{1}{2\pi}]})} \widehat{\left( \pi (1 - \pi |x|) \mathbb{1}_{[-\frac{1}{\pi}, \frac{1}{\pi}]} \right) }(x) \d x \\
+		 &= \int_{-\frac{1}{2\pi}}^{\frac{1}{2\pi}} \pi^2(1 - \pi |x|)\d x \\
+		 &= \int_{-\frac{1}{2\pi}}^{\frac{1}{2\pi}} \pi^2 \d x - 2 \pi ^3 \int_0^{\frac{1}{2\pi}} x \d x \\
+		 &= \pi^2 \frac{1}{\pi} - 2 \pi^3 \left[ \frac{x^2}{2} \right]_0^{\frac{1}{2\pi}} \\
+		 &= \pi - 2\pi^3 \left( \frac{\frac{1}{(2 \pi)^2}}{2} \right)  \\
+		 &= \pi - \pi^3 \frac{1}{4 \pi ^2} \\
+		 &= \pi - \frac{\pi}{4} \\
+		 &=  \frac{3\pi}{4} \\
+\end{align*}
+
+
+\section{Exercice 9}
+
+\[
+	h(t) = e^{-\lambda t} \mathbb{1}_{\R^+}(t) \quad \lambda > 0
+\] 
+
+\begin{align*}
+	\hat{h}(x) &= \int_0^{+\infty} e^{-\lambda t} e^{-2i\pi t x} \d t \\
+	&= \int_{0}^{+\infty} e^{-t(\lambda + 2i \pi x)} \d t \\
+	&=  \int_0^{+\infty} e^{-t(\lambda + 2i \pi x)} \d t \\
+	&= \left[ \frac{e^{-t(\lambda + 2i \pi x)}}{-(\lambda + 2 \pi ix)} \right]_0^{\infty} \\
+	&= \frac{1}{\lambda + 2\pi i x} \\
+\end{align*}
+
+
+
+
+\end{document}
