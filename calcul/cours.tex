@@ -1,0 +1,260 @@
+%! TEX root=cours.tex
+\documentclass{article}
+\usepackage{cancel}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{stmaryrd}
+\usepackage{import}
+\usepackage{pdfpages}
+\usepackage{transparent}
+\usepackage{xcolor}
+\newcommand{\mult}{\operatorname{mult}} 
+\newcommand{\trivial}{$\mathbb{TRIVIAL}$} 
+\newcommand{\Sp}{\operatorname{Sp}} 
+\newcommand{\image}{\operatorname{im}} 
+\newcommand{\rg}{\operatorname{rg}} 
+\newcommand{\dim}{\operatorname{dim}} 
+\newcommand{\cM}{\mathcal{M}}
+\newcommand{\cT}{\mathcal{T}}
+\newcommand{\cF}{\mathcal{F}}
+\newcommand{\cO}{\mathcal{O}}
+\newcommand{\cE}{\mathcal{E}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\dx}{\mathrm{d}x}
+\newcommand{\dy}{\mathrm{d}y}
+\newcommand{\dz}{\mathrm{d}z}
+\newcommand{\dt}{\mathrm{d}t}
+\newcommand{\df}{\mathrm{d}f}
+
+
+\newenvironment{theorem}[1][\unskip]{
+	\paragraph{Théorème #1}
+
+}{}
+
+\newenvironment{proof}[1][\unskip]{
+	\def\temp{#1}\ifx\temp\empty
+		\paragraph{Preuve}
+	\else
+		\paragraph{Preuve \emph{(#1)}}
+	\fi
+
+}{}
+
+\newenvironment{definition}[1][\unskip]{
+	\paragraph{Définition: #1}
+
+}{}
+
+\begin{document}
+\section{Rappels d'algèbre linéaire}
+
+\begin{description}
+	\item[Matrice de permutation] \begin{align*}
+		P_\sigma := \left(\sum_{j=1}^{n} E_{\sigma(i),j}\right)_i
+	\end{align*} avec $E_{i, j}$ la matrice élémentaire $(i, j)$.
+\end{description}
+
+\begin{theorem}[de Schur]
+	$\forall  A \in \cM_n(\C), \exists U \in \cM_n(\C), \underbrace{U^\ast = U^{-1}}_{\text{unitaire}} \land U^\ast AU \in \cT_{n, s}(\C)$
+\end{theorem}
+
+\subsection{Méthodes itératives}
+
+\paragraph{Principe}
+
+On cherche une suite $x^{(p)}$ de $\R^{n}$ convergeant vers la solution de $Ax = b$:
+
+\begin{align*}
+	\forall x^{(0)}\quad x^{(p+1)} = H(x^{(p)})
+\end{align*}
+
+\paragraph{Propriétés}
+
+\begin{itemize}
+	\item $A$ n'est jamais modifiée
+	\item Problème du suivi de la convergence et du choix du test d'arrêt
+	\item Solution obtenue inexacte
+	\item Matrice doit vérifier conditions de convergence
+	\item Vitesse de convergence dépend de la matrice
+\end{itemize}
+
+\section{Décomposition en valeurs singulières}
+
+\paragraph{Objectif}
+Soit $A \in \cM_{n}(\R)$, $n \ge 1$.
+
+On pose $
+	A = U \Sigma V^\top
+$  avec $\begin{cases}
+U \in \cO_n(\R) \\
+V \in \cO_n(\R) \\
+\Sigma \in \cM_n(\R)
+\end{cases}$
+
+On a 
+
+\[
+	\Sigma = \begin{pmatrix} \sigma_i & 0 & \cdots & | & 0 & \cdots & 0 \\ 0 & \sigma_i & \cdots & | & 0 & \cdots & 0 \\ 0 & 0 & \ddots & | & 0 & \cdots  & 0 \\ \hline 0  & 0  & \cdots 0 & | & 0 & \cdots & 0 \\ 0  & 0 & \cdots 0 & | & 0 & \cdots & 0\end{pmatrix} 
+\] 
+
+
+\subsection{SVD d'une matrice}
+
+\paragraph{SVD} Singular value decomposition
+
+Soit $A \in \cM_n(\R)$ telle que $\operatornam{rg}A \ge  1$
+
+
+\subsubsection{Propriétés}
+
+\begin{enumerate}
+	\item $A$ est symétrique réelle semi-définie-positive i.e. $\forall x \in \R^n,\ x^\top (A^\top A)x \ge 0$ i.e. $\forall x\in \R^n,\ \|Ax\|^2\ge 0$
+	\item $\operatorname{Sp}(A) \subset \R_+$
+	\item $A^\top A$ est orthoDZ: $\begin{cases}
+		\ker(A^\top A) &= \ker A \\
+		\image(A^\top A) &= \image (A^\top) \\
+	\end{cases}$
+
+	\begin{proof}[de 3.]
+		\begin{itemize}
+			\item $\ker A \subset  \ker(A^\top A)$: \trivial
+			\item $\ker A \supset \ker(A^\top A)$
+			Soit $x\in \ker(A^\top A)$.
+
+			On a \begin{align*}
+				A^\top A x &= 0 \\
+				\implies x^\top (A^\top A x) &= 0 \\
+				\implies \|Ax\|^2 &= 0 \\
+				\implies x &\in \ker A
+			\end{align*}
+
+			\item $\image A \subset  \image(A^\top A)$ 
+				\begin{align*}
+					\dim \ker (A^\top A) + \rg (A^\top A) &= n \\
+					\implies \rg(A^\top A) &= n - \dim \ker(A^\top A) \\
+					&= n - \dim \ker A \quad&\text{car $\ker A = \ker (A^\top A)$} \\
+					&=  \rg A \\
+					&= \rg (A^\top) \\
+					\implies \image(A^\top A) &\subset   \image A \\
+				\end{align*}
+			\item $\image A \supset  \image(A^\top A)$ : \trivial
+		\end{itemize}
+	\end{proof}
+
+	\item $A ^\top A \in GL_n(\R) \iff \rg A = n$
+		\begin{proof}[de 4.]
+		\begin{align*}
+			A^\top A \in GL_n(\R) &\iff \ker(A^\top A) = \{0\}  \\
+					      &\iff \ker A = \{0\} \\
+					      &\iff \rg A = n \quad&\text{par théorème du rang}
+		\end{align*}
+	\end{proof}
+\end{enumerate}
+
+\subsection{Construction de la SVD de $A$}
+
+Soit $A \in \cM_{m,n}(\R)$ tel que $\rg A \ge 1$. On note $r := \rg A$.
+
+\begin{itemize}
+	\item $\dim \ker (A^\top A) = n - r$ par théorème du rang. 
+
+		Donc $0 \in \Sp(A^\top A)$ et $\mult_{A^\top A}(0) = n -r$
+	\item On note $(\lambda_i)_{i\in \llbracket 1, n \rrbracket} = \Sp(A^\top A) \subset \R_+^\ast$, {\bf telles que $i < j \implies \lambda_i \le  \lambda_j$}
+
+		On note $(v_i)_{i\in \llbracket 1, r\rrbracket}$ une bond DZante de $A^\top A$ associée à $(\lambda_i)_{i\in \llbracket 1, n \rrbracket}$
+
+		Et on pose enfin
+
+		\begin{align*}
+		\cE = \left(\underbrace{v_1, \ldots, v_r}_{\text{bon de $(\ker A)^\top$}}, \underbrace{v_{r+1}, \ldots, v_n}_{\text{bon de $\ker A$}} \right)
+		\end{align*}
+
+
+		\item 
+		On pose $V = (v_1, \ldots, v_r) \in \cO_n(\R)$
+		Et \[
+			\forall i\in \llbracket 1, n\rrbracket u_i = \frac{1}{\sqrt{\lambda_i} } A v_i \in \R^n 
+		\] 
+
+		\begin{align*}
+			\forall (i, j) \in \llbracket 1, r \rrbracket^2\quad \left<U_i, U_j \right> &= \frac{1}{\sqrt{\lambda_i \lambda_j} } \left<Av_i, Av_j \right> \\
+												    &= \frac{1}{\sqrt{\lambda_i \lambda_j} } \left<\underbrace{A^\top A v_i}_{\lambda_i v_i}, A^\top Av_j \right> \\
+												    &= \sqrt{\frac{\lambda_i}{\lambda_j}} \underbrace{\left<v_i, v_j \right>}_{\delta_{ij}} \quad&\text{car $(v_i)_i$ orthonormée} \\
+												    &= \delta_{ij} \quad&\text{car si $i=j$, ça fait 1, sinon ça fait 0} \\
+		\end{align*}
+
+		Donc $(U_i)_i$ est une famille orthonormée de $\R^m$
+	
+		Donc $\rg (U_i)_{i\in \llbracket 1, n \rrbracket} = r$
+
+		Or $(u_i)_i \subset \image A$
+
+		D'où $\Vect(u_i)_i \subset  \image A$ et $(\rg u_i)_i = \rg A$
+
+		Donc  $(\Vect U_i)_i = \image A$ 
+
+		 et $(U_i)_i$ bon de $\image A$.
+
+		 D'où  $0\in \Sp(A^\top A)$ avec $\image A$
+
+		 On la complète en  $(U_i)_{i\in \llbracket 1, m\rrbracket}$ bon de $\R^m$
+
+		 \[
+			 \cF = \left( \underbrace{u_1, \ldots, u_{r}}_{\text{bon de $\image A$ }}, \underbrace{u_{r+1}, \ldots, u_m}_\text{bon de $(\image A)^\top$} \right) 
+		 \] 
+
+		 Posons $U = (U_1, \ldots, U_m) \in \cO_n(\R)$
+
+		 \paragraph{Remarque}
+		 $\forall i\in \llbracket 1, r \rrbracket$
+		 \begin{align*}
+			 B u_i &= \mu_i u_i \\
+		 \end{align*}
+
+
+		 Avec $B, \mu_i$ à determiner.
+
+		  \begin{align*}
+			  A A ^\top U_i &= \frac{1}{\sqrt{\lambda_i} } \underbrace{A A^\top A v_i}_{=\lambda_i v_i\quad \text{par def de $v_i$}} \\
+			  &= \sqrt{\lambda_i} A v_i  \\
+			  &= \lambda_i \underbrace{\left( \frac{1}{\sqrt{\lambda_i} } A v_i \right) }_{U_i} \\
+			  &= \lambda_i U_i \\
+		 \end{align*}
+
+
+		 D'où $U_i$ vecteur propre de $A A^\top$ associé à  $\lambda_i$
+
+		 \item  On pose \begin{align*}
+		 	\Sigma &= U^\top AV \\
+			       &= U^\top \left(\underbrace{Av_1, \ldots, Av_r}_{\sqrt{\lambda_i} u_i }, \underbrace{A v_{r+1}, \ldots, A v_n}_{0\ \text{car $v_i \in \ker A$}}\right) \\
+			       &= \begin{pmatrix} u_1^\top \\ \vdots \\ u_m^\top \end{pmatrix} \begin{pmatrix} \sqrt{\lambda_j}  \left<u_i, u_j \right> | (0) \\ \hline \sqrt{\lambda_j} \left<u_i, u_j \right> | (0) \end{pmatrix}   \\
+			       &= \begin{pmatrix} \sqrt{\lambda_1} &  & (0) &  | & \\  & \ddots &  & |  & (0) \\  (0) &  & \sqrt{\lambda_r}  & | & \\ \hline & (0) & & | & (0) \end{pmatrix}  \\
+			       \implies A &= U \sigma V^\top \\
+		 \end{align*}
+
+
+		 \begin{definition}[SVD de $A$]
+		 	Décomposition de la forme \[
+		 		A = U \Sigma V^\top
+		 	\] 
+
+			Avec $U, \Sigma, V$ comme définies précédemment
+
+			On appelle valeurs singulières notées  $(\sigma_i)_i$ les valeurs propres racines carrées
+		 \end{definition}
+
+
+\end{itemize}
+
+
+%\begin{align*}
+%	A\quad {}^\top A^\top,\  A \\
+%	A\quad{}^\top k\tau,\ B
+%\end{align*}
+%
+
+\end{document}
