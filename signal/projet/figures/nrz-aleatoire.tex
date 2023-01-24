@@ -1,0 +1,56 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.00000,0.44700,0.74100}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=4.521in,
+height=3.559in,
+at={(0.758in,0.488in)},
+scale only axis,
+xmin=0,
+xmax=4000,
+xlabel style={font=\color{white!15!black}},
+xlabel={temps [s]},
+ymin=-0.1,
+ymax=1.1,
+ylabel style={font=\color{white!15!black}},
+ylabel={$\text{\$m}_\text{i}\text{(t)\$}$},
+axis background/.style={fill=white},
+title style={font=\bfseries},
+title={Signal NRZ aléatoire}
+]
+\addplot [color=mycolor1, forget plot]
+  table[row sep=crcr]{%
+1	1\\
+640	1\\
+641	0\\
+1120	0\\
+1121	1\\
+1280	1\\
+1281	0\\
+1440	0\\
+1441	1\\
+1760	1\\
+1761	0\\
+2560	0\\
+2561	1\\
+2720	1\\
+2721	0\\
+2880	0\\
+2881	1\\
+3200	1\\
+3201	0\\
+3360	0\\
+3361	1\\
+3520	1\\
+3521	0\\
+4000	0\\
+};
+\end{axis}
+\end{tikzpicture}%
