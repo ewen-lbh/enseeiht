@@ -200,7 +200,7 @@ La multiplication du signal avec le cosinus correspondant (par exemple) au bit 1
 \end{figure}
 \end{center}
 
-On fait ensuite une accumulation (une moyenne en quelque sorte) de ces mesures sur une période $T_s$ en élevant l'intégrale sur $T_s$ au carré, pour avoir une idée de la synchronisation avec le signal d'un bit 1 et d'un bit 0 à chaque instant échantilloné.
+On fait ensuite une accumulation (une moyenne en quelque sorte) de ces mesures sur une période $T_s$ en intégrant sur $T_s$, pour avoir une idée de la synchronisation avec le signal d'un bit 1 et d'un bit 0 à chaque instant échantilloné.
 
 % TODO montrer l'intégrale pas juste le produit
 
@@ -237,7 +237,11 @@ En notant $\operatorname{sync}_b$ le produit pour le bit $b$.
 
 Le signal démodulé avec cette méthode est le suivant:
 
+
+\begin{figure}
 \input{figures.v21.61/signal-demodule-synchro-parfaite.tex}
+\end{figure}
+
 
 
 \subsection{Gestion d'une erreur de synchronisation de phase porteuse}

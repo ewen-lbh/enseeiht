@@ -1,0 +1,17 @@
+\babel@toc {french}{}
+\contentsline {section}{\numberline {1}Introduction}{1}{section.1}%
+\contentsline {section}{\numberline {2}Modem en fréquence}{1}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Génération d'un signal NRZ}{1}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Génération d'un signal modulé en fréquence}{2}{subsection.2.2}%
+\contentsline {section}{\numberline {3}Canal de transmission à bruit additif, blanc et Gaussien}{3}{section.3}%
+\contentsline {section}{\numberline {4}Démodulation par filtrage}{4}{section.4}%
+\contentsline {paragraph}{Filtre passe haut}{4}{section*.2}%
+\contentsline {paragraph}{Filtre passe bas}{4}{section*.3}%
+\contentsline {paragraph}{}{5}{section*.4}%
+\contentsline {subsection}{\numberline {4.1}Détection d'énergie}{6}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Modification du démodulateur}{7}{subsection.4.2}%
+\contentsline {subsubsection}{\numberline {4.2.1}Modification du nombre de coefficients}{7}{subsubsection.4.2.1}%
+\contentsline {subsubsection}{\numberline {4.2.2}Modification de la fréquence de coupure}{9}{subsubsection.4.2.2}%
+\contentsline {section}{\numberline {5}Démodulateur de fréquence adapté à la norme V21}{9}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Contexte de synchronisation idéale}{9}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Gestion d'une erreur de synchronisation de phase porteuse}{11}{subsection.5.2}%

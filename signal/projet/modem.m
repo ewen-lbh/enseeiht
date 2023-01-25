@@ -1,21 +1,20 @@
 clear all;
 close all;
 
-
 %Initialisation des variables
 V21 = true;
 NOMBRE_COEFS_FILTRE = 201;
 snr = 5000;
 
 Fe = 48000;
-Te = 1/Fe;
+Te = 1 / Fe;
 Ts = 1/300; % 1/débit en bits/sec
-Ns = floor(Ts/Te);
+Ns = floor(Ts / Te);
 Nbits = 25;
 
 % Déphasages tirés aléatoirement dans [0,2pi]
-phi0=rand*2*pi;
-phi1=rand*2*pi;
+phi0 = rand * 2 * pi;
+phi1 = rand * 2 * pi;
 
 % 3 - Modem de fréquence
 
@@ -24,7 +23,7 @@ phi1=rand*2*pi;
 % génération d'un signal NRZ
 
 bits = randi([0, 1], 1, Nbits); % suite de bits aléatoire
-nrz = kron(bits, ones(1, Ns));  % signal NRZ
+nrz = kron(bits, ones(1, Ns)); % signal NRZ
 
 % 3.1.2
 % Tracé du signal
@@ -44,7 +43,7 @@ matlab2tikz('figures/nrz-aleatoire.tex');
 
 hold off
 dsp = pwelch(nrz, [], [], [], Fe, 'twosided');
-f=linspace(-Fe/2, Fe/2, length(dsp));
+f = linspace(-Fe / 2, Fe / 2, length(dsp));
 
 % Tracé de la densité spectrale de puissance expérientale
 
@@ -59,8 +58,8 @@ title("Densité spectrale de puissance")
 
 hold on;
 
-dsp2 = 0.25*Ts*(sinc(f*Ts).^2);
-dsp2(f==0) = dsp2(f==0) + 0.25;
+dsp2 = 0.25 * Ts * (sinc(f * Ts) .^ 2);
+dsp2(f == 0) = dsp2(f == 0) + 0.25;
 
 % Tracé de la densité spectrale de puissance théorique
 semilogy(f, dsp2, 'r')
@@ -72,23 +71,22 @@ matlab2tikz('figures/dsp-nrz-pratique-theorique.tex');
 
 % Génération du signal modulé en fréquence
 
-t=0:Te:(Nbits*Ns-1)*Te;
+t = 0:Te:(Nbits * Ns - 1) * Te;
 
 % si on est dans le cadre de la recommandadtion V21 alors on utilise les
 % fréquence recommandées, sinon on prend f0=6kHz et f1=2kHz
 if V21
-    frequence_0 = 1180 
-    frequence_1 = 980 
+    frequence_0 = 1180
+    frequence_1 = 980
 else
     frequence_0 = 6000
-    frequence_1 = 2000 
+    frequence_1 = 2000
 end
 
 % calcul du signal modulé en fréquence
 
-module = nrz .* cos(2*pi*frequence_1*t+phi1) + (1-nrz) .* cos(2*pi*frequence_0*t+phi0);
+module = nrz .* cos(2 * pi * frequence_1 * t + phi1) + (1 - nrz) .* cos(2 * pi * frequence_0 * t + phi0);
 size(module)
-
 
 % 3.2.2
 
@@ -103,17 +101,16 @@ title("NRZ modulé en fréquence")
 cleanfigure;
 matlab2tikz('figures/nrz-module-en-frequence.tex');
 
-
 % 3.2.3
 
 % Calcul de la densité spectrale de puissance théorique du signal modulé
 
 hold off
 
-dsp4=abs(fftshift(fft(module))).^2;
+dsp4 = abs(fftshift(fft(module))) .^ 2;
 
-% Tracé de la densité spectrale de puissance théorique du signal modulé 
-f=linspace(-Fe/2, Fe/2, length(dsp4));
+% Tracé de la densité spectrale de puissance théorique du signal modulé
+f = linspace(-Fe / 2, Fe / 2, length(dsp4));
 semilogy(f, dsp4)
 xlabel("Fréquence [Hz]")
 ylabel("Amplitude")
@@ -125,24 +122,22 @@ hold on;
 
 % Calcul de la densité spectrale de puissance expérimentale du signal modulé
 
-dsp3=fftshift(pwelch(module, [], [], [], Fe, 'twosided'));
+dsp3 = fftshift(pwelch(module, [], [], [], Fe, 'twosided'));
 
+% Tracé de la densité spectrale de puissance théorique du signal modulé
 
-% Tracé de la densité spectrale de puissance théorique du signal modulé 
-
-f=linspace(-Fe/2, Fe/2, length(dsp3));
+f = linspace(-Fe / 2, Fe / 2, length(dsp3));
 semilogy(f, dsp3)
 legend("Théorique", "Expérimentale")
 cleanfigure;
 matlab2tikz('figures/dsp-nrz-module-en-frequence.tex');
 
-
 % 4 - Canal de transmission à bruit additif, blanc et Gaussien
 
 % Génération du bruit
 hold off
-puissance_module = mean(abs(module).^2);
-sigma = sqrt(puissance_module/10^(snr/10));
+puissance_module = mean(abs(module) .^ 2);
+sigma = sqrt(puissance_module / 10 ^ (snr / 10));
 bruit = sigma * randn(1, length(module));
 
 % On ajoute le bruit au signal modulé en fréquence
@@ -158,11 +153,11 @@ matlab2tikz('figures/signal-bruite.tex');
 
 % 5 - Démodulation par filtrage
 
-f = linspace(-Fe/2, Fe/2, length(module_bruite));
+f = linspace(-Fe / 2, Fe / 2, length(module_bruite));
 
 % On fixe l'ordre du filtre
-ordre_2 = NOMBRE_COEFS_FILTRE;  %valeur bonne: 61, test à 201
-t_ordre_2 = -(ordre_2 - 1) / 2 * Te : Te : (ordre_2 - 1)/2 * Te;
+ordre_2 = NOMBRE_COEFS_FILTRE; %valeur bonne: 61, test à 201
+t_ordre_2 =- (ordre_2 - 1) / 2 * Te:Te:(ordre_2 - 1) / 2 * Te;
 
 % On place la fréquence de coupure au milieu entre f0 et f1
 fc = (frequence_0 + frequence_1) / 2;
@@ -176,7 +171,7 @@ H_bas = 1 - H_haut;
 h_bas = -h_haut;
 
 % ajout d'un dirac
-h_bas(t_ordre_2==0) = h_bas(t_ordre_2==0) + 1;
+h_bas(t_ordre_2 == 0) = h_bas(t_ordre_2 == 0) + 1;
 
 % Réception du signal modulé bruité sortant du passe haut puis du passe bas
 recu_1 = filter(h_haut, 1, module_bruite);
@@ -210,28 +205,27 @@ matlab2tikz('figures/reponse-impulsionnelle-bas-haut.tex');
 
 % Tracé des réponses en fréquence des filtres
 hold off
-semilogy(linspace(-Fe/2, Fe/2, length(H_haut)), H_bas);
+semilogy(linspace(-Fe / 2, Fe / 2, length(H_haut)), H_bas);
 hold on
-semilogy(linspace(-Fe/2, Fe/2, length(H_haut)), H_haut);
+semilogy(linspace(-Fe / 2, Fe / 2, length(H_haut)), H_haut);
 cleanfigure;
 matlab2tikz('figures/reponse-frequentielle-bas-haut.tex');
 
 %2
 % Tracé de la densité spectrale de puissance du signal modulé
-% et de la réponse en fréquences du fltre 
+% et de la réponse en fréquences du fltre
 
 hold off
-signal_filtre=recu_1+recu_0;
-semilogy(linspace(-Fe/2, Fe/2, length(dsp)), fftshift(dsp));
+signal_filtre = recu_1 + recu_0;
+semilogy(linspace(-Fe / 2, Fe / 2, length(dsp)), fftshift(dsp));
 cleanfigure;
 matlab2tikz('figures/dsp-signal-filtre.tex');
 
 hold off
 pwelch_filtre = fftshift(pwelch(signal_filtre, [], [], [], Fe, 'twosided'));
-semilogy(linspace(-Fe/2, Fe/2, length(dsp)), pwelch_filtre);
+semilogy(linspace(-Fe / 2, Fe / 2, length(dsp)), pwelch_filtre);
 cleanfigure;
 matlab2tikz('figures/dsp-signal-filtre-pwelch.tex');
-
 
 %3)
 %tracé dusignal filtré
@@ -240,13 +234,13 @@ matlab2tikz('figures/dsp-signal-filtre-pwelch.tex');
 %Calcul des energies de chaque période
 
 matrice_energie = reshape(recu_1, Nbits, Ns);
-S=sum(matrice_energie.^2, 1);
+S = sum(matrice_energie .^ 2, 1);
 
 % Définition du seuil K
-K=mean(S);
+K = mean(S);
 
 % Reconstitution du signal avec la méthode des energies
-signal_reconstitue=kron(S > K, ones(1, length(nrz) / Ns));
+signal_reconstitue = kron(S > K, ones(1, length(nrz) / Ns));
 hold off
 
 % Tracé des énergies
@@ -265,29 +259,26 @@ matlab2tikz('figures/signal-reconstitue.tex');
 % calcul du taux d'erreur binaire associé à la démodulation
 erreur = sum(signal_reconstitue ~= nrz) / length(nrz) % 0.0912
 
-
-
 % 3 scripts: création bruit, filtrage 1 et filtrage 2
 
 %5-6-1 ----> a l'ordre 201 on obtient toujours de bons résultats.
-
 
 % 6
 % 6.1
 
 if V21
-sync_0 = sum(reshape(module_bruite .* cos(2*pi*frequence_0*t), Nbits, Ns), 1).^2
-sync_1 = sum(reshape(module_bruite .* cos(2*pi*frequence_1*t), Nbits, Ns), 1).^2
-demodule_synchro_parfaite = sync_0 - sync_1 < 0
-Nbits
-Ns
-size(demodule_synchro_parfaite)
+    sync_0 = sum(reshape(module_bruite .* cos(2 * pi * frequence_0 * t), Nbits, Ns), 2);
+    sync_1 = sum(reshape(module_bruite .* cos(2 * pi * frequence_1 * t), Nbits, Ns), 2) ;
+    demodule_synchro_parfaite = kron((sync_0 - sync_1)' < 0, ones(1, Ns));
 
-hold off
-plot(demodule_synchro_parfaite);
-ylim([-0.1, 1.1])
-title("Signal démodulé avec synchronisation parfaite")
-cleanfigure;
-matlab2tikz('figures.v21.61/signal-demodule-synchro-parfaite.tex');
-
+    hold off
+    plot(nrz, 'LineWidth', 2);
+    hold on
+    plot(demodule_synchro_parfaite, "--", 'LineWidth', 4)
+    ylim([-0.1, 1.1])
+    title("Signal démodulé avec synchronisation parfaite")
+    legend("Signal d'origine", "Signal démodulé")
+    cleanfigure;
+    matlab2tikz('figures.v21.61/signal-demodule-synchro-parfaite.tex');
+    taux_erreur = sum(demodule_synchro_parfaite ~= nrz) / length(nrz)
 end

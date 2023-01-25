@@ -1,0 +1,49 @@
+interface Mesurable2D {
+    perimetre: double
+    aire: double
+}
+
+' E6
+class Cercle implements Mesurable2D
+
+class Cercle {
+    ' E8 et E18
+    - couleur: Color
+    - centre: Point
+    - rayon: double
+    ---
+    ' E3
+    + getRayon: double 
+    ' E16
+    + setRayon(rayon: double)
+    ' E2
+    + getCentre: Point 
+    ' E9
+    + getCouleur: Color
+    ' E10
+    + setCouleur(couleur: Color)
+    ' E4
+    + getDiametre: double 
+    ' E17
+    + setDiametre(diametre: double)
+    ' E1
+    + translater(dx, dy: double) 
+    ' E5
+    + contient(point: Point): boolean
+    ' E15
+    + toString: String
+    ' 
+    ---
+    ' E11
+    + Cercle(centre: Point, rayon: double)
+    ' E12
+    + Cercle(a: Point, b: Point)
+    ' E13
+    + Cercle(a: Point, b: Point, couleur: Color)
+    ' E14
+    {static} + creerCercle(centre: Point, surCirconference: Point)
+}
+
+note bottom of Cercle : constructeurs: quand la couleur n'est pas précisée, on prend du bleu.
+
+note right of Cercle: toString renvoie sous la forme Cr@(a, b) avec r rayon et (a, b) centre
