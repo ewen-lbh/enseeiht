@@ -28,6 +28,10 @@
 \newcommand{\TF}{\operatorname{TF}}
 \newcommand{\sinc}{\operatorname{sinc}}
 
+
+\includegraphics[width=0.2\textwidth]{n7.png}
+
+
 \title{Rapport de projet -- Traitement du signal}
 \author{Florent Puy, Ewen Le Bihan}
 
@@ -169,7 +173,7 @@ En passant à 61 coefficients, le taux d'erreur reste de 0.0725.
 
 %%%\input{figures.6k2k.201/reponse-impulsionnelle-bas-haut.tex}
 
-\subsubsection{Modification de la fréquence de coupure}
+%\subsubsection{Modification de la fréquence de coupure}
 
 % TODO
 
@@ -181,6 +185,16 @@ En passant à 61 coefficients, le taux d'erreur reste de 0.0725.
 
 Nous allons ici introduire une nouvelle méthode de démodulation plus adaptée à la norme V21.
 La multiplication du signal avec le cosinus correspondant (par exemple) au bit 1 donne, en fonction du temps, une mesure de la synchronisation entre le signal et ce cosinus: plus le résultat est proche de 1, plus les signaux sont synchronisés à cet instant, et donc plus le signal est susceptible d'être un bit 1.
+On a:
+\[ 
+\int_{0}^{T_s} cos^2(2 \pi F_0 t + \phi_0) \, \mathrm{d}t  = \frac{1} {8 \pi F_0} sin(2(2 \pi F_0 T + phi_0))+4 \pi F_0 T - sin(2 \phi_0) 
+
+\int_{0}^{T_s} cos^2(2 \pi F_0 t + \phi_1) \, \mathrm{d}t  = \frac{1} {8 \pi F_0} sin(2(2 \pi F_0 T + phi_1))+4 \pi F_0 T - sin(2 \phi_1) 
+
+\int_{0}^{T_s} cos(2 \pi F_0 t + \phi_0) cos(2 \pi F_0 t + \phi_1)\, \mathrm{d}t  = \frac{1} {8 \pi F_0} sin(4 \pi F_0 T + phi_0 + phi_1)+4 \pi F_0 T cos(phi_0 - phi_1) - sin (\phi_0 + \phi_1) 
+
+\]
+
 
 \begin{center}
 \begin{figure}[H]
