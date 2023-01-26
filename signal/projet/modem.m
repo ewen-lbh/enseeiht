@@ -1,8 +1,10 @@
 clear all;
 close all;
 
-V21 = true;
-snr = 200;
+
+V21 = false;
+ordre_2 = 61;
+snr = 10;
 Fe = 48000;
 Te = 1/Fe;
 Ts = 1/300; % 1 / débit en bits/sec
@@ -10,7 +12,7 @@ Ns = floor(Ts/Te);
 Nbits = 25;
 phi0=rand*2*pi;
 phi1=rand*2*pi;
-layout = tiledlayout(5, 3);
+
 
 % 3.1.1
 
@@ -23,7 +25,9 @@ figure; hold off;
 plot(nrz)
 xlabel("temps [s]")
 ylabel("m_i(t)")
+ylim([-0.1, 1.1]);
 title("Signal NRZ aléatoire")
+tikzfigure('signal-nrz-aleatoire.tex', V21, ordre_2)
 
 % 3.1.3
 
@@ -34,7 +38,7 @@ f=linspace(-Fe/2, Fe/2, length(dsp));
 semilogy(f, fftshift(dsp))
 xlabel("fréquence [Hz]")
 ylabel("Densité spectrale de puissance")
-title("Densité spectrale de puissance")
+title("Densité spectrale de puissance du signal NRZ aléatoire")
 % 3.1.4
 
 hold on;
@@ -43,6 +47,7 @@ dsp2 = 0.25*Ts*(sinc(f*Ts).^2);
 dsp2(f==0) = dsp2(f==0) + 0.25;
 semilogy(f, dsp2, 'r')
 legend("Pratique", "Théorique")
+tikzfigure('dsp-nrz.tex', V21, ordre_2)
 
 % 3.2.1
 figure; hold off;
@@ -57,14 +62,13 @@ else
     frequence_1 = 2000;
 end
 module = nrz .* cos(2*pi*frequence_1*t+phi1) + (1-nrz) .* cos(2*pi*frequence_0*t+phi0);
-size(module)
 
 % 3.2.2
-
 plot(t, module);
 xlabel("Temps [s]")
 ylabel("Amplitude")
 title("NRZ modulé en fréquence")
+tikzfigure('nrz-module.tex', V21, ordre_2)
 
 figure; hold off;
 
@@ -75,7 +79,7 @@ f=linspace(-Fe/2, Fe/2, length(dsp4));
 semilogy(f, dsp4)
 xlabel("Fréquence [Hz]")
 ylabel("Amplitude")
-title("Densité spectrale de puissance")
+title("Densité spectrale de puissance du signal modulé en fréquence")
 
 
 hold on;
@@ -85,6 +89,7 @@ dsp3=fftshift(pwelch(module, [], [], [], Fe, 'twosided'));
 f=linspace(-Fe/2, Fe/2, length(dsp3));
 semilogy(f, dsp3)
 legend("Théorique", "Expérimentale")
+tikzfigure('dsp-module.tex', V21, ordre_2)
 
 % 4
 figure; hold off;
@@ -96,10 +101,10 @@ plot(module_bruite)
 xlabel("Temps [s]")
 ylabel("Amplitude")
 title("Signal bruité")
+tikzfigure('signal-bruite.tex', V21, ordre_2)
 
 % 5
 f = linspace(-Fe/2, Fe/2, length(module_bruite));
-ordre_2 = 61;  %valeur bonne: 61, test à 201
 t_ordre_2 = -(ordre_2 - 1) / 2 * Te : Te : (ordre_2 - 1)/2 * Te;
 fc = (frequence_0 + frequence_1) / 2;
 % Attention, h doit être exprimé en fréquences normalisées
@@ -128,9 +133,10 @@ xlabel("Temps [s]")
 ylabel("Amplitude")
 title("Signal démodulé")
 legend("1", "0")
+tikzfigure('signal-demodule.tex', V21, ordre_2);
 
 %5-4
-%Signal modulé en fréquenfind(f==0)ce
+%Signal modulé en fréquence
 %densité spectrale puissance
 
 %1)
@@ -139,38 +145,41 @@ figure; hold off;
 plot(t_ordre_2, h_bas);
 hold on
 plot(t_ordre_2, h_haut);
+tikzfigure('filtre-reponse-impulsionnelle.tex', V21, ordre_2);
 
 figure; hold off;
 semilogy(linspace(-Fe/2, Fe/2, length(H_haut)), H_bas);
 hold on
 semilogy(linspace(-Fe/2, Fe/2, length(H_haut)), H_haut);
+tikzfigure('filtre-reponse-frequentielle.tex', V21, ordre_2);
 
 %2)
+% figure; hold off;
+% semilogy(linspace(-Fe/2, Fe/2, length(dsp)), fftshift(dsp));
+% tikzfigure('signal-filtre-dsp-theorique.tex', V21, ordre_2);
+
 figure; hold off;
 signal_filtre=recu_1+recu_0;
-semilogy(linspace(-Fe/2, Fe/2, length(dsp)), fftshift(dsp));
-figure; hold off;
-aaaaaaaaaaaaa = fftshift(pwelch(signal_filtre, [], [], [], Fe, 'twosided'));
-semilogy(linspace(-Fe/2, Fe/2, length(dsp)), aaaaaaaaaaaaa);
+signal_filtre_dsp_experimentale = fftshift(pwelch(signal_filtre, [], [], [], Fe, 'twosided'));
+semilogy(linspace(-Fe/2, Fe/2, length(dsp)), signal_filtre_dsp_experimentale);
+tikzfigure('signal-filtre-dsp-experimentale.tex', V21, ordre_2);
 
 %3)
 %afficher signal_filtre
 
 %%%%%%5-5
 
+figure; hold off;
 matrice_energie = reshape(recu_1, Nbits, Ns);
 S=sum(matrice_energie.^2, 1);
-
-
 K=mean(S);
-figure; hold off;
 signal_reconstitue=kron(S > K, ones(1, length(nrz) / Ns));
-plot(S)
-figure; hold off;
-plot(signal_reconstitue)
+erreur = sum(signal_reconstitue ~= nrz) / length(nrz)
+title("Signal reconstitué (Taux d'erreur: " + erreur*100 + "%)")
+ylim([-0.1, 1.1]);
+tikzfigure('signal-reconstitue.tex', V21, ordre_2);
 
 %erreur
-erreur = sum(signal_reconstitue ~= nrz) / length(nrz)
 
 
 
@@ -179,55 +188,51 @@ erreur = sum(signal_reconstitue ~= nrz) / length(nrz)
 %5-6-1 ----> a l'ordre 201 on obtient toujours de bons résultats.
 
 if V21
-    sync_0 = Te * sum(reshape(module_bruite .* cos(2 * pi * frequence_0 * t + phi0), Nbits, Ns), 2);
-    
-    sync_1 = Te * sum(reshape(module_bruite .* cos(2 * pi * frequence_1 * t + phi1), Nbits, Ns), 2) ;
+    sync_0 = Te * sum(reshape(module_bruite .* cos(2 * pi * frequence_0 * t + phi0), Ns, []));    
+    sync_1 = Te * sum(reshape(module_bruite .* cos(2 * pi * frequence_1 * t + phi1), Ns, []));
 
-    sync_0 - sync_1
-    demodule_synchro_parfaite = kron((sync_0 - sync_1)' < 0, ones(1, Ns));
+    demodule_synchro_parfaite = sync_1 > sync_0;
 
     figure; hold off;
-    plot(sync_0)
-    hold on
-    plot(sync_1)
-    hold on
-    % plot(module_bruite)
-    legend("sync 0", "sync 1", "modulé bruité")
-
-
-    figure; hold off;
-    figure
     plot(nrz, 'LineWidth', 2);
     hold on
-    plot(demodule_synchro_parfaite, "--", 'LineWidth', 4)
-    ylim([-0.1, 1.1])
-    title("Signal démodulé avec synchronisation parfaite")
+    plot(kron(demodule_synchro_parfaite, ones(1, Ns)), "--", 'LineWidth', 4)
+    ylim([-0.1, 1.1]);
+    erreur = sum(demodule_synchro_parfaite ~= bits) / length(bits);
+    title("Signal démodulé avec synchronisation parfaite (Taux d'erreur: " + erreur*100 + "%)")
     legend("Signal d'origine", "Signal démodulé")
-    % cleanfigure;
-    % matlab2tikz('figures.v21.61/signal-demodule-synchro-parfaite.tex');
-    taux_erreur = sum(demodule_synchro_parfaite ~= nrz) / length(nrz);
+    tikzfigure('signal-demodule-synchro-parfaite.tex', V21, ordre_2);
 
 
     % 6.2
 
-    sync_sin_0 = sum(reshape(module_bruite .* sin(2 * pi * frequence_0 * t + phi0), Nbits, Ns), 2) .^ 2;
-    sync_cos_0 = sum(reshape(module_bruite .* cos(2 * pi * frequence_0 * t + phi0), Nbits, Ns), 2) .^ 2;
-    sync_sin_1 = sum(reshape(module_bruite .* sin(2 * pi * frequence_1 * t + phi1), Nbits, Ns), 2) .^ 2;
-    sync_cos_1 = sum(reshape(module_bruite .* cos(2 * pi * frequence_1 * t + phi1), Nbits, Ns), 2) .^ 2;
+    sync_sin_0 = sum(reshape(module_bruite .* sin(2 * pi * frequence_0 * t + phi0), Ns, [])) .^ 2;
+    sync_cos_0 = sum(reshape(module_bruite .* cos(2 * pi * frequence_0 * t + phi0), Ns, [])) .^ 2;
+    sync_sin_1 = sum(reshape(module_bruite .* sin(2 * pi * frequence_1 * t + phi1), Ns, [])) .^ 2;
+    sync_cos_1 = sum(reshape(module_bruite .* cos(2 * pi * frequence_1 * t + phi1), Ns, [])) .^ 2;
 
     sync_0 = sync_sin_0 + sync_cos_0;
     sync_1 = sync_sin_1 + sync_cos_1;
-    demodule_gestion_desync = kron((sync_0 - sync_1)' < 0, ones(1, Ns));
+    demodule_gestion_desync = sync_1 > sync_0;
 
     figure; hold off;
     plot(nrz, 'LineWidth', 2);
     hold on
-    plot(demodule_gestion_desync, "--", 'LineWidth', 4)
-    ylim([-0.1, 1.1])
-    title("Signal démodulé avec compensation du déphasage")
+    plot(kron(demodule_gestion_desync, ones(1, Ns)), "--", 'LineWidth', 4)
+    ylim([-0.1, 1.1]);
+    erreur = sum(demodule_gestion_desync ~= bits) / length(bits);
+    title("Signal démodulé avec compensation du déphasage (Taux d'erreur: " + erreur*100 + "%)")
     legend("Signal d'origine", "Signal démodulé")
-    % cleanfigure;
-    % matlab2tikz('figures.v21.61/signal-demodule-compensation-dephasage.tex');
-    taux_erreur = sum(demodule_gestion_desync ~= nrz) / length(nrz);
+    tikzfigure('signal-demodule-compensation-dephasage.tex', V21, ordre_2);
+end
 
+
+
+function tikzfigure(name, V21, ordre_2)
+	if V21
+		typ = 'v21';
+	else
+		typ = '6k2k';
+	end
+	matlab2tikz(sprintf('figures.%s.%d/%s', typ, ordre_2, name));
 end
