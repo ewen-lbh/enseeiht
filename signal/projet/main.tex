@@ -192,7 +192,7 @@ E=\sum_{i=1}^{N_s} x_n^2
 Enfin, on compare cette énergie à un seuil $K$ qu'on fixera à la moyenne des énergies du signal.
 Pour le signal en sortie du passe bas par exemple, si $E>K$ alors le signal reconstitué sera égal à 1 sur cette période $T_s$, sinon il sera égal à 0.
 
-Voici les figures obtenues grâce à cette méthode.
+Voici les figures obtenues grâce à cette méthode:
 
 \begin{figure}
 	\centering
@@ -206,6 +206,7 @@ Voici les figures obtenues grâce à cette méthode.
 \subsubsection{Modification du nombre de coefficients}
 
 Avec 201 coefficients pour le filtre, le taux d'erreur est grand.
+Voici le signal démodulé qu'on obtient:
 
 \begin{figure}[H]
 	\centering
@@ -214,11 +215,10 @@ Avec 201 coefficients pour le filtre, le taux d'erreur est grand.
 	\label{fig:201-coefficients}
 \end{figure}
 
-\section{Démodulateur de fréquence adapté à la norme V21}
+\subsubsection{Modification des fréquences}
 
-Avec des fréquences porteuses beaucoup plus rapporchées, il devient difficile de démoduler en séparant le signal par filtrage haut et bas.
-
-On observe donc un taux d'erreur non-nul.
+Nous travaillons jusqu'alors avec des fréquences très éloignées: $F_1=2kHz$ et $F_2=6kHz$. Cependant, la norme V21 impose des fréquences proches: $F_1=980Hz$ et $F_2=1180kHz$. On observe en utilisant ces fréquences une augmentation du taux d'erreur, il devient difficile de démoduler en séparant le signal par filtrage haut et bas.
+Voici le signal démodulé obtenu:
 
 \begin{figure}[H]
 	\centering
@@ -227,10 +227,14 @@ On observe donc un taux d'erreur non-nul.
 	\label{fig:filtrage-avec-v21}
 \end{figure}
 
+\section{Démodulateur de fréquence adapté à la norme V21}
+
+Nous avons vudans la partie précédente que la méthode par filtrage n'était pas optimale. Nous allons ici introduire une nouvelle méthode de démodulation plus adaptée à la norme V21.
+
 \subsection{Contexte de synchronisation idéale}
 \label{synchro-ideale}
 
-Nous allons ici introduire une nouvelle méthode de démodulation plus adaptée à la norme V21.
+
 La multiplication du signal avec le cosinus correspondant (par exemple) au bit 1 donne, en fonction du temps, une mesure de la synchronisation entre le signal et ce cosinus: plus le résultat est proche de 1, plus les signaux sont synchronisés à cet instant, et donc plus le signal est susceptible d'être un bit 1.
 On a:
 
