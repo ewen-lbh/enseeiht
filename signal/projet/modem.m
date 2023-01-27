@@ -18,7 +18,7 @@ Nbits = 25;
 figure_nrz(signal_nrz, Te, Nbits, Ns, "Signal NRZ aléatoire", "signal-nrz-aleatoire")
 % 3.1.(3, 4)
 dsp_nrz_experimentale = dsp_experimentale(signal_nrz, Fe);
-figure_dsp(dsp_nrz_experimentale, dsp_nrz_theorique(Ts, Te, length(dsp_nrz_experimentale)), Fe, "Densité spectrale de puissance du signal NRZ aléatoire", "dsp-nrz-aleatoire", false, ordre_filtre)
+figure_dsp(dsp_nrz_experimentale, dsp_nrz_theorique(Ts, Te, length(dsp_nrz_experimentale)), Fe, "Densité spectrale de puissance du signal NRZ aléatoire", "dsp-nrz-aleatoire")
 
 % 3.2.1
 phi_0 = rand*2*pi;
@@ -27,7 +27,7 @@ frequence_0 = 6000;
 frequence_1 = 2000;
 nrz_module = moduler(signal_nrz, frequence_0, frequence_1, phi_0, phi_1, Nbits, Ns, Te);
 % 3.2.2
-figure_signal_module(nrz_module, sprintf("Modulation du signal NRZ aléatoire (0 à %dHz, 1 à %dHz)", frequence_0, frequence_1), "signal-nrz-module")
+figure_signal_module(nrz_module, sprintf("Modulation du signal NRZ aléatoire (bit 0 sur %dHz, bit 1 sur %dHz)", frequence_0, frequence_1), "signal-nrz-module")
 % 3.2.3
 dsp_nrz_module_theorique = dsp_signal_module_theorique(nrz_module);
 % 3.2.4
@@ -112,7 +112,7 @@ end
 
 
 function dsp = dsp_nrz_theorique(Ts, Te, taille_dsp_exp)
-    f = linspace(-Te/2, Te/2, taille_dsp_exp)
+    f = linspace(-Te/2, Te/2, taille_dsp_exp);
     dsp = 0.25*Ts*(sinc(f*Ts).^2);
     dsp(f==0) = dsp(f==0) + 0.25;
 end
