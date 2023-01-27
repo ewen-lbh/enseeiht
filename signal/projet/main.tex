@@ -87,6 +87,8 @@ On peut déormais comparer les densités spectrales de puissance théoriques et 
 
 \subsection{Génération d'un signal modulé en fréquence}
 
+\subsubsection{Modulation du signal NRZ}
+
 Pour construire notre signal modulé en fréquence nous allons nous baser sur le signal NRZ et sur une simple sinusoïdale. Lorsque le signal NRZ vaut 0, la fréquence de la sinusoïdale sera $F_0=\SI{1180}{Hz}$ et lorsqu'il vaut 1 la sinusoïdale sera de fréquence $F_1=\SI{980}{Hz}$. Au final, notre signal modulé suit la formule suivante:
 \[
 \operatorname{modulé}(t)=\operatorname{NRZ}(t) \cos(2\pi F_1 t + \phi_1) + (1-\operatorname{NRZ}(t)) \cos(2 \pi F_0 t + \phi_1)
@@ -98,8 +100,11 @@ On obtient ainsi le signal suivant:
 
 \input{figures/signal-nrz-module.tex}
 
+\subsubsection{Densité spectrale de puissance}
+
+
 \begin{align*}
-	s_x(f) &= | \operatorname{TF}(x)(f) |^2 \\
+	s_\text{NRZ}(f) &= | \operatorname{TF}(x)(f) |^2 \\
 	       &= \left| \operatorname{TF}(\operatorname{NRZ}(t) \cos(2\pi F_1 t + \phi_1)) + \operatorname{TF}((1 - \operatorname{NRZ}(t)) \cos(2 \pi F_0 t + \phi_0)) \right|^2 \\
 	       &= | \TF \NRZ (f) \ast \TF (\cos (2\pi F_1 t) \cos \phi_1 - \sin(2 \pi F_1 t) \sin \phi_1) + \TF (1-\NRZ)(f) \ast \TF(\cos (2 \pi F_0 t) \cos \phi_0 - \sin (2 \pi F_0 t) \sin \phi_0) |^2 \\
 	       &= | \TF \NRZ (f) \ast \frac{1}{2} \left( \cos \phi_1 (\delta(f-F_1) + \delta(f+F_1)) - \frac{1}{i} \sin \phi_1 (\delta(f-F_1) - \delta(f+F_1)) \right) + \TF(1-\NRZ)(f) \ast \frac{1}{2} \left( \cos \phi_0 (\delta(f-F_0) + \delta(f+F_0)) - \frac{1}{i} \sin \phi_0 (\delta(f-F_0) - \delta(f+F_0)) \right) |^2  \\
@@ -146,7 +151,7 @@ et donc \[H_\text{haut}(f) = \TF(h_\text{haut}(t))
 \paragraph{Filtre passe bas}
 
 \[
-H_\text{bas}(f) = 1-H_\text{haut}(f)
+	H_\text{bas}(\tilde{f}) = 1-H_\text{haut}(\tilde{f})
 \]
 
 Les réponses des filtres sont les suivantes:
@@ -176,6 +181,17 @@ Les réponses des filtres sont les suivantes:
 	\caption{Réponses des filtres}
 	\label{fig:reponses-filtres}
 \end{figure}
+
+\begin{figure}[H]
+	\centering
+	\input{figures/filtrage-signal-module.tex}
+	\caption{Densités spectrales de puissance lors du filtrage}
+	\label{fig:filtrage-dsps}
+\end{figure}
+
+On remarque que le support de la DSP de l'entrée est quasi disjoint aux supports des réponses fréquentielles des filtres.
+
+
 
 Les sorties des filtres sont les suivantes
 
@@ -215,10 +231,13 @@ Voici le signal démodulé qu'on obtient:
 	\label{fig:201-coefficients}
 \end{figure}
 
-\subsubsection{Modification des fréquences}
+\subsubsection{Utilisation des fréquences de la norme V21}
 
-Nous travaillons jusqu'alors avec des fréquences très éloignées: $F_1=2kHz$ et $F_2=6kHz$. Cependant, la norme V21 impose des fréquences proches: $F_1=980Hz$ et $F_2=1180kHz$. On observe en utilisant ces fréquences une augmentation du taux d'erreur, il devient difficile de démoduler en séparant le signal par filtrage haut et bas.
-Voici le signal démodulé obtenu:
+Nous travaillons jusqu'alors avec des fréquences très éloignées: $F_1=2kHz$ et $F_2=6kHz$. Cependant, la norme V21 spécifie des fréquences proches: $F_1=980Hz$ et $F_2=1180kHz$. On observe en utilisant ces fréquences une augmentation du taux d'erreur, il devient difficile de démoduler en séparant le signal par filtrage haut et bas.
+
+Avec des fréquences porteuses beaucoup plus rapprochées, il devient difficile de démoduler en séparant le signal par filtrage haut et bas.
+
+On observe donc un taux d'erreur non-nul.
 
 \begin{figure}[H]
 	\centering

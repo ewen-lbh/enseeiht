@@ -315,4 +315,4 @@ TSWLatexianTemp*
 
 # Environment variables
 .env
-images/
+images/*.mat
