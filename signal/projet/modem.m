@@ -4,14 +4,14 @@ close all;
 
 % CONSTANTES
 ordre_filtre = 61;
-snr = 10;
+snr = 50;
 Fe = 48000;
 Te = 1/Fe;
 Ts = 1/300; % 1 / débit en bits/sec
 Ns = floor(Ts/Te);
 Nbits = 25;
 
-
+if false
 % 3.1.1
 [bits_originaux, signal_nrz] = nrz(Nbits, Ns);
 % 3.1.2
@@ -28,10 +28,9 @@ frequence_1 = 2000;
 nrz_module = moduler(signal_nrz, frequence_0, frequence_1, phi_0, phi_1, Nbits, Ns, Te);
 % 3.2.2
 figure_signal_module(nrz_module, sprintf("Modulation du signal NRZ aléatoire (bit 0 sur %dHz, bit 1 sur %dHz)", frequence_0, frequence_1), "signal-nrz-module")
-% 3.2.3
-dsp_nrz_module_theorique = dsp_signal_module_theorique(nrz_module);
-% 3.2.4
+% 3.2.(3,4)
 dsp_nrz_module_experimentale = dsp_experimentale(nrz_module, Fe);
+dsp_nrz_module_theorique = dsp_signal_module_theorique(nrz_module, Te, length(dsp_nrz_module_experimentale));
 figure_dsp(dsp_nrz_module_theorique, dsp_nrz_module_experimentale, Fe, "Densité spectrale de puissance du signal modulé", "dsp-nrz-module")
 
 % 4
@@ -54,10 +53,12 @@ figure_reponses_filtre(filtre_haut_impulsionnelle, filtre_haut_frequentielle, or
 figure_reponses_filtre(filtre_bas_impulsionnelle, filtre_bas_frequentielle, ordre_filtre, Te, 'filtre passe-bas', 'reponse-passe-bas')
 % 5.4.2
 f = linspace(-Fe/2, Fe/2, length(dsp_nrz_module_experimentale));
+size(dsp_nrz_module_experimentale)
+size(filtre_bas_frequentielle)
 hold on 
 semilogy(f, fftshift(dsp_nrz_module_experimentale))
-semilogy(f, fftshift(reponse_bas_frequentielle))
-semilogy(f, fftshift(reponse_haut_frequentielle))
+semilogy(f, fftshift(filtre_bas_frequentielle))
+semilogy(f, fftshift(filtre_haut_frequentielle))
 hold off
 xlabel("fréquence [Hz]")
 ylabel("amplitude")
@@ -65,28 +66,51 @@ legend('Entrée', 'Passe-bas', 'Passe-haut')
 title("Filtrage du signal modulé")
 tikzfigure('filtrage-signal-module')
 % 5.4.3
-figure_signal_demodule(signal_0, signal_1, Fe, 'Signal démodulé', 'signal-demodule')
+figure_signal_demodule(signal_0, signal_1, 'Signal démodulé', 'signal-demodule')
 % TODO: faire les DSPs du démodulé
 
 % 5.5.(1, 2)
 bits_reconstruits = reconstruire_depuis_demodule_filtre(signal_1, Nbits, Ns);
 figure_bits_comparaison(bits_reconstruits, bits_originaux, Te, Nbits, Ns, snr, 'Signal reconstruit par filtrage et détection d''énergie', 'bits-reconstruits-filtrage')
 
-% 5.6
-% TODO
+% 5.6.1
+ordre_filtre = 201;
+[filtre_haut_impulsionnelle, filtre_haut_frequentielle] = construire_filtre_haut(frequence_coupure, ordre_filtre, Te);
+[filtre_bas_impulsionnelle, filtre_bas_frequentielle] = construire_filtre_bas(filtre_haut_impulsionnelle, filtre_haut_frequentielle, ordre_filtre, Te);
+[signal_0, signal_1] = demoduler(nrz_bruite, filtre_haut_impulsionnelle, filtre_bas_impulsionnelle);
+bits_reconstruits = reconstruire_depuis_demodule_filtre(signal_1, Nbits, Ns);
+figure_bits_comparaison(bits_reconstruits, bits_originaux, Te, Nbits, Ns, snr, 'Signal reconstruit par filtrage, avec 201 coefficients', 'bits-reconstruits-filtrage-201-coefs')
+ordre_filtre = 61;
+
+% 5.6.2
+frequence_coupure = mean([980 1180]);
+[filtre_haut_impulsionnelle, filtre_haut_frequentielle] = construire_filtre_haut(frequence_coupure, ordre_filtre, Te);
+[filtre_bas_impulsionnelle, filtre_bas_frequentielle] = construire_filtre_bas(filtre_haut_impulsionnelle, filtre_haut_frequentielle, ordre_filtre, Te);
+[signal_0, signal_1] = demoduler(nrz_bruite, filtre_haut_impulsionnelle, filtre_bas_impulsionnelle);
+bits_reconstruits = reconstruire_depuis_demodule_filtre(signal_1, Nbits, Ns);
+figure_bits_comparaison(bits_reconstruits, bits_originaux, Te, Nbits, Ns, snr, 'Signal reconstruit par filtrage, avec les fréquences de la norme V21', 'bits-reconstruits-filtrage-v21')
+
+
+% Partie V21
+phi_0 = rand*2*pi;
+phi_1 = rand*2*pi;
+frequence_0 = 1180;
+frequence_1 = 980;
+nrz_module = moduler(signal_nrz, frequence_0, frequence_1, phi_0, phi_1, Nbits, Ns, Te);
+nrz_bruite = bruiter(nrz_module, snr);
 
 % 6.1.1
 % TODO
 
 % 6.1.2
-bits_reconstruits = reconstruire_phase_parfaite_v21(nrz_bruite, Ns, phi_0, phi_1, Te);
+bits_reconstruits = reconstruire_fsk_phase_parfaite(nrz_bruite, Ns, phi_0, phi_1, Te, Nbits);
 figure_bits_comparaison(bits_reconstruits, bits_originaux, Te, Nbits, Ns, snr, 'Signal reconstruit par démodulation FSK, avec une synchronisation idéale', 'bits-reconstruits-fsk-synchro-parfaite')
 
 % 6.2.1
 % On introduit une erreur en retirant la compensation du déphasage
 % aléatoire: on met phi_0 et phi_1 à 0 en entrée du reconstructeur
 % seulement, et on les laisse sur le signal NRZ original
-bits_reconstruits = reconstruire_phase_parfaite_v21(nrz_bruite, Ns, 0, 0, Te);
+bits_reconstruits = reconstruire_fsk_phase_parfaite(nrz_bruite, Ns, 0, 0, Te, Nbits);
 figure_bits_comparaison(bits_reconstruits, bits_originaux, Te, Nbits, Ns, snr, 'Signal reconstruit par démodulation FSK, sans correction de désynchronisation', 'bits-reconstruits-fsk-sans-correction-desynchro')
 % TODO explication
 
@@ -94,11 +118,14 @@ figure_bits_comparaison(bits_reconstruits, bits_originaux, Te, Nbits, Ns, snr, '
 % cf rapport
 
 % 6.2.2.b
-bits_reconstruits = reconstruire_v21(nrz_bruite, Ns);
+bits_reconstruits = reconstruire_fsk(nrz_bruite, Te, Ns, Nbits);
 figure_bits_comparaison(bits_reconstruits, bits_originaux, Te, Nbits, Ns, snr, 'Signal reconstruit par démodulation FSK', 'bits-reconstruits-fsk')
+end
 
 % 6.2.2.c
-% TODO
+for i = 1:6
+    reconstruire_image(i, Te, Ns)
+end
 
 
 function [bits, signal_nrz] = nrz(Nbits, Ns)
@@ -107,7 +134,7 @@ function [bits, signal_nrz] = nrz(Nbits, Ns)
 end
 
 function dsp = dsp_experimentale(signal, Fe)
-    dsp = fftshift(pwelch(signal, [], [], [], Fe, 'twosided'));
+    dsp = pwelch(signal, [], [], [], Fe, 'twosided');
 end
 
 
@@ -125,10 +152,12 @@ end
 
 % 3.2.3
 
-function dsp = dsp_signal_module_theorique(signal_module)
+function dsp = dsp_signal_module_theorique(nrz, Te, taille_dsp_exp)
+    f = linspace(-Te/2, Te/2, taille_dsp_exp);
+    dsp = ones(1, taille_dsp_exp);
     % FIXME on devrai utiliser nrz, pas le signal module
-    dsp=abs(fftshift(fft(signal_module))).^2;
-    f=linspace(-Fe/2, Fe/2, length(dsp));
+    % dsp=abs(fft(signal_module)).^2;
+    % f=linspace(-Fe/2, Fe/2, length(dsp));
     semilogy(f, dsp)
     xlabel("Fréquence [Hz]")
     ylabel("Amplitude")
@@ -145,8 +174,9 @@ end
 
 function [reponse_impulsionnelle, reponse_frequentielle] = construire_filtre_haut(frequence_coupure, ordre_filtre, Te)
     t = -(ordre_filtre - 1) / 2 * Te : Te : (ordre_filtre - 1)/2 * Te;
+    Fe = 1/Te;
     reponse_impulsionnelle = 2 * (frequence_coupure / Fe) * sinc(2 * frequence_coupure * t);
-    reponse_frequentielle = fftshift(fft(reponse_impulsionnelle, 8192));
+    reponse_frequentielle = fftshift(fft(reponse_impulsionnelle, 1024));
 end
 
 function [reponse_impulsionnelle, reponse_frequentielle]  = construire_filtre_bas(filtre_haut_impuls, filtre_haut_freq, ordre_filtre, Te)
@@ -163,7 +193,7 @@ function [signal_0, signal_1] = demoduler(signal, filtre_haut_impuls, filtre_bas
 end
 
 function [signal_reconstruit] = reconstruire_depuis_demodule_filtre(signal_1, Nbits, Ns)
-    matrice_energie = reshape(signal_1, Nbits, Ns);
+    matrice_energie = reshape(signal_1, Ns, Nbits);
     energies=sum(matrice_energie.^2, 1);
     energie_moyenne=mean(energies);
     signal_reconstruit=energies > energie_moyenne;
@@ -173,18 +203,20 @@ function taux_erreur = taux_erreur(original, recu)
     taux_erreur = sum(recu ~= original) / length(original);
 end
 
-function signal_reconstruit = reconstruire_phase_parfaite_v21(module_bruite, Ns, phi_0, phi_1, Te)
+function signal_reconstruit = reconstruire_fsk_phase_parfaite(module_bruite, Ns, phi_0, phi_1, Te, Nbits)
     frequence_0 = 1180;
     frequence_1 = 980;
+    t = 0:Te:(Nbits*Ns-1)*Te;
     sync_0 = Te * sum(reshape(module_bruite .* cos(2 * pi * frequence_0 * t + phi_0), Ns, []));    
     sync_1 = Te * sum(reshape(module_bruite .* cos(2 * pi * frequence_1 * t + phi_1), Ns, []));
 
     signal_reconstruit = sync_1 > sync_0;
 end
 
-function signal_reconstruit = reconstruire_v21(module_bruite, Ns)
+function signal_reconstruit = reconstruire_fsk(module_bruite, Te, Ns, Nbits)
     frequence_0 = 1180;
     frequence_1 = 980;
+    t = 0:Te:(Nbits*Ns-1)*Te;
     % On montre que l'ajout d'un déphasage aléatoire ne change pas le
     % résultat
     phi0 = 0;
@@ -201,14 +233,17 @@ function signal_reconstruit = reconstruire_v21(module_bruite, Ns)
 end
 
 
-function image_retrouvee = reconstruire_image(signal)
-    suite_binaire_reconstruite = reconstruire_v21(signal, Ns);
+function image_retrouvee = reconstruire_image(fichier_numero, Te, Ns)
+    signal = load(sprintf("images/fichier%d.mat", fichier_numero)).signal;
+    suite_binaire_reconstruite = reconstruire_fsk(signal, Te, Ns, 105*108);
     mat_image_binaire_retrouvee = reshape(suite_binaire_reconstruite,105*100,8);
     mat_image_decimal_retrouvee = bi2de(mat_image_binaire_retrouvee);
     image_retrouvee = reshape(mat_image_decimal_retrouvee,105,100);
+    imwrite(image_retrouvee, sprintf("images/décodée%d.png", fichier_numero))
 end
 
 function figure_signal_module(signal, titre, fichier_tikz)
+   figure
    plot(signal)
    xlabel("temps [s]")
    ylabel("amplitude")
@@ -218,6 +253,7 @@ function figure_signal_module(signal, titre, fichier_tikz)
 end
 
 function figure_signal_demodule(signal_0, signal_1, titre, fichier_tikz)
+   figure
    hold on
    plot(signal_0)
    plot(signal_1)
@@ -232,9 +268,12 @@ end
 
 % Attention: la dsp ne doit pas être fftshiftée
 function figure_dsp(dsp_experimentale, dsp_theorique, Fe, titre, fichier_tikz)
+    figure
     f = linspace(-Fe/2, Fe/2, length(dsp_experimentale));
+    size(dsp_experimentale)
+    size(dsp_theorique)
     semilogy(f, fftshift(dsp_experimentale), 'r')
-    semilogy(f, dsp_theorique, 'b')
+    semilogy(f, fftshift(dsp_theorique), 'b')
     xlabel("fréquence [Hz]")
     ylabel("Densité spectrale de puissance")
     legend("Expérimentale", "Théorique")
@@ -243,6 +282,7 @@ function figure_dsp(dsp_experimentale, dsp_theorique, Fe, titre, fichier_tikz)
 end
 
 function figure_nrz(nrz, Te, Nbits, Ns, titre, fichier_tikz)
+    figure
     t = 0:Te:(Nbits*Ns-1)*Te;
     plot(t, nrz)
     xlabel("temps [s]")
@@ -255,9 +295,10 @@ end
 function figure_bits_comparaison(bits_recus, bits_originaux, Te, Nbits, Ns, snr, titre, fichier_tikz)
     t = 0:Te:(Nbits*Ns-1)*Te;
     
-    nrz_recu = kron(bits_recu, ones(1, Ns));
+    nrz_recu = kron(bits_recus, ones(1, Ns));
     nrz_original = kron(bits_originaux, ones(1, Ns));
     
+    figure
     hold on 
     plot(t, nrz_original, 'LineWidth', 2)
     plot(t, nrz_recu, '--', 'LineWidth', 4)
@@ -266,20 +307,23 @@ function figure_bits_comparaison(bits_recus, bits_originaux, Te, Nbits, Ns, snr,
     ylabel("bit")
     legend("Original", "Reconstitué")
     ylim([-0.1, 1.1])
-    title(sprintf("%s (taux d'erreur: %.2f%%, SNR: %d)", titre, taux_erreur(bits_originaux, bits_recus)*100), snr)
+    title([titre, sprintf("taux d'erreur: %.2f%%, SNR: %d", taux_erreur(bits_originaux, bits_recus)*100, snr)])
     tikzfigure(fichier_tikz)
 end
 
 function figure_reponses_filtre(reponse_impulsionnelle, reponse_frequentielle, ordre_filtre, Te, titre, fichier_tikz)
+    Fe = 1/Te;
     t_filtres = -(ordre_filtre - 1) / 2 * Te : Te : (ordre_filtre - 1)/2 * Te;
     f_filtres = linspace(-Fe/2, Fe/2, length(reponse_frequentielle));
     
+    figure
     plot(t_filtres, reponse_impulsionnelle);
     xlabel("temps [s]")
     ylabel("amplitude")
     title(sprintf('Réponse impulsionnelle du %s', titre))
     tikzfigure(sprintf('%s-impulsionnelle', fichier_tikz))
     
+    figure
     plot(f_filtres, reponse_frequentielle);
     xlabel("fréquence [Hz]")
     ylabel("amplitude")
@@ -288,5 +332,8 @@ function figure_reponses_filtre(reponse_impulsionnelle, reponse_frequentielle, o
 end
 
 function tikzfigure(name)
-	matlab2tikz(sprintf('figures/%s.tex', name));
+    if exist('cleanfigure', 'file') & exist('matlab2tikz', 'file')
+        cleanfigure;
+	    matlab2tikz(sprintf('figures/%s.tex', name));
+    end
 end

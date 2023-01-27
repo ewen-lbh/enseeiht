@@ -5,12 +5,13 @@
 %where you can also make suggestions and rate matlab2tikz.
 %
 \definecolor{mycolor1}{rgb}{0.00000,0.44700,0.74100}%
+\definecolor{mycolor2}{rgb}{0.85000,0.32500,0.09800}%
 %
 \begin{tikzpicture}
 
 \begin{axis}[%
 width=4.521in,
-height=3.559in,
+height=3.406in,
 at={(0.758in,0.488in)},
 scale only axis,
 xmin=0,
@@ -22,10 +23,13 @@ ymax=1.1,
 ylabel style={font=\color{white!15!black}},
 ylabel={bit},
 axis background/.style={fill=white},
-title style={font=\bfseries},
-title={Signal NRZ aléatoire}
+title style={font=\bfseries, align=center},
+title={Signal reconstruit par filtrage, avec les fréquences de la norme V21\\[1ex]taux d'erreur: 20.00\%, SNR: 50},
+axis x line*=bottom,
+axis y line*=left,
+legend style={legend cell align=left, align=left, draw=white!15!black}
 ]
-\addplot [color=mycolor1, forget plot]
+\addplot [color=mycolor1, line width=2.0pt]
   table[row sep=crcr]{%
 0	1\\
 0.00331250000000005	1\\
@@ -54,5 +58,30 @@ title={Signal NRZ aléatoire}
 0.0666875	1\\
 0.0833124999999999	1\\
 };
+\addlegendentry{Original}
+
+\addplot [color=mycolor2, dashed, line width=4.0pt]
+  table[row sep=crcr]{%
+0	1\\
+0.00664583333333324	1\\
+0.00668749999999996	0\\
+0.00997916666666665	0\\
+0.0100208333333334	1\\
+0.0266458333333333	1\\
+0.0266875	0\\
+0.0299791666666667	0\\
+0.0300208333333334	1\\
+0.0466458333333333	1\\
+0.0466875	0\\
+0.0499791666666667	0\\
+0.0500208333333334	1\\
+0.0599791666666667	1\\
+0.0600208333333334	0\\
+0.0666458333333333	0\\
+0.0666875	1\\
+0.0833124999999999	1\\
+};
+\addlegendentry{Reconstitué}
+
 \end{axis}
 \end{tikzpicture}%
