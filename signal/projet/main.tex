@@ -48,6 +48,7 @@ Rapport de projet -- Traitement du signal
 
 \maketitle
 
+\setcounter{tocdepth}{3}
 \tableofcontents
 
 \section{Introduction}
@@ -69,7 +70,10 @@ Nous comparerons ensuite les densités spectrales de puissance théoriques et ex
 
 On génère tout d'abord un signal NRZ prennant deux valeurs, 0 ou 1, générées aléatoirement d'une durée $T_s=1/300 s$. On effectue cela sur $N_s$ périodes. Voici les résultats ainsi obtenus. Pour calculer le signal NRZ depuis un vecteur binaire de taille $1 \times N_\text{bits}$, fait le produit tensoriel de Kronecker entre le vecteur binaire et un vecteur comportant $N_s$ fois le bit 1.
 
+\begin{figure}[H]
+	\centering
 \input{figures/signal-nrz-aleatoire.tex}
+\end{figure}
 
 \subsection{Densité spectrale de puissance}
 
@@ -80,9 +84,12 @@ Puis la DSP théorique:
 \[
 S_\text{NRZ}(f)=\frac{1}{4} T_s \sinc^2(\pi f T_s)+\frac{1}{4} \delta(f)
 \]
-On peut déormais comparer les densités spectrales de puissance théoriques et expérimentales:
+Voici la DSP expérimentale:
 
-\input{figures/dsp-nrz-aleatoire.tex}
+\begin{figure}[H]
+	\centering
+\input{figures/dsp-nrz-aleatoire-experimentale.tex}
+\end{figure}
 
 
 \subsection{Génération d'un signal modulé en fréquence}
@@ -365,17 +372,17 @@ Le reste du processus reste le même qu'en \ref{synchro-ideale}.
 \input{figures/bits-reconstruits-fsk.tex}
 \end{figure}
 
-On peut désormais utiliser cette méthode de démodulation pour démoduler les images proposées. On divise la matrice par 255 et on assemble le puzzle pour obtenir l'image suivante:
+\subsubsection{Image mystère}
+
+
+On peut désormais utiliser cette méthode de démodulation pour démoduler les images proposées. On divise les coefficients de la matrice par 255 et on assemble le puzzle pour obtenir l'image suivante:
 
 \begin{center}
-	\includegraphics[width=0.5]{camichet.png}
+	\includegraphics[width=0.5\textwidth]{camichel.png}
 \end{center}
 
-Il s'agit du grand et fameux Charles Camichel ! Normalien de bonne facture, il fut prof d'élec à l'université de Lille de 1895 à 1900. En 1907, à la suite d'une dépression causée par le mauvais temps du nord de la France, il s'installe à Toulouse et crée l'institut électrotechique de Toulouse. Cette école évoluera jusqu'à avoir un nom beaucoup trop compliqué: école naionnale supérieure d'électrotechnique, d'électronique, d'informatique, d'hydraulique et des télécomunications. Heureusement, le groupe centrale est en route pour venir secourir cette école en perdition en la renomant "Institut Centrale Toulouse", faisant payer ce changement de nom aux élèves en mulltipliant par quatre les frais d'inscription.
+Il s'agit du grand et fameux Charles Camichel ! Normalien de bonne facture, il fut prof d'élec à l'université de Lille de 1895 à 1900. En 1907, à la suite d'une dépression causée par le mauvais temps du nord de la France, il s'installe à Toulouse et crée l'institut électrotechique de Toulouse. Cette école évoluera jusqu'à avoir un nom beaucoup trop compliqué: école naionnale supérieure d'électrotechnique, d'électronique, d'informatique, d'hydraulique et des télécomunications. Heureusement, le groupe centrale est en route pour venir secourir cette école en perdition en la renomant ``Institut Centrale Toulouse", faisant payer ce changement de nom aux élèves en mulltipliant par quatre les frais d'inscription.
 
-% ne pas écrire en dessous
+C'est une photo de l'ancien Foy' de l'ENSEEIHT, situé très précisément aux coordonnées {\bf 43°36'06.7"N 1°27'18.3"E}
 
-\begin{center}
-    \includegraphics[width=0.125\textwidth]{frog.jpg}
-\end{center}
 \end{document}
