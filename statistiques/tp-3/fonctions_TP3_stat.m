@@ -72,16 +72,15 @@ end
 % Fonction G_et_R_moyen (exercice_3.m, bonus, fonction du TP1) ------------
 function [G, R_moyen, distances] = ...
          G_et_R_moyen(x_donnees_bruitees,y_donnees_bruitees)
-
-
-
+        
+    G = mean([x_donnees_bruitees' y_donnees_bruitees']);
+    distances = sqrt((G(1) - x_donnees_bruitees).^2 + ((G(2) - y_donnees_bruitees).^2));
+    R_moyen = mean(distances);
 end
 
 % Fonction estimation_C_et_R (exercice_3.m, bonus, fonction du TP1) -------
 function [C_estime,R_estime,critere] = ...
          estimation_C_et_R(x_donnees_bruitees,y_donnees_bruitees,n_tests,C_tests,R_tests)
-     
-
 
 end
 

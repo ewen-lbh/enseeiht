@@ -28,4 +28,4 @@ Non, `p` n'est pas modifié ensuite.
 
 ## Que se passerait-il si on modifiait `*p` après la ligne 19 ?
 
-- L'affichage aux lignes 20, 27 et 34 change
+L'affichage aux lignes 20, 27 et 34 change

@@ -3,6 +3,7 @@
 % Language setting
 % Replace `english' with e.g. `spanish' to change the document language
 \usepackage[french]{babel}
+\usepackage[utf8]{inputenc}
 
 \usepackage{float}
 
@@ -29,33 +30,37 @@
 \newcommand{\sinc}{\operatorname{sinc}}
 
 
+
+
+\title{
 \includegraphics[width=0.2\textwidth]{n7.png}
+\\[1cm]
+Rapport de projet -- Traitement du signal
 
-
-\title{Rapport de projet -- Traitement du signal}
+}
 \author{Florent Puy, Ewen Le Bihan}
 
 \date{ENSEEIHT, département Sciences du Numérique}
 
 \begin{document}
+
 \maketitle
-
-
 
 \tableofcontents
 
 \section{Introduction}
 
-Dans ce projet, nous avons eu à implémenter un modem suivant les règles V21 de l'union internationnale des télécommunications (UIT) en Matlab. Nous utiliserons la méthode de la modulation en fréquence numérique.
+Dans ce projet, nous implémentons un modem suivant les règles V21 de l'union internationnale des télécommunications (UIT) en Matlab. Nous utiliserons la méthode de la modulation en fréquence numérique.
 
 \section{Modem en fréquence}
 
-Nous allons tout d'abord réaliser un signal NRZ binaire à partir duquel nous construirons ensuite un signal sinusoïdal modulé fréquence $F_0=\SI{1180}{\hertz}$ pour les bits 0 et de fréquence $F_1=\SI{980}{\hertz}$ pour les bits 1.
-Nous comparerons ensuite les densités spéctrales de puissance théorique et pratique du signal NRZ et du signal modulé en fréquence.
+Nous allons tout d'abord réaliser un signal NRZ binaire à partir duquel nous construirons ensuite un signal sinusoïdal modulé fréquence $F_0=\SI{6000}{\hertz}$ pour les bits 0 et de fréquence $F_1=\SI{2000}{\hertz}$ pour les bits 1.
+
+Nous comparerons ensuite les densités spectrales de puissance théoriques et expérimentales du signal NRZ et du signal modulé en fréquence.
 
 \subsection{Génération d'un signal NRZ}
 
-On génère tout d'abord un signal NRZ prennant deux valeurs, 0 ou 1, générées aléatoirement d'une durée $T_s=1/300 s$. On effectue cela sur $N_s$ périodes. Voici les résultats ainsi obtenus.
+On génère tout d'abord un signal NRZ prennant deux valeurs, 0 ou 1, générées aléatoirement d'une durée $T_s=1/300 s$. On effectue cela sur $N_s$ périodes. Voici les résultats ainsi obtenus. Pour calculer le signal NRZ depuis un vecteur binaire de taille $1 \times N_\text{bits}$, fait le produit tensoriel de Kronecker entre le vecteur binaire et un vecteur comportant $N_s$ fois le bit 1.
 
 \input{figures.6k2k.61/signal-nrz-aleatoire.tex}
 
@@ -65,11 +70,9 @@ On calcule ensuite la densité spectrale théorique vue en cours d'un signal NRZ
 \[
 S_\text{NRZ}(f)=\frac{1}{4} T_s \sinc^2(\pi f T_s)+\frac{1}{4} \delta(f)
 \]
-
-On peut déormais comparer la densité spéctrale de puissance théorique à celle calculée:
+On peut déormais comparer les densités spectrales de puissance théoriques et expérimentales:
 
 \input{figures.6k2k.61/dsp-nrz.tex}
-
 
 
 \subsection{Génération d'un signal modulé en fréquence}
@@ -78,13 +81,17 @@ Pour construire notre signal modulé en fréquence nous allons nous baser sur le
 \[
 \operatorname{modulé}(t)=\operatorname{NRZ}(t) \cos(2\pi F_1 t + \phi_1) + (1-\operatorname{NRZ}(t)) \cos(2 \pi F_0 t + \phi_1)
 \]
-$\phi_1$ et $\phi_2$ étant des déphasages tirés aléatoirement dans $[0, 2\pi]$
-
+$\phi_1$ et $\phi_2$ étant des déphasages tirés aléatoirement dans $[0, 2\pi]$ et $\text{NRZ}(t)$ le signal NRZ.
 
 
 On obtient ainsi le signal suivant:
 
 \input{figures.6k2k.61/nrz-module.tex}
+
+\begin{align*}
+	s_x(f) &= | \operatorname{TF}(x)(f) |^2 \\
+	       &= \left| \operatorname{TF}(\operatorname{NRZ}(t) \cos(2\pi F_1 t + \phi_1)) + \operatorname{TF}((1 - \operatorname{NRZ}(t)) \cos(2 \pi F_0 t + \phi_0)) \right|^2 \\
+\end{align*}
 
 On calcule ensuite la densité spectrale de puissance de ce signal NRZ en utilisant la fonction \verb|pwelch| de Matlab utilisant un périodogramme de Welch. 
 On obtient ceci:
@@ -103,7 +110,12 @@ Le bruit simulé sera généré aléatoirement grâce au module \verb|rand| de M
 
 avec $S_\text{module}$ représentant la densité spectrale de puissance du signal modulé en fréquence et $\operatorname{SNR}$ le rapport signal sur bruit (signal to noise ratio) que nous fixerons à 10 par la suite.
 
-\input{figures.6k2k.61/signal-bruite.tex}
+\begin{figure}[H]
+	\centering
+	\input{figures.6k2k.61/signal-bruite.tex}
+	\caption{Signal bruité}
+	\label{fig:bruite}
+\end{figure}
 
 \section{Démodulation par filtrage}
 
@@ -148,12 +160,29 @@ Enfin, on compare cette énergie à un seuil $K$ qu'on fixera à la moyenne des 
 Pour le signal en sortie du passe bas par exemple, si $E>K$ alors le signal reconstitué sera égal à 1 sur cette période $T_s$, sinon il sera égal à 0.
 
 Voici les figures obtenues grâce à cette méthode.
-\input{figures.6k2k.61/nrz-aleatoire.tex}
-% TODO side by side
-\input{figures.6k2k.61/signal-reconstitue.tex}
+
+\begin{figure}
+	\centering
+	\begin{minipage}{0.45\textwidth}
+		\centering
+		\scalebox{0.5}{
+			\input{figures.6k2k.61/nrz-aleatoire.tex}
+		}
+		\caption{Signal original}
+	\end{minipage}\hfill
+	\begin{minipage}{0.45\textwidth}
+		\centering
+		\scalebox{0.5}{
+			\input{figures.6k2k.61/signal-reconstitue.tex}
+		}
+		\caption{Signal reconstitué}
+	\end{minipage}
+\end{figure}
+
 
 On peut désormais calculer le taux d'erreur binaire $\eta$ correspondant au nombre de bits mal transmits sur le nombre de bits total.
 Avec $F_1=980Hz$ et $F_0=1180Hz$ on obtient un taux d'erreur binaire $\eta=9\%$
+
 \subsection{Modification du démodulateur} 
 
 \subsubsection{Modification du nombre de coefficients}
@@ -186,14 +215,13 @@ En passant à 61 coefficients, le taux d'erreur reste de 0.0725.
 Nous allons ici introduire une nouvelle méthode de démodulation plus adaptée à la norme V21.
 La multiplication du signal avec le cosinus correspondant (par exemple) au bit 1 donne, en fonction du temps, une mesure de la synchronisation entre le signal et ce cosinus: plus le résultat est proche de 1, plus les signaux sont synchronisés à cet instant, et donc plus le signal est susceptible d'être un bit 1.
 On a:
-\[ 
-\int_{0}^{T_s} cos^2(2 \pi F_0 t + \phi_0) \, \mathrm{d}t  = \frac{1} {8 \pi F_0} sin(2(2 \pi F_0 T + phi_0))+4 \pi F_0 T - sin(2 \phi_0) 
 
-\int_{0}^{T_s} cos^2(2 \pi F_0 t + \phi_1) \, \mathrm{d}t  = \frac{1} {8 \pi F_0} sin(2(2 \pi F_0 T + phi_1))+4 \pi F_0 T - sin(2 \phi_1) 
-
-\int_{0}^{T_s} cos(2 \pi F_0 t + \phi_0) cos(2 \pi F_0 t + \phi_1)\, \mathrm{d}t  = \frac{1} {8 \pi F_0} sin(4 \pi F_0 T + phi_0 + phi_1)+4 \pi F_0 T cos(phi_0 - phi_1) - sin (\phi_0 + \phi_1) 
-
-\]
+\begin{align*}
+	\int_{0}^{T_s} \cos^2(2 \pi F_0 t + \phi_0) \, \mathrm{d}t  &= \frac{1} {8 \pi F_0} \sin(2(2 \pi F_0 T + phi_0))+4 \pi F_0 T - \sin(2 \phi_0) \\
+	\int_{0}^{T_s} \cos^2(2 \pi F_0 t + \phi_1) \, \mathrm{d}t  &= \frac{1} {8 \pi F_0} \sin(2(2 \pi F_0 T + phi_1))+4 \pi F_0 T - \sin(2 \phi_1) \\
+	\int_{0}^{T_s} \cos(2 \pi F_0 t + \phi_0) \cos(2 \pi F_0 t + \phi_1)\, \mathrm{d}t  &= \frac{1} {8 \pi F_0} \sin(4 \pi F_0 T + phi_0 + phi_1)\\
+											    & + 4 \pi F_0 T \cos(phi_0 - phi_1) - \sin (\phi_0 + \phi_1) 
+\end{align*}
 
 
 \begin{center}
@@ -258,7 +286,13 @@ Le signal démodulé avec cette méthode est le suivant:
 
 
 \begin{figure}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
 \input{figures.v21.61/signal-demodule-synchro-parfaite.tex}
+	\caption{Signal démodulé en supposant une synchronisation parfaite}
+	\label{fig:synchro-parfaite}
 \end{figure}
 
 

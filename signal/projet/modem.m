@@ -22,7 +22,7 @@ nrz = kron(bits, ones(1, Ns));
 % 3.1.2
 
 figure; hold off;
-plot(nrz)
+plot(nrz, 'LineWidth', 2)
 xlabel("temps [s]")
 ylabel("m_i(t)")
 ylim([-0.1, 1.1]);
@@ -68,6 +68,7 @@ plot(t, module);
 xlabel("Temps [s]")
 ylabel("Amplitude")
 title("NRZ modulé en fréquence")
+ylim([-1.1, 1.1]);
 tikzfigure('nrz-module.tex', V21, ordre_2)
 
 figure; hold off;
@@ -121,7 +122,6 @@ H_bas = 1 - H_haut;
 
 h_bas = -h_haut;
 h_bas(t_ordre_2==0) = h_bas(t_ordre_2==0) + 1;
-find(f==0)
 recu_1 = filter(h_haut, 1, module_bruite);
 recu_0 = filter(h_bas, 1, module_bruite);
 
@@ -174,7 +174,10 @@ matrice_energie = reshape(recu_1, Nbits, Ns);
 S=sum(matrice_energie.^2, 1);
 K=mean(S);
 signal_reconstitue=kron(S > K, ones(1, length(nrz) / Ns));
-erreur = sum(signal_reconstitue ~= nrz) / length(nrz)
+plot(signal_reconstitue, "LineWidth", 2);
+erreur = sum(signal_reconstitue ~= nrz) / length(nrz);
+xlabel("Temps")
+ylabel("Amplitude")
 title("Signal reconstitué (Taux d'erreur: " + erreur*100 + "%)")
 ylim([-0.1, 1.1]);
 tikzfigure('signal-reconstitue.tex', V21, ordre_2);
