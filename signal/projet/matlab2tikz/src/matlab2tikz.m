@@ -6217,12 +6217,15 @@ function [m2t, axesBoundingBox] = getRelevantAxes(m2t, axesHandles)
 end
 % ==============================================================================
 function userInfo(m2t, message, varargin)
+    % ~~DEACTIVATED~~
+    if false
     % Display usage information.
     if m2t.args.showInfo
         mess = sprintf(message, varargin{:});
 
         mess = strrep(mess, sprintf('\n'), sprintf('\n *** '));
         fprintf(' *** %s\n', mess);
+    end
     end
 end
 % ==============================================================================
