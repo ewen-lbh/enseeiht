@@ -1,0 +1,56 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=4.521in,
+height=3.548in,
+at={(0.758in,0.499in)},
+scale only axis,
+xmin=-25000,
+xmax=25000,
+xlabel style={font=\color{white!15!black}},
+xlabel={fréquence [Hz]},
+ymin=0,
+ymax=1,
+ylabel style={font=\color{white!15!black}},
+ylabel={Densité spectrale de puissance},
+axis background/.style={fill=white},
+title style={font=\bfseries},
+title={Densité spectrale de puissance du signal modulé},
+axis x line*=bottom,
+axis y line*=left
+]
+\addplot [color=red, forget plot]
+  table[row sep=crcr]{%
+-24000	1\\
+24000	1\\
+};
+\addplot [color=blue, forget plot]
+  table[row sep=crcr]{%
+-24000	8.14827217254788e-07\\
+-22076.2463343109	0.000176826575625455\\
+-21982.4046920821	0.00124771342962049\\
+-21935.4838709677	0.000277809660474304\\
+-21700.8797653959	9.12488758331165e-07\\
+-18041.0557184751	0.000259531043411698\\
+-17994.1348973607	0.000684993883623974\\
+-17900.293255132	0.000142605411383556\\
+-17008.7976539589	1.06670631794259e-06\\
+11612.9032258065	3.49209585692734e-08\\
+17994.1348973607	0.000257560655882116\\
+18041.0557184751	0.000684993883623974\\
+18134.8973607038	0.000146692083944799\\
+19073.3137829912	2.38798020291142e-06\\
+21982.4046920821	0.000277809660474304\\
+22029.3255131965	0.00124771342962049\\
+22217.008797654	7.91521597420797e-05\\
+22639.2961876833	7.95349478721619e-07\\
+24000	4.76087734568864e-07\\
+};
+\end{axis}
+\end{tikzpicture}%

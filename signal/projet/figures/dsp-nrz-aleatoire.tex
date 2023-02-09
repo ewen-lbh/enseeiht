@@ -1,0 +1,46 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=4.521in,
+height=3.548in,
+at={(0.758in,0.499in)},
+scale only axis,
+xmin=-25000,
+xmax=25000,
+xlabel style={font=\color{white!15!black}},
+xlabel={fréquence [Hz]},
+ymin=0,
+ymax=0.9,
+ylabel style={font=\color{white!15!black}},
+ylabel={Densité spectrale de puissance},
+axis background/.style={fill=white},
+title style={font=\bfseries},
+title={Densité spectrale de puissance du signal NRZ aléatoire},
+axis x line*=bottom,
+axis y line*=left
+]
+\addplot [color=red, forget plot]
+  table[row sep=crcr]{%
+-24000	0.00564946688973578\\
+-23953.0791788856	0.00207483772101114\\
+-23906.1583577713	0.00061344380810624\\
+-23624.633431085	2.37427884712815e-05\\
+-22967.7419354839	8.00076304585673e-06\\
+539.58944281525	2.10529833566397e-08\\
+23859.2375366569	0.000255953087616945\\
+23953.0791788856	0.00061344380810624\\
+24000	0.00207483772101114\\
+};
+\addplot [color=blue, forget plot]
+  table[row sep=crcr]{%
+-24000	0.833333333332121\\
+24000	0.833333333332121\\
+};
+\end{axis}
+\end{tikzpicture}%

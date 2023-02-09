@@ -1,0 +1,81 @@
+\usepackage{cancel}
+\usepackage[pdf]{graphviz}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage[binary-units]{siunitx}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{pgffor}
+\usepackage{import}
+\usepackage{vwcol}
+\usepackage{fontawesome}
+\usepackage{stmaryrd}
+\usepackage{multicol}
+\usepackage{pdfpages}
+\usepackage{transparent}
+\usepackage{xcolor}
+\usepackage{scalerel}
+\usepackage{stackengine}
+\usepackage{algpseudocode}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\card}{\operatorname{card}}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\rg}{\operatorname{rg}}
+\renewcommand{\epsilon}{\varepsilon}
+\newcommand{\equivalent}[1]{\underset{#1}{\sim}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\cM}{\mathcal{M}}
+\newcommand{\cO}{\mathcal{O}}
+\newcommand{\dx}{\mathrm{d}x}
+\newcommand{\dy}{\mathrm{d}y}
+\newcommand{\dz}{\mathrm{d}z}
+\newcommand{\dt}{\mathrm{d}t}
+\newcommand{\df}{\mathrm{d}f}
+\newcommand{\Sp}{\operatorname{Sp}}
+\newcommand{\dangersign}[1][2ex]{%
+  \renewcommand\stacktype{L}%
+  \scaleto{\stackon[1.3pt]{\color{red}$\triangle$}{\tiny !}}{#1}%
+}
+
+\usepackage[a4paper,top=4cm,bottom=4cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+% \newcommand{\incfig}[2][1]{%
+%     \def\svgwidth{#1\columnwidth}
+%     \import{./figures/}{#2.pdf_tex}
+% }
+% 
+\newenvironment{theorem}[1][\unskip]{
+	\paragraph{Théorème #1}
+
+}{}
+
+\newenvironment{proof}[1][\unskip]{
+	\def\temp{#1}\ifx\temp\empty
+		\paragraph{Preuve}
+	\else
+		\paragraph{Preuve \emph{(#1)}}
+	\fi
+
+}{}
+
+\newenvironment{definition}[1][\unskip]{
+	\paragraph{Définition: #1}
+
+}{}
+
+\newenvironment{warning}[1][\unskip]
+{
+	\vspace{1cm}
+	\begin{minipage}[c]{0.1\linewidth}
+	\dangersign[8ex] 
+\end{minipage}%
+\begin{minipage}[l]{0.9\linewidth}
+}
+{
+	\end{minipage}
+	\vspace{1cm}
+}
+
+% \pdfsuppresswarningpagegroup=1

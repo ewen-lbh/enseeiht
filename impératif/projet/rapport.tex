@@ -1,0 +1,217 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+ \usepackage{tikz}
+ \usepackage{amsmath, amssymb, amsfonts, xfrac}
+
+\title{Rapport projet Programmation impérative}
+\author{Axel DEORA, Clément HERBIN, Ewen LE BIHAN}
+\date{January 2023}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+Le but du projet est d'implémenter en Ada un routeur avec cache. Un routeur est un élément d'un réseau qui a pour objectif de transmettre les paquets qu'il reçoit sur une interface d'entrée vers la bonne interface de sortie en fonction des informations qui sont stockées dans sa table de routage.\par
+La première partie du projet était d'implémenter une routeur simple, c'est-à-dire un routeur sans cache.\par  
+La deuxième partie du projet consistait à implémenter un routeur avec cache. Il y a deux types de caches:
+\begin{itemize}
+    \item Cache LA, qui est un cache représenté par une liste chainée,
+    \item Cache LL, qui est un cache représenté quant à lui par un arbre binaire.
+\end{itemize}\par
+De plus, pour les deux types de caches, il y a différentes politique de remplacement à mettre en place. Elles définissent la donnée qui sera supprimée du cache lorsque celui-ci sera plein:
+\begin{itemize}
+    \item FIFO (First In, First Out): la donnée la plus ancienne du cache,
+    \item LRU (Least Recently Used): la donnée la moins récemment utilisée,
+    \item LFU (Least Frequently Used): la donnée la moins utilisée.
+\end{itemize}
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\section{Architecture de l'application en modules}
+
+\subsection{Routeur simple}
+Pour implémenter le routeur simple, nous avons défini plusieurs modules:
+\begin{enumerate}
+    \item Parsing qui permet d'analyser les différents fichiers d'entrées ainsi que la ligne de commande pour lancer le programme,
+    \item Table qui défini des types de données et des fonctions et procédures permettant de manipuler des adresses IP,
+    \item RouteurSimple qui défini un routeur simple,
+    \item Exceptions qui défini différentes exceptions utilisés dans le programme.
+\end{enumerate}
+
+\subsection{Routeur avec cache}
+Chaque type de cache à besoin de stocker les demandes et les défauts de caches. Nous avons donc créé un module Caches où nous définissons une structure de données représentant les statistiques d'un cache.\par
+Ensuite, il y a un module Routeur\_la pour le routeur avec un cache de type arbre et un module Routeur\_ll pour le routeur avec un cache de type liste chainée.
+
+\subsubsection{Routeur LL}
+Pour implémenter les caches avec différentes politique de remplacement, nous avons décidé de créer trois modules:
+\begin{enumerate}
+    \item Lca\_Fifo qui représente le cache avec une politique FIFO
+    \item Lca\_Lru qui représente le cache avec une politique LRU
+    \item Lca\_Lfu qui représente le cache avec une politique LFU
+\end{enumerate}
+
+
+\subsubsection{Routeur LA}
+\label{routeur_la_choix}
+
+Nous avons choisi d'implémenter les trois politiques avec un seul type. Chaque nœud stockant une interface stocke également un nombre flottant appelé \verb|critere_politique|, qui prend des valeurs différentes selon la politique choisie:
+
+\begin{description}
+    \item[FIFO] Ancienneté d'insertion: Le noeud le plus récemment inséré dans l'arbre est à 0. Les autres nœuds voient cette valeur incrémentée à chaque insertion d'un nouveau nœud.
+
+    \item[LRU] Ancienneté d'utilisation: Le nœud le plus récemment utilisé (celui dont l'interface a été choisie) est à 0. Les autres nœud voient cette valeur incrémentée à chaque demande au cache.
+
+    \item[LFU] Fréquence d'utilisation: Chaque nœud a sa valeur mise à jour à chaque demande d'accès.
+\end{description}
+
+\section{Présentation des principaux choix réalisés}
+
+\subsection{Routeur simple}
+Pour l'implémentation du routeur simple, nous avons décidé de réutiliser le module LCA du PRO2, en faisant quelques modifications, nous avons rendu ce module non générique, et remplacer l'unique donnée stockée par un triplet comprenant l'adresse, le masque ainsi que l'interface.
+
+\subsection{Routeur avec cache}
+\subsubsection{Routeur LL}
+Pour l'implémentation du cache avec des listes chainées, nous avons décidé d'arrêter d'utiliser le module LCA du PRO2. En effet, nous avons essayé d'utiliser la généricité de ce module, en le modifiant, pour représenter les différentes politiques de remplacement du cache. Mais il y a eu des problèmes, nous avons donc défini de nouveau type de données pour pouvoir représenter les listes chainées. Cela rendait plus facile la mise en place des algorithmes permettant la vérification et l'ajout d'élément dans le cache.
+
+\subsubsection{Routeur LA}
+\paragraph{}
+J'ai choisi de gérer les trois politiques en un seul paquet et un seul type: la configuration de la politique est gérée par la valeur d'un \emph{enum} \verb|T_Politique|, stockée dans un champ de l'enregistrement \verb|T_Cache_ABR|.
+
+Les nœuds stockant des interfaces ont aussi un champ \verb|critere_politique|, un nombre flottant, qui stocke une donéee différente selon la politique choisie:
+
+\begin{description}
+\item[FIFO] Ancienneté d'insertion: le noeud dernièrement inséré est à 0, les autres s'incrémente à chaque ajout de noeud.
+\item[LRU] Ancienneté d'accès: le noeud dernièrement accédé (utilisé, celui dont l'interface a été choisie) est à 0, les autres s'incrémentent à chaque demande.
+\item[LFU] Fréquence d'accès: chaque noeud voit sa valeur mise à jour à chaque demande.
+\end{description}
+
+\paragraph{}
+Nous avons choisi d'opérer sur des chaînes de caractères des représentation binaires des adresses plutôt que des entiers dans $\sfrac{\mathbb{N}}{(2^{32} - 1)\mathbb{N}}$: les algorithmes sur cette arbre requiert de nombreuses opérations sur des suffixes, préfixes et sous-chaînes d'une chaîne, il était plus intéréssant de manier des caractères que de devoir traduire ces opérations en opérations sur des entiers, surtout quand on remarque que \emph{Ada} ne propose pas les opérations \verb|shift_right| et \verb|shift_left| (décalages bit-à-bit) sur des entiers (il faut utiliser un type \verb|bytesIO| que nous n'avons pas choisi d'utiliser). Le code est rendu également plus lisible.
+
+
+\section{Présentation des principaux algorithmes et types de données}
+
+\subsection{Routeur avec cache}
+Pour représenter les statistiques d'un cache, nous avons défini un type de donnée qui contient un entier représentant le nombre de demandes et un entier représentant le nombre de défaults de cache.
+
+\subsubsection{Routeur LL}
+Pour représenter le cache avec une liste chainée et les différentes politique de remplacement, il faut définir différents types de données. Les 3 structures de données représentant chaque politique de cache ont des champs en communs:
+\begin{itemize}
+    \item La capacité du cache,
+    \item La taille actuelle du cache,
+    \item La liste chainée,
+    \item La structure de donnée représentant les statistiques.
+\end{itemize}
+Le cache avec la politique LRU aura quant à lui un entier représentant un compteur en plus.
+\newline
+Ensuite, pour représenter les différentes listes chainées, il y a aussi une base commune:
+\begin{itemize}
+    \item L'adresse IP,
+    \item Le masque,
+    \item L'interface,
+    \item Un pointeur vers l'élément suivant.
+\end{itemize}\par
+Pour la politique LRU, il y a un entier représentant un compteur en plus, ce qui permettra de trouver l'élément le moins récemment utilisé en cherchant l'élément de la liste contenant le plus petit compteur. \par 
+Pour la politique LFU, il y a un entier représentant la fréquence, ce qui permettra de trouver l'élément le moins fréquemment utilisé en cherchant l'élément avec la plus petite fréquence.
+
+\subsubsection{Routeur LA}
+
+Pour l'implémentation du cache avec des arbres binaires de recherche, nous avons choisi de représenter les nœuds par des enregistrements, avec pour champs:
+
+\begin{itemize}
+    \item \verb|fils_gauche|, \verb|fils_droit|: pointeurs vers les nœuds enfants
+    \item \verb|eth|: l'interface associée à ce nœud. Une chaîne vide correspond à l'absence de règles correspondant au chemin jusqu'à ce nœud.
+    \item \verb|fragment| : fragment du préfixe d'URL. Peut être vide.
+    \item \verb|critere_politique|: nombre utilisé pour la gestion de la politique de suppression (voir \ref{routeur_la_choix})
+\end{itemize}
+
+L'arbre stocke des préfixes d'URLs, qui sont les URLs présents dans la table de routage, sans la partie dont le masque est fait de zéros (on ne stocke que la partie "utile" de la règle)
+
+Une règle est ainsi représentée par une chaîne de caractères \verb|`1'| ou \verb|`0'|, ainsi que l'interface vers laquelle le paquet doit être routé.
+
+Pour trouvé ladite interface, ont descend dans l'arbre, et l'adresse est la concaténation des fragments des nœuds, sans oublier que la descente dans un sous-arbre gauche encode la concaténation d'un \verb|`0'|, et celle dans un sous-arbre droit encode la concaténation d'un \verb|`1'|:
+
+\begin{center}
+    \begin{tikzpicture}[scale=0.2]
+\tikzstyle{every node}+=[inner sep=0pt]
+\draw [black] (38.9,-8.9) circle (3);
+\draw (38.9,-8.9) node {$\emptyset$};
+\draw [black] (28.6,-18.4) circle (3);
+\draw (28.6,-18.4) node {$\emptyset$};
+\draw [black] (18.9,-29.2) circle (3);
+\draw (18.9,-29.2) node[text width=1cm, align=center] {010100\\$\texttt{eth3}$};
+%\draw [black] (38.9,-29.2) circle (3);
+\draw [rounded corners=0.5cm] (29.9,-31.7) rectangle ++(18, 5);
+\draw (38.9,-29.2) node {01001101111111000};
+\draw [black] (30.8,-41.2) circle (3);
+\draw (30.8,-41.2) node[text width=1cm, align=center] {$\emptyset$\\$\texttt{eth0}$};
+\draw [black] (38.9,-49.4) circle (3);
+\draw (38.9,-49.4) node[text width=1cm, align=center] {010\\$\texttt{eth1}$};
+\draw [black] (48.9,-41.2) circle (3);
+\draw (48.9,-41.2) node[text width=1cm, align=center] {0000\\$\texttt{eth2}$};
+\draw [black] (36.69,-10.93) -- (30.81,-16.37);
+\fill [black] (30.81,-16.37) -- (31.73,-16.19) -- (31.05,-15.46);
+\draw (32.68,-13.16) node [above] {$0$};
+\draw [black] (26.6,-20.63) -- (20.9,-26.97);
+\fill [black] (20.9,-26.97) -- (21.81,-26.71) -- (21.07,-26.04);
+\draw (23.21,-22.34) node [left] {$0$};
+\draw [black] (30.67,-20.57) -- (36.83,-27.03);
+\fill [black] (36.83,-27.03) -- (36.64,-26.11) -- (35.92,-26.8);
+\draw (33.22,-25.27) node [left] {$1$};
+\draw [black] (37.22,-31.69) -- (32.48,-38.71);
+\fill [black] (32.48,-38.71) -- (33.34,-38.33) -- (32.51,-37.77);
+\draw (34.24,-33.86) node [left] {$0$};
+\draw [black] (40.82,-31.5) -- (46.98,-38.9);
+\fill [black] (46.98,-38.9) -- (46.85,-37.96) -- (46.08,-38.6);
+\draw (43.35,-36.64) node [left] {$1$};
+\draw [black] (32.91,-43.33) -- (36.79,-47.27);
+\fill [black] (36.79,-47.27) -- (36.59,-46.35) -- (35.87,-47.05);
+\draw (34.33,-46.77) node [left] {$1$};
+\end{tikzpicture}
+\end{center}
+
+Par exemple, les paquets routés à \verb|eth2| doivent avoir une adresse IP commençant par  \verb|010100110111111100010000|
+
+
+\section{Tests du programme}
+
+
+
+\section{Difficultés rencontrées}
+\subsection{Analyse du fichier table}
+La première difficulté rencontrée est l'analyse du fichier table. En effet, le fait de devoir transformer un string représentant l'adresse IP en un entier était assez difficile à mettre en place.
+
+\subsection{Les tests}
+Les tests concernant les fonctions de parsing étaient compliqués à mettre en place. Pour les tests de parsing de fichier, il fallait créer un fichier au début du test et écrire des données à l'intérieur, puis ensuite réaliser les tests et enfin supprimer le fichier. Cela était assez long à mettre en place.
+
+\section{Organisation de l'équipe}
+Pour l'organisation de l'équipe, nous avons décidé de garder le découpage donner dans le sujet:
+\begin{itemize}
+    \item Axel Deora a fait les raffinages ainsi que l'implémentation des routeurs,
+    \item Clément Herbin a fait les raffinages ainsi que l'implémentation des caches du routeur LL, de plus, il a fait l'analyse du fichier table,
+    \item Ewen Le Bihan a fait les raffinages ainsi que l'implémentation des caches du routeur LA, de plus, il a fait l'analyse du fichier paquets ainsi que l'analyse de la ligne de commande.
+\end{itemize}\par
+Concernant le test, chacun a testé la partie de code qu'il a implémenté, sauf pour quelques exceptions. Cependant, nous avons chacun relu le code des autres.
+
+\section{Bilan technique}
+\subsection{État d'avancement du projet}
+Le routeur simple est fonctionnel.\par
+
+\subsection{Amélioration et évolution}
+\begin{itemize}
+    \item La partie du code sur le cache LCA est assez redondance, un axe d'amélioration est donc de modifier cette partie du code pour enlever cette redondance.
+    \item Le cache à arbre utilise des \verb|Unbounded_String| par facilité, mais il aurait été intéréssant de gérer la manipulation des fragments d'IP avec des \verb|String(32)|, comme les addresses IP ne peuvent par définition pas dépasser les 32 bits.
+\end{itemize}
+
+\section{Bilan personnel et individuel}
+\subsection{Bilan de Clément}
+Premièrement, ce projet m'a permis de découvrir le principe d'une table de routage et comment cela fonctionne. Nous nous avons utilisé git pour gérer les différentes versions du programme, cela m'a donc permis d'utiliser git dans un contexte de groupe. Ensuite, ce projet m'a permis de mettre en pratique les raffinages pour la conception des algorithmes puis d'implémenter cela en Ada.\par
+Ayant fait les raffinages du cache avec des listes chainées, j'ai passé environ 4 heures à faire des raffinages. Ensuite, j'ai passé environ 12 heures pour la partie sur le routeur simple et environ 10 heures pour la partie cache avec liste chainée. J'ai enfin passé quelques heures pour la rédaction du rapport et la mise au point de différentes parties du code.
+\subsection{Bilan de Ewen}
+\subsection{Bilan de Axel}
+\end{document}

@@ -1,0 +1,39 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.00000,0.44700,0.74100}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=4.521in,
+height=3.548in,
+at={(0.758in,0.499in)},
+scale only axis,
+xmin=-25000,
+xmax=25000,
+xlabel style={font=\color{white!15!black}},
+xlabel={fréquence [Hz]},
+ymode=log,
+ymin=0.1,
+ymax=10,
+yminorticks=true,
+ylabel style={font=\color{white!15!black}},
+ylabel={Densité spectrale de puissance},
+axis background/.style={fill=white},
+title style={font=\bfseries},
+title={Densité spectrale de puissance du signal modulé},
+legend style={legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=mycolor1]
+  table[row sep=crcr]{%
+-24000	1\\
+24000	1\\
+};
+\addlegendentry{Expérimentale}
+
+\end{axis}
+\end{tikzpicture}%

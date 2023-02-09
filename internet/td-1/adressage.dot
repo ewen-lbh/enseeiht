@@ -1,0 +1,10 @@
+digraph adressage {
+A -> I [label=".9"]
+I -> A [label=".126"]
+B -> I [label=".10"]
+I -> B
+C -> I [label=".11"]
+I -> C
+D -> I [label=".12"]
+I -> D
+}

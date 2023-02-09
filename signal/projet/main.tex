@@ -1,0 +1,388 @@
+\documentclass{article}
+
+% Language setting
+% Replace `english' with e.g. `spanish' to change the document language
+\usepackage[french]{babel}
+\usepackage[utf8]{inputenc}
+\newcommand{\TF}{\operatorname{TF}}
+\newcommand{\NRZ}{\operatorname{NRZ}}
+
+\usepackage{float}
+
+% Set page size and margins
+% Replace `letterpaper' with `a4paper' for UK/EU standard size
+\usepackage[a4paper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{siunitx}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usetikzlibrary{plotmarks}
+\usetikzlibrary{arrows.meta}
+\usepgfplotslibrary{patchplots}
+\usepackage{grffile}
+\pgfplotsset{plot coordinates/math parser=false}
+\newlength\figureheight
+\newlength\figurewidth
+  
+\usepackage{graphicx}
+\usepackage{hyperref}
+\newcommand{\TF}{\operatorname{TF}}
+\newcommand{\sinc}{\operatorname{sinc}}
+
+
+
+
+\title{
+\includegraphics[width=0.2\textwidth]{n7.png}
+\\[1cm]
+Rapport de projet -- Traitement du signal
+
+}
+\author{Florent Puy, Ewen Le Bihan}
+
+\date{ENSEEIHT, département Sciences du Numérique}
+
+\begin{document}
+
+\maketitle
+
+\setcounter{tocdepth}{3}
+\tableofcontents
+
+\section{Introduction}
+
+Dans ce projet, nous implémentons un modem suivant les règles V21 de l'union internationnale des télécommunications (UIT) en Matlab. Nous utiliserons la méthode de la modulation en fréquence numérique.
+
+\setcounter{section}{2}
+
+\section{Modem en fréquence}
+
+Nous allons tout d'abord réaliser un signal NRZ binaire à partir duquel nous construirons ensuite un signal sinusoïdal modulé fréquence $F_0=\SI{6000}{\hertz}$ pour les bits 0 et de fréquence $F_1=\SI{2000}{\hertz}$ pour les bits 1.
+
+Nous comparerons ensuite les densités spectrales de puissance théoriques et expérimentales du signal NRZ et du signal modulé en fréquence.
+
+\subsection{Génération d'un signal NRZ}
+
+\subsection{Signal NRZ}
+
+
+On génère tout d'abord un signal NRZ prennant deux valeurs, 0 ou 1, générées aléatoirement d'une durée $T_s=1/300 s$. On effectue cela sur $N_s$ périodes. Voici les résultats ainsi obtenus. Pour calculer le signal NRZ depuis un vecteur binaire de taille $1 \times N_\text{bits}$, fait le produit tensoriel de Kronecker entre le vecteur binaire et un vecteur comportant $N_s$ fois le bit 1.
+
+\begin{figure}[H]
+	\centering
+\input{figures/signal-nrz-aleatoire.tex}
+\end{figure}
+
+\subsection{Densité spectrale de puissance}
+
+
+On calcule ensuite la densité spectrale de puissance de ce signal NRZ en utilisant la fonction $pwelch$ de Matlab utilisant un périodogramme de Welch.
+
+Puis la DSP théorique: 
+\[
+S_\text{NRZ}(f)=\frac{1}{4} T_s \sinc^2(\pi f T_s)+\frac{1}{4} \delta(f)
+\]
+Voici la DSP expérimentale:
+
+\begin{figure}[H]
+	\centering
+\input{figures/dsp-nrz-aleatoire-experimentale.tex}
+\end{figure}
+
+
+\subsection{Génération d'un signal modulé en fréquence}
+
+\subsubsection{Modulation du signal NRZ}
+
+Pour construire notre signal modulé en fréquence nous allons nous baser sur le signal NRZ et sur une simple sinusoïdale. Lorsque le signal NRZ vaut 0, la fréquence de la sinusoïdale sera $F_0=\SI{1180}{Hz}$ et lorsqu'il vaut 1 la sinusoïdale sera de fréquence $F_1=\SI{980}{Hz}$. Au final, notre signal modulé suit la formule suivante:
+\[
+\operatorname{modulé}(t)=\operatorname{NRZ}(t) \cos(2\pi F_1 t + \phi_1) + (1-\operatorname{NRZ}(t)) \cos(2 \pi F_0 t + \phi_1)
+\]
+$\phi_1$ et $\phi_2$ étant des déphasages tirés aléatoirement dans $[0, 2\pi]$ et $\text{NRZ}(t)$ le signal NRZ.
+
+
+On obtient ainsi le signal suivant:
+
+\input{figures/signal-nrz-module.tex}
+
+\subsubsection{Densité spectrale de puissance}
+
+
+\begin{align*}
+	s_\text{NRZ}(f) &= | \operatorname{TF}(x)(f) |^2 \\
+	       &= \left| \operatorname{TF}(\operatorname{NRZ}(t) \cos(2\pi F_1 t + \phi_1)) + \operatorname{TF}((1 - \operatorname{NRZ}(t)) \cos(2 \pi F_0 t + \phi_0)) \right|^2 \\
+	       &= | \TF \NRZ (f) \ast \TF (\cos (2\pi F_1 t) \cos \phi_1 - \sin(2 \pi F_1 t) \sin \phi_1) + \TF (1-\NRZ)(f) \ast \TF(\cos (2 \pi F_0 t) \cos \phi_0 - \sin (2 \pi F_0 t) \sin \phi_0) |^2 \\
+	       &= | \TF \NRZ (f) \ast \frac{1}{2} \left( \cos \phi_1 (\delta(f-F_1) + \delta(f+F_1)) - \frac{1}{i} \sin \phi_1 (\delta(f-F_1) - \delta(f+F_1)) \right) + \TF(1-\NRZ)(f) \ast \frac{1}{2} \left( \cos \phi_0 (\delta(f-F_0) + \delta(f+F_0)) - \frac{1}{i} \sin \phi_0 (\delta(f-F_0) - \delta(f+F_0)) \right) |^2  \\
+	       &= | \frac{1}{4} \left( \delta(f) + \sinc^2(\pi f T_s) \right)  \ast \frac{1}{2} \left( \cos \phi_1 (\delta(f-F_1) + \delta(f+F_1)) - \frac{1}{i} \sin \phi_1 (\delta(f-F_1) - \delta(f+F_1)) \right) + \left( \delta(f) - \frac{1}{4} \delta(f) - \sinc^2(\pi f T_s) \right)  \ast \frac{1}{2} \left( \cos \phi_0 (\delta(f-F_0) + \delta(f+F_0)) - \frac{1}{i} \sin \phi_0 (\delta(f-F_0) - \delta(f+F_0)) \right) |^2  \\
+\end{align*}
+
+On calcule ensuite la densité spectrale de puissance de ce signal NRZ en utilisant la fonction \verb|pwelch| de Matlab utilisant un périodogramme de Welch. 
+On obtient ceci:
+
+\input{figures/dsp-nrz-module.tex}
+
+
+\section{Canal de transmission à bruit additif, blanc et Gaussien}
+
+Dans cette section, nous allons tenter de simuler un bruit blanc Gaussion que nous additionnerons à notre signal modulé en fréquence afin de modéliser le signal reçu par le modem.
+Le bruit simulé sera généré aléatoirement grâce au module \verb|rand| de Matlab et sera de puissance $\sigma^2$ avec:
+
+\[
+\sigma=\sqrt{\frac{S_\text{module}}{10^{\operatorname{SNR}/10}}} \huge
+\]
+
+avec $S_\text{module}$ représentant la densité spectrale de puissance du signal modulé en fréquence et $\operatorname{SNR}$ le rapport signal sur bruit (signal to noise ratio) que nous fixerons à 10 par la suite.
+
+\begin{figure}[H]
+	\centering
+	\input{figures/signal-bruite.tex}
+	\caption{Signal bruité}
+	\label{fig:bruite}
+\end{figure}
+
+\section{Démodulation par filtrage}
+
+On souhaite désormais reconstituer le signal de départ. Pour cela, nous allons procéder à un filtrage passe bas d'une part et passe haut d'autre part, avec une fréquence de coupure $F_c=\frac{F_0+F_1}{2}$. Nous ferons ensuite passer chacun des signaux filtrés par un détecteur d'énergie qui permettra de reproduire de signal binaire initial de manière fidèle.
+
+\paragraph{Filtre passe haut}
+Pour le passe haut, nous allons utiliser un filtre de réponse impulsionnelle suivante:
+\[
+h_\text{haut}(t) = \frac{2 F_c}{F_e} \sinc(2 F_c t)
+\]
+\\
+et donc \[H_\text{haut}(f) = \TF(h_\text{haut}(t))
+\]
+
+\paragraph{Filtre passe bas}
+
+\[
+	H_\text{bas}(\tilde{f}) = 1-H_\text{haut}(\tilde{f})
+\]
+
+Les réponses des filtres sont les suivantes:
+
+\begin{figure}[H]
+	\centering
+	\begin{minipage}{0.45\textwidth}
+		\scalebox{0.5}{
+		\input{figures/reponse-passe-haut-frequentielle.tex}
+	}
+	\end{minipage}\hfill
+	\begin{minipage}{0.45\textwidth}
+		\scalebox{0.5}{
+		\input{figures/reponse-passe-haut-impulsionnelle.tex}
+	}
+	\end{minipage}
+	\begin{minipage}{0.45\textwidth}
+		\scalebox{0.5}{
+		\input{figures/reponse-passe-bas-frequentielle.tex}
+	}
+	\end{minipage}\hfill
+	\begin{minipage}{0.45\textwidth}
+		\scalebox{0.5}{
+		\input{figures/reponse-passe-bas-impulsionnelle.tex}
+	}
+	\end{minipage}
+	\caption{Réponses des filtres}
+	\label{fig:reponses-filtres}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\input{figures/filtrage-signal-module.tex}
+	\caption{Densités spectrales de puissance lors du filtrage}
+	\label{fig:filtrage-dsps}
+\end{figure}
+
+On remarque que le support de la DSP de l'entrée est quasi disjoint aux supports des réponses fréquentielles des filtres.
+
+
+
+Les sorties des filtres sont les suivantes
+
+\input{figures/signal-demodule.tex}
+
+\subsection{Détection d'énergie}
+
+
+Avec ces signaux ainsi filtrés, nous désirons reconstituer le signal de base. Pour cela nous allons utiliser un détecteur d'énergie.
+Nous divisons nos signaux en périodes $T_s$ et sur chaque période nous calculons l'énergie suivant la formule suivante:
+\[
+E=\sum_{i=1}^{N_s} x_n^2
+\]
+Enfin, on compare cette énergie à un seuil $K$ qu'on fixera à la moyenne des énergies du signal.
+Pour le signal en sortie du passe bas par exemple, si $E>K$ alors le signal reconstitué sera égal à 1 sur cette période $T_s$, sinon il sera égal à 0.
+
+Voici les figures obtenues grâce à cette méthode:
+
+\begin{figure}
+	\centering
+	\input{figures/bits-reconstruits-filtrage.tex}
+\end{figure}
+
+
+
+\subsection{Modification du démodulateur} 
+
+\subsubsection{Modification du nombre de coefficients}
+
+Avec 201 coefficients pour le filtre, le taux d'erreur est grand.
+Voici le signal démodulé qu'on obtient:
+
+\begin{figure}[H]
+	\centering
+	\input{figures/bits-reconstruits-filtrage-201-coefs.tex}
+	\caption{Avec 201 coefficients}
+	\label{fig:201-coefficients}
+\end{figure}
+
+\subsubsection{Utilisation des fréquences de la norme V21}
+
+Nous travaillons jusqu'alors avec des fréquences très éloignées: $F_1=2kHz$ et $F_2=6kHz$. Cependant, la norme V21 spécifie des fréquences proches: $F_1=980Hz$ et $F_2=1180kHz$. On observe en utilisant ces fréquences une augmentation du taux d'erreur, il devient difficile de démoduler en séparant le signal par filtrage haut et bas.
+
+Avec des fréquences porteuses beaucoup plus rapprochées, il devient difficile de démoduler en séparant le signal par filtrage haut et bas.
+
+On observe donc un taux d'erreur non-nul.
+
+\begin{figure}[H]
+	\centering
+	\input{figures/bits-reconstruits-filtrage-v21.tex}
+	\caption{Avec les fréquences de la norme V21}
+	\label{fig:filtrage-avec-v21}
+\end{figure}
+
+\section{Démodulateur de fréquence adapté à la norme V21}
+
+Nous avons vu dans la partie précédente que la méthode par filtrage n'était pas optimale. Nous allons ici introduire une nouvelle méthode de démodulation plus adaptée à la norme V21.
+
+\subsection{Contexte de synchronisation idéale}
+\label{synchro-ideale}
+
+
+La multiplication du signal avec le cosinus correspondant (par exemple) au bit 1 donne, en fonction du temps, une mesure de la synchronisation entre le signal et ce cosinus: plus le résultat est proche de 1, plus les signaux sont synchronisés à cet instant, et donc plus le signal est susceptible d'être un bit 1.
+On a:
+
+\begin{align*}
+	\int_{0}^{T_s} \cos^2(2 \pi F_0 t + \phi_0) \, \mathrm{d}t  &= \frac{1} {8 \pi F_0} \sin(2(2 \pi F_0 T + phi_0))+4 \pi F_0 T - \sin(2 \phi_0) \\
+	\int_{0}^{T_s} \cos^2(2 \pi F_0 t + \phi_1) \, \mathrm{d}t  &= \frac{1} {8 \pi F_0} \sin(2(2 \pi F_0 T + phi_1))+4 \pi F_0 T - \sin(2 \phi_1) \\
+	\int_{0}^{T_s} \cos(2 \pi F_0 t + \phi_0) \cos(2 \pi F_0 t + \phi_1)\, \mathrm{d}t  &= \frac{1} {8 \pi F_0} \sin(4 \pi F_0 T + phi_0 + phi_1)\\
+											    & + 4 \pi F_0 T \cos(phi_0 - phi_1) - \sin (\phi_0 + \phi_1) 
+\end{align*}
+
+
+\begin{center}
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}
+        \begin{axis}[
+            ymax=1.1, ymin=-1.1,
+            ylabel={Amplitude},
+            xlabel={t [s]},
+            samples=2000,
+        ]
+        \addplot[domain=0:100, red] {cos(2*pi*x)};
+        \addplot[domain=0:100, blue] {cos(4*pi*x)};
+        \addplot[domain=0:100, black, ultra thick] {cos(2*pi*x)*cos(4*pi*x)};
+        \legend{cos(2t), cos(4t), produit}
+        \end{axis}
+        \node[] at (axis cs:55,1) {synchronises};
+        \node[] at (axis cs:29,1) {desynchronises};
+    \end{tikzpicture}
+	\caption{Synchronisation entre deux cosinus de fréquences différentes}
+	\label{fig:synchronisation}
+\end{figure}
+\end{center}
+
+On fait ensuite une accumulation (une moyenne en quelque sorte) de ces mesures sur une période $T_s$ en intégrant sur $T_s$, pour avoir une idée de la synchronisation avec le signal d'un bit 1 et d'un bit 0 à chaque instant échantilloné.
+
+% TODO montrer l'intégrale pas juste le produit
+
+\begin{center}
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}
+        \begin{axis}[
+            ymax=1.1, ymin=-1.1,
+            ylabel={Amplitude},
+            xlabel={t [s]},
+            samples=1000,
+        ]
+        \addplot[domain=0:200, red, thick] {cos(2*pi*x) * (x<30*pi) + cos(4*pi*x) * (x>=30*pi)};
+        \addplot[domain=0:200, blue, thick] {cos(4*pi*x)};
+        \addplot[domain=0:200, black, ultra thick] {(cos(2*pi*x) * (x<30*pi) + cos(4*pi*x) * (x>=30*pi)) * cos(4*pi*x)};
+        \legend{signal, cos(4t), produit}
+        \end{axis}
+    \end{tikzpicture}
+	\caption{Synchronisation entre le signal obtenu et le signal théorique d'un bit}
+\end{figure}
+\end{center}
+
+Finalement, pour chaque échantillon temporel (de durée $T_s$), on effectue une comparaison:
+
+$$
+\operatorname{reconstitué}(kT_s) = \begin{cases}
+    1 & \text{si } \operatorname{sync}_1(kT_s) - \operatorname{sync}_0(kT_s) > 0 \\
+    0 & \text{sinon}
+\end{cases}
+$$
+
+En notant $\operatorname{sync}_b$ le produit pour le bit $b$.
+
+Le signal démodulé avec cette méthode est le suivant:
+
+
+\begin{figure}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+\input{figures/bits-reconstruits-fsk-synchro-parfaite.tex}
+	\caption{Signal démodulé en supposant une synchronisation parfaite}
+	\label{fig:synchro-parfaite}
+\end{figure}
+
+
+
+\subsection{Gestion d'une erreur de synchronisation de phase porteuse}
+
+Un sinus est déphasé d'un quart de phase, comparé à un cosinus de même fréquence et même déphasage.
+
+En rajoutant ces mesures de désynchronisation, on prend en compte les signaux d'entrée qui seraient déphasés: si le signal n'est pas synchronisé avec le cosinus à cause d'un léger déphasage, l'ajout d'une mesure de synchronisation avec ce même cosinus, mais déphasé de $\frac{\pi}{2}$ compensera la faible valeur de synchronisation.
+
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}
+		\begin{axis}[ymin=-1.1, ymax=1.1, xlabel={Temps [s]}, ylabel={Amplitude}, samples=1000]
+		\addplot[domain=0:100, blue, thick] {cos(2*pi*x)};
+		\addplot[domain=0:100, blue, thick, dashed] {sin(2*pi*x)};
+		\addplot[domain=0:100, red, thick] {cos(2*pi*x - 20*pi)};
+		\legend{cosinus, sinus, signal};
+	\end{axis}	
+	\end{tikzpicture}
+	\caption{Compensation d'un déphasage du signal d'entrée}
+	\label{fig:compensation-dephasage}
+\end{figure}
+
+Le reste du processus reste le même qu'en \ref{synchro-ideale}.
+
+
+\begin{figure}
+\input{figures/bits-reconstruits-fsk.tex}
+\end{figure}
+
+\subsubsection{Image mystère}
+
+
+On peut désormais utiliser cette méthode de démodulation pour démoduler les images proposées. On divise les coefficients de la matrice par 255 et on assemble le puzzle pour obtenir l'image suivante:
+
+\begin{center}
+	\includegraphics[width=0.5\textwidth]{camichel.png}
+\end{center}
+
+Il s'agit du grand et fameux Charles Camichel ! Normalien de bonne facture, il fut prof d'élec à l'université de Lille de 1895 à 1900. En 1907, à la suite d'une dépression causée par le mauvais temps du nord de la France, il s'installe à Toulouse et crée l'institut électrotechique de Toulouse. Cette école évoluera jusqu'à avoir un nom beaucoup trop compliqué: école naionnale supérieure d'électrotechnique, d'électronique, d'informatique, d'hydraulique et des télécomunications. Heureusement, le groupe centrale est en route pour venir secourir cette école en perdition en la renomant ``Institut Centrale Toulouse", faisant payer ce changement de nom aux élèves en mulltipliant par quatre les frais d'inscription.
+
+C'est une photo de l'ancien Foy' de l'ENSEEIHT, situé très précisément aux coordonnées {\bf 43°36'06.7"N 1°27'18.3"E}
+
+\end{document}

@@ -1,0 +1,21 @@
+project Default is 
+
+for Main use ("parsing.adb","main.adb","routeur_simple_test.adb","routeur_ll.adb","cache_lca_test.adb","routeur_la.adb","cache_abr_test.adb");
+
+package Builder is
+      for Default_Switches ("ada") use ("-s");
+   end Builder;
+
+   package Compiler is
+      for Default_Switches ("ada") use ("-gnatwa", "-gnata", "-g");
+   end Compiler;
+
+   package Binder is
+      for Default_Switches ("ada") use ("-E");
+   end Binder;
+
+   package Pretty_Printer is
+   for Default_Switches("ada") use ("-M100");
+   end Pretty_Printer;
+
+end Default;
