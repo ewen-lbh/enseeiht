@@ -1,0 +1,20 @@
+digraph trie {
+root -> "B
+40.0.0.128/25
+128-2 hosts" [label="1"]
+root -> node0 [label="0"]
+node0 -> "A
+40.0.0.64/26
+64-2 hosts"[label="1"]
+node0 -> node00 [label="0"]
+node00 -> "C
+40.0.0.32/27
+32-2 hosts" [label="1"]
+node00 -> node000 [label="0"]
+node000 -> "D
+40.0.0.16/28
+16-2 hosts" [label="1"]
+node000 -> "I
+40.0.0.0/28
+16-2 hosts"[label="0"]
+}

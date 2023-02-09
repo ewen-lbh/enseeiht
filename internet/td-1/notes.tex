@@ -1,0 +1,101 @@
+\documentclass{article}
+\input{/home/ewen/enseeiht/.tooling/template.tex}
+
+\begin{document}
+   \section{Adressage IPv4}
+   \subsection{Lecture d'adresses}
+    
+   \begin{description}
+       \item[80.2.3.12/16] adresse de classe A\footnote{on prend A par défaut, sans le masque} de machine avec réseau sur 16 bits (80.2.0.0) et broadcast 80.2.255.255
+       \item[147.127.2.0/16] classe B\footnote{masque de 2 octets} réseau 147.127.0.0 sur 16 bits , broadcast 147.127.255.255
+       \item[1.2.3.4/5] adresse de machine avec réseau sur 5 bits (0.0.0.0/5) et broadcast $(00000111)_2.255.255.255 = 7.255.255.255$
+        \item[147.127.0.0] réseau de classe B, broadcast 147.127.255.255
+        \item[192.168.0.0] réseau sur 16 bits, broadcast 192.168.255.255 (adresses privées)
+        \item[223.4.17.0] réseau 223.4.16.0 sur 21 bits, broadcast: adresse $223.4.(0001 0001)_2.0$, masque $255.255.(1111 1000)_2.0$ donc  $223.4.(0001 0111)_2.255 = 223.4.23.255$
+        \item[10.0.0.0] réseau sur 10.0.0.0 sur ? bits (classe A $\implies$ 1 octet $\implies$ 10.0.0.0/8), broadcast: 10.255.255.255 (adresses privées)
+        \item[255.255.255.255] broadcast, TOUT INTERNEEEEEEEEEEEEEEEET
+        \item[127.0.0.1] there's no place like $\leftarrow$
+   \end{description}
+
+   \subsection{Découpage d'une plage d'adresse}
+   \begin{align*}
+       \underbrace{40.0.0}_{\text{net}}.(\underbrace{000}_{\text{subnet}}\underbrace{0.0000}_{\text{hosts}})_2/24
+   \end{align*}
+
+   \begin{description}
+       \item[réseau A] 30 terminaux donc $\left\lceil \log_2(30)  \right\rceil = 5$ bits\ldots trop de monde!
+   \end{description}
+
+   On va plutôt faire un trie.
+
+   \begin{figure}[H]
+       \centering
+       
+       \digraph[scale=0.75]{trie}{
+        root -> "B 
+        40.0.0.128/25
+        128-2 hosts" [label="1"]
+        root -> node0 [label="0"]
+        node0 -> "A
+        40.0.0.64/26
+        64-2 hosts"[label="1"]
+        node0 -> node00 [label="0"]
+        node00 -> "C
+        40.0.0.32/27
+        32-2 hosts" [label="1"]
+        node00 -> node000 [label="0"]
+        node000 -> "D
+        40.0.0.16/28
+        16-2 hosts" [label="1"]
+        node000 -> "I
+        40.0.0.0/28
+        16-2 hosts"[label="0"]
+    }
+       \caption{Réseau}
+       \label{fig:reseau}
+   \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \digraph[scale=0.75]{adressage}{
+        A -> I [label=".9"]
+        I -> A [label=".126"]
+        B -> I [label=".10"]
+        I -> B
+        C -> I [label=".11"]
+        I -> C
+        D -> I [label=".12"]
+        I -> D
+        }
+        \caption{Plan d'adressage}
+        \label{fig:plan-adressage}
+    \end{figure}
+
+    Soit $M$ un host source sur le réseau A et $D$ un host destination sur le réseau D
+
+   \begin{table}[H]
+       \centering
+       \caption{Table de routage de M}
+       \label{tab:table-routage}
+       \begin{tabular}{llll}
+       dest & mask & gateway & interface \\\hline
+       40.0.0.64 & & $\ast$\footnote{pas besoin, on reste dans le même réseau} & int0 \\
+       0.0.0.0 & & 40.0.0.126 & int0 \\
+       \end{tabular}
+   \end{table}
+
+   \begin{table}[H]
+       \centering
+       \caption{Table de routage de $R_{AI}$\footnote{routeur entre A et I}}
+       \label{tab:routage-RAI}
+       \begin{tabular}{llll}
+           dest & mask & gateway & interface \\\hline
+           40.0.0.64 & 255.255.255.192 & & int0 \\
+           40.0.0.8 & 255.255.255.248 & & int1 \\
+           40.0.0.128 & 255.255.255.128 & .10 & int1 \\
+           40.0.0.32 & 255.255.255.224 & .11 & int1 \\
+           40.0.0.16 & 255.255.255.240 & .12 & int1 \\
+       \end{tabular}
+   \end{table}
+
+\end{document}

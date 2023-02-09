@@ -7,13 +7,16 @@
 \usepackage{pdfpages}
 \usepackage{transparent}
 \usepackage{xcolor}
+% \usepackage{tikz}
 \newcommand{\mult}{\operatorname{mult}} 
+\newcommand{\img}{\operatorname{Im}} 
 \newcommand{\trivial}{$\mathbb{TRIVIAL}$} 
 \newcommand{\Sp}{\operatorname{Sp}} 
 \newcommand{\image}{\operatorname{im}} 
 \newcommand{\rg}{\operatorname{rg}} 
-\newcommand{\dim}{\operatorname{dim}} 
+\renewcommand{\dim}{\operatorname{dim}} 
 \newcommand{\cM}{\mathcal{M}}
+\newcommand{\cP}{\mathcal{P}}
 \newcommand{\cT}{\mathcal{T}}
 \newcommand{\cF}{\mathcal{F}}
 \newcommand{\cO}{\mathcal{O}}
@@ -32,6 +35,21 @@
 
 \newenvironment{theorem}[1][\unskip]{
 	\paragraph{Théorème #1}
+
+}{}
+
+\newenvironment{corollary}[1][\unskip]{
+	\paragraph{Corollaire #1}
+
+}{}
+
+\newenvironment{lemma}[1][\unskip]{
+	\paragraph{Lemme #1}
+
+}{}
+
+\newenvironment{proposition}[1][\unskip]{
+	\paragraph{Proposition #1}
 
 }{}
 
@@ -255,6 +273,342 @@ Soit $A \in \cM_{m,n}(\R)$ tel que $\rg A \ge 1$. On note $r := \rg A$.
 %	A\quad {}^\top A^\top,\  A \\
 %	A\quad{}^\top k\tau,\ B
 %\end{align*}
+
+\begin{center}
+    {\Large\bf Il manque un passage, j'étais en retard de 7 minutes au cours :/}
+\end{center}
+
+\subsection{Matrice pseudo-inverse}
+Ou pseudo-inverse généralisée
+
+Soit $A\in \cM_{n, n}(\R)$ telle que $\rg A = r \ge 1$
+
+
+
+\begin{definition}[Matrice pseudo-inverse]
+   Soit $A = U \Sigma U^\top$  la SVD de $A$
+
+   \begin{figure}[H]
+       \centering
+       \begin{tikzpicture}
+           \draw[->] (-1, 0) -- (10, 0) node{$\ker A$ };
+           \draw[->] (0, -1) -- (0, 10) node{$\ker A^\top$ };
+           \draw[->] (1, 1) node{$U_{|\ker A}^{|\img A \top}$ -- (20, 1) node{$A = [U]$};
+       \end{tikzpicture}
+       \caption{}
+       \label{fig:}
+   \end{figure}
+
+   On définit la pseudo-inverse  \begin{align*}
+       A^+ &= V\Sigma^+ U^\top \\
+   \end{align*}
+   avec $\Sigma^+ = \begin{pmatrix} \Sigma_r^{-1} & | & 0 \\\hline 0 & | & 0 \end{pmatrix} $ avec le bloc non-nul de taille $r  \times r$.
+\end{definition}
+
+\begin{proposition}
+    \begin{enumerate}
+        \item $A A^+ = \Pi_{\img A}$
+         \item $A^+ A = \Pi_{\ker A^\top}$
+    \end{enumerate}
+
+    Avec $\Pi_A$ la projection orthogonale sur  $A$
+\end{proposition}
+
+\begin{lemme}
+    Soit $Q\in \cO_{n, r}(\R)$.
+
+    ALors $Q Q^\top$ est une projection othogonale sur le sous-espace engendré par les colonnes de $Q$.
+\end{lemme}
+
+\begin{proof}
+    cf. CTD factorisation $Q_r$
+\end{proof}
 %
+
+\begin{enumerate}
+    \item \begin{align*}
+        A A^+ &= U \Sigma \underbrace{V^\top V}_{\img} \Sigma^+ U^\top \\
+              &= \begin{pmatrix} u_1 & u_2 \end{pmatrix} \begin{pmatrix} \Sigma_1 & 0 \\ 0 & 0 \end{pmatrix} \begin{pmatrix} \Sigma_1^{-1} & 0 \\ 0 & 0 \end{pmatrix} \begin{pmatrix} u_1^\top \\ u_2^\top \end{pmatrix}  \\
+              &= u_1 u_1^\top \\
+    \end{align*}
+
+Avec $U_1 = \begin{pmatrix} u_1 & \ldots & u_r \end{pmatrix} \in \cM_{m, r}$ telle que $u_1^\top u_2 = I_r$.
+
+Donc \begin{align*}
+    A A^+ &= \underbrace{\Pi_{\vect(u_1, \ldots, u_r)}}_{\img A} \\
+    &= \Pi_{\img A} \\
+\end{align*}
+
+\item \begin{align*}
+    A A^+ &= V_1 V_1^\top \\
+    &= \underbrace{\Pi_{\vect(v_1, \ldots, v_r)}}_{\ker A^\top} \\
+    &= \Pi_{\ker A^\top} \\
+\end{align*}
+
+\end{enumerate}
+
+\begin{theorem}[Caractérisation de Moore-Penrose]
+   $A^+$ est l'unique solution du système
+
+   \begin{align*}
+       (MP) \begin{cases}
+           AXA &= A \\
+           XAX &= X \\
+           (AX)^\top &=  AX \\
+           (XA)^\top &= XA \\
+       \end{cases}
+   \end{align*}
+
+   Avec $X \in \cM_{n, n}(\R)$
+\end{theorem}
+
+\begin{proof}[Etude de $(MP)$]
+    \paragraph{Existance de solution}
+    \begin{enumerate}
+        \item \begin{align*}
+            A A^+ A &=  U \Sigma \underbrace{\img}_{V^\top V} \Sigma^+ \underbrace{U^\top U}_{\img} \Sigma V^\top \\
+            &= U \Sigma \Sigma^+ \Sigma V^\top \\
+        \end{align*}
+
+        Or \begin{align*}
+            \Sigma \Sigma^+ \Sigma &= \begin{pmatrix} \Sigma_r & 0 \\ 0 & 0 \end{pmatrix}  \begin{pmatrix} \Sigma_r^{-1} & 0 \\ 0 & 0 \end{pmatrix} \begin{pmatrix} \Sigma_r & 0 \\ 0 & 0 \end{pmatrix}  \\
+                                   &= \begin{pmatrix} \Sigma_r & 0 \\ 0 & 0 \end{pmatrix} \begin{pmatrix} I_r & 0 \\ 0 & 0 \end{pmatrix} \\
+                                   &= \begin{pmatrix} \Sigma_r & 0 \\ 0 & 0 \end{pmatrix}  \\
+                                   &= \Sigma \\
+        \end{align*}
+    \end{enumerate}
+
+    Donc \begin{align*}
+        A A^+ A &= U \Sigma V^\top = A \\
+    \end{align*}
+
+    \item \begin{align*}
+        A^+ A A^+ &= V \underbrace{\Sigma^+ \Sigma \Sigma^+}_{\Sigma^+} U^\top \\
+        &= V \Sigma^+ U^\top \\
+        &= A^+ \\
+    \end{align*}
+
+    \item \begin{align*}
+            (A A^+)^\top &= (U_1 U_1^\top)^\top \quad&\text{cf. prop. sur $A A^\top$ et $A^+ A$} \\
+            &= U_1 U_1^\top \\
+            &= A A^+ \\
+    \end{align*}
+
+    \item \begin{align*}
+            (A^+ A)^\top &= (V_1 V_1^\top)^\top \\
+            &= V_1 V_1^\top \\
+            &= A^+ A \\
+    \end{align*}
+
+    d(où $A^+$ solution de $(MP)$ associée à $A$ 
+
+\paragraph{Unicité de la solution}
+Soient $X_1, X_2$ deux solutions de $(MP)$ associées à $A$.
+
+\begin{itemize}
+    \item Montrons $AX_1 = AX_2$ 
+        \begin{align*}
+            AX_1 &= (AX_1)^\top \quad&\text{par 3. appliquée à $X_1$} \\
+            &= X_1^\top A^\top \\
+            &= X_1^\top (AX_2 A )^\top \\
+            &= X_1^\top A^\top X_2^\top A^\top \\
+            &= (A X_1)^\top (AX_2)^\top \\
+            &= (AX_1) (AX_2) \quad&\text{par 3.} \\
+            &= \underbrace{AX_1 A}_{A} X_2 \quad&\text{par 1. appliquée à $X_1$}\\
+            &= AX_2 \\
+        \end{align*}
+
+        \item On montre de même: $X_1 A = X_2 A$.
+
+    \item Montrons $X_1 A X_2 = A$
+
+        \begin{align*}
+            X_1A X_2 &= X_2 A X_2 \\
+            &= X_2 \quad&\text{par 2. appliquée à $X_2$} \\
+            &= X_2 \quad&\text{car $AX_1 = AX_2$} \\
+            \text{i.e.}\quad X_1 &= X_2 \quad&\text{par 2. appliquée à $X_1$} \\
+        \end{align*}
+\end{itemize}
+
+
+{\bf Donc on peut permuter $ \cdot ^\top$ et $ \cdot ^+$.}
+
+\end{proof}
+
+\begin{theorem}[$^\top = ^+$]
+    \begin{align*}
+        A^\top ^+ = A^+ ^\top
+    \end{align*}
+\end{theorem}
+
+\begin{proof}
+    On vérifie que $(A^+)^\top$ est solution de $(MP)$ associée à $A$.
+
+    \begin{enumerate}
+        \item \begin{align*}
+            A^\top (A^+)^\top A^\top &= (A A^+ A)^\top \\
+            &= A^\top \quad&\text{par 1. appliquée à $A^+$} \\
+        \end{align*}
+
+        \item \begin{align*}
+                (A^+)^\top A^\top (A^+)^\top &= \underbrace{(A^+ A A^+)^\top}_{A+} \quad&\text{par 2 appliquée à $A^+$} \\
+                &= (A^+)^\top \\
+        \end{align*}
+
+        \item \begin{align*}
+                (A^\top (A^+)^\top)^\top &= ( \underbrace{(A^+ A)^\top}_{A^+ A})^\top \quad&\text{par 4. appliquée à $A^+$ } \\
+                &= (A^+A)^\top \\
+                &= A^\top (A^+)^\top \\
+        \end{align*}
+
+        \item \begin{align*}
+                ((A^+)^\top A^\top)^\top &= [\underbrace{(A A^+)^\top}_{A A^+}]^\top \quad&\text{par 3. appliquée à $A^+$} \\
+                &= (A^+)^\top A^\top \\
+        \end{align*}
+
+    \end{enumerate}
+        d'où  $A^+^\top $ solution de  $(MP)$ associée à $A^\top$.
+
+        Par caractérisation de Moore-Penrose:
+
+         \begin{align*}
+             A^{\top +} &= A^{+ \top} \\
+        \end{align*}
+\end{proof}
+
+\begin{theorem}[Caractérisation de $A^+$ par l'image d'un vecteur de $\R^n$ ]
+    Soit $b\in \R^n$.
+
+    Alors $A^{+} b$ est la solution de norme $\| \cdot \|_2$ minimale de 
+
+    \begin{align*}
+        (\cP) \min_{x \in \R^n} f(x) &= \frac{1}{2} \| Ax - b \|_2^2 \\
+    \end{align*}
+\end{theorem}
+
+\begin{proof}
+    \begin{itemize}
+        \item \begin{align*}
+            \forall x\in \R^n, \begin{cases}
+               \nabla f(x) &= A^\top (Ax - b) \\
+               \nabla ^2 f(x) &= A^\top A \text{ semi-def pos.} \\
+            \end{cases}
+        \end{align*}
+
+        Donc $f$ convexe sur $\R^n$ et les points critiques ont des minima globaux.
+
+        \item \begin{align*}
+            \nabla f &= A^\top (A A^+b-b) \\
+            &= V_1 \Sigma_1 U_1^\top (U_1 \Sigma_r \underbrace{V_1^\top V_1}_{I_2} \Sigma_r^{-1} U_1^\top b-b)  \\
+            &= V_1 \Sigma_r \underbrace{(\underbrace{U_1^\top U_1}_{I_2} U_1^\top - U_1^\top }_{0})b \\
+            &= 0 \\
+        \end{align*}
+
+        car \begin{align*}
+            A &= U\Sigma V^\top = U_1 \Sigma_r V_1^\top \\
+            A^+ &= V \Sigma^+ U^\top = V_1 \Sigma_r^{-1} U_1^\top  \\
+        \end{align*}
+
+        et $A^+ b$ est solution de $(\cP)$
+
+        \item Montrons $\forall v \in \R^n,\text{ $v$ solution de $(\cP)$}, \exists x_0 \in \ker A,\ x=x_0 + A^+ b$
+
+            Soit $x\in \R^n$ solution de $(\cP)$.
+
+            Or $\R^n = \ker A \oplus \ker A^\bot $.
+
+            D'où $\exists ! (x_0, x_{\bot}) \in \ker A  \times \ker A^\bot, x = x_0 + x_{\bot} $.
+
+            Or $x$ solution de $(\cP)$ donc $\nabla f(x)=0$.
+
+            D'où 
+            \begin{align*}
+                A^\top  A x &= A^\top b\\
+                \iff A^\top  A(x_0 + x_{\bot}) &= A^\top b \\
+                \iff A^\top \underbrace{A x_0}_{\text{$0$ car $x_0\in \ker A$}} + A^\top  A x_{\bot} &= A^\top b \\
+                \iff A^\top  A x_{\bot} &= A^\top b \\
+            \end{align*}
+
+            Or $A^\top  A (A^+ b) =A^\top b$ car $A^\top b$ solution de $(\cP)$ 
+
+            D'où $A^\top  A x_{\bot} = A^\top  A(A^+b) \text{ i.e. } A^\top A(x_{\bot} - A^+ b) = 0$.
+
+            D'où $x_{\bot}-A^+ b \in \ker(A^\top  A) = \ker A$ (cf. prop. de $A^\top A$ )
+
+            \begin{align*}
+                A^+ b &= X_1 \Sigma_r^{-1} U_1^\top b \\
+                      &\in \img V_1 \\
+                \text{or } V_1 &= \begin{pmatrix} v_1 & \ldots & v_r \end{pmatrix} \quad \text{avec les $(u_i)_i$ b.o.n. de $\ker A^\top $} \\
+            \end{align*}
+
+            D'où $A^+ b \in \ker A^\bot$
+
+            Or $x_{\bot}\in \ker A^\bot$ donc $x_{\bot} - A^+ b \in \ker A^\bot$ 
+
+            D'où $x_{\bot} - A^+ b \in \ker A \cap \ker A^\bot = \{0\} $ car $\ker A \oplus \ker A^\bot = \R^n$
+
+            et $x_{\bot} = A^+ b$ 
+
+            D'où $\exists x_0 \in \ker A, x=x_0 + A^+ b$ 
+
+        \item {\bf Bilan} \begin{align*}
+            \forall x \in \R^n,\quad \text{solution de $(\cP)$} \implies \|x\|_2 \ge \|A^{+}b\|_2
+        \end{align*}
+
+    \end{itemize}
+\end{proof}
+
+\begin{corollary}[Equation normale]
+    $\forall b\in \R^m, (A^\top A) A^+ b = A^\top b$, 
+\end{corollary}
+
+\begin{proposition}[Cas particuliers]
+   \begin{enumerate}
+       \item $A$ inversible:  $\rg A = m = n$
+           \begin{align*}
+               A^+ = A^{-1}
+           \end{align*}
+
+        \item $\rg A = m$ ($m \ge n$ )
+            \begin{align*}
+                A^+ = (A^\top A)^{-1} A^\top 
+            \end{align*}
+
+        \item $\rg A = m \quad (n\ge m)$
+
+            \begin{align*}
+                A^+ = A^\top (A A^\top )^{-1}
+            \end{align*}
+   \end{enumerate} 
+\end{proposition}
+
+\begin{proof}
+   \begin{enumerate}
+       \item $A^{-1}$ vérifie $(MP)$
+        \item $\rg A = n$ donc $A^\top A$ inversible. (cf. prop. de $A^\top A$ ).
+
+            D'après les équations normales, 
+
+            \begin{align*}
+                \forall b\in \R^m,\quad (A^\top A) A ^+ b &= A^\top b \\
+                \text{donc}\quad (A^\top A) A^+ &= A^\top  \\
+                \text{donc}\quad A^+ &= (A^\top A)^{-1} A^\top  \\
+            \end{align*}
+
+        \item On pose $B = A^\top $. On a $B^\top B$ inversible.
+
+            \begin{align*}
+                \rg B = m
+            \end{align*}
+            d'où par 2.
+
+            \begin{align*}
+                B^+ &= (B^\top B)^{-1} B^\top \\
+                \text{i.e. }(A^\top )^+ &= (A A^\top )^{-1} A \\
+                \text{i.e. }(A^{+})^\top &= (A A^\top )^{-1} A \quad&\text{car $ \cdot ^+$ et $ \cdot ^\top $ permuttent} \\
+                \text{i.e. }A^+ &= A^\top  (A A^\top )^{-1} \\
+            \end{align*}
+   \end{enumerate} 
+\end{proof}
 
 \end{document}
