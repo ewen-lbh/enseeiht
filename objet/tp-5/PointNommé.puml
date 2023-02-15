@@ -1,0 +1,29 @@
+class Point {
+    -x: double
+    -y: double
+    -couleur: Color
+    ---
+    getX: double
+    getY: double
+    setX(x: double): void
+    setY(y: double): void
+    afficher(): void
+    distance(autre: Point): double
+    translater(dx: double, dy: double): void
+    dessiner(afficheur: afficheur.Afficheur): void
+    getCouleur: Color
+    setCouleur(couleur: Color): void
+    ---
+    Point(x: double, y: double)
+}
+
+class PointNomme extends Point {
+    -nom: string
+    ---
+    getNom: string
+    setNom(nom: string): void
+    afficher(): void
+    dessiner(afficheur: afficheur.Afficheur): void
+    ---
+    PointNomme(x: number, y: number, nom: string)
+}

@@ -1,0 +1,19 @@
+
+- **2.4**: La compilation ne se termine pas car PointNomme ne peut plus override afficher, puisqu'elle est final
+- **2.5**: PointNomme n'override pas distance, donc la méthode de Point est utilisée. La méthode de Point a besoin d'un argument de type Point, or un PointNomme hérite d'un Point, donc implémente son interface. On peut donc utiliser un PointNomme comme argument de la méthode distance de Point.
+- **2.6**: 
+	- q est défini comme une poignée sur un Point, et un PointNomme peut être considéré comme un Point, héritant de cette dernière, il implémente son interface.
+	- Ce concept est appelé le polymorphisme.
+- **3.1**: 
+	- Oui, car la méthode correspondante de Segment prend des Point en argument, et un PointNomme peut être considéré comme un Point car, héritant de cette dernière classe, il implémente son interface.
+	- Le segment sera affiché avec la méthode afficher de PointNomme, car les poignées pointent toujours sur des PointNomme.
+- **3.2**: 
+	```
+	Les modifications à effectuer sont
+	
+	- Renommer la classe dans la déclaration
+	- Utiliser des PointNomme lorsque c'est pertinent
+	- Modifier ExempleSchema1 en ExempleSchema2 dans l'instanciation d'Ecran
+	- Supprimer la translation à la fin du programme
+	
+	```

@@ -1,0 +1,59 @@
+class Personne {
+    -nom: string
+    -prenom: string
+    -masculin: boolean
+    -feminin: boolean
+    ---
+    getNom: string
+    getPrenom: string
+    estHomme: boolean
+    estFemme: boolean
+    afficher(): void
+    ---
+    +Personne(...)
+}
+
+Personne "1 titulaire" o-- "*" CompteSimple  
+
+class CompteSimple {
+    -monnaie: string
+    ---
+    getTitulaire: Personne
+    getSolde: number
+    getMonnaie: string
+    crediter(montant: Argent): void
+    debiter(montant: Argent): void
+    setTitulaire(titulaire: Personne): void
+    setMonnaie(nouvelleMonnaie: string): void
+    decouvert: boolean
+}
+
+CompteSimple "1 solde" o-- "*" Argent
+
+class Argent {
+    +valeur: Decimal
+    +monnaie: String
+}
+
+Operation "1 montant" o-- "*" Argent
+
+class Operation {
+    +date: Date
+}
+
+CompteCourant "* releve" *-- "*" Operation
+
+class CompteCourant {
+    ---
+    afficherReleve(): void
+    afficherReleveCredits(): void
+    afficherReleveDebits(): void
+    crediter(montant: Argent): void
+    debiter(montant: Argent): void
+} 
+
+CompteCourant -|> CompteSimple
+
+} 
+
+CompteCourant -|> CompteSimple

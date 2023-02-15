@@ -138,6 +138,67 @@ Notation compacte
  \end{description}
  
  
+\section{Routage IP}
 
+\subsection{Routeur IP}
+
+\begin{itemize}
+    \item Interconnecte au mmoins deux réseaux différents
+\end{itemize}
+
+\section{Paquet}
+
+\subsection{Composition}
+
+\begin{description}
+    \item[Entête] $\in 4\N$ octets
+        \begin{description}
+            \item[Entête obligatoire] 20 octets 
+                \begin{description}
+                    \item[Version] bits 0 à 3
+                    \item[IHL] \emph{taille de l'entête} bits 4 à 7
+                    \item[ToS] obsolète pour IP
+                    \item[Taille totale du contenu]  bits 16 à 31
+                    \item[Identification] identifier le paquet pour la fragmentation
+                    \item[R] (réservé), 1 bit
+                    \item[DF] fragmentation interdite
+                    \item[MF] c'est un fragment
+                    \item[Fragment offset] déclage du fragment par rapport au paquet (en octets)
+                    \item[TTL] Time to live \emph{compteur incrémenté à chaque passage d'une interface} 
+                    \item[Protocol] 
+                    \item[Checksum du header] 
+                    \item[IP source] 
+                    \item[IP dest] 
+                \end{description}
+        \end{description}
+\end{description}
+
+
+\begin{description}
+    \item[MTU (Maximum transmission unit)] Taille maximale que peut envoyer la liaison
+\end{description}
+
+\subsection{ICMP}
+Utilisation
+\begin{itemize}
+    \item tests
+        \begin{itemize}
+    \item ping
+    \item timestamp request/reply
+        \end{itemize}
+    \item avertissements
+        \begin{itemize}
+            \item unreachable
+            \item time exceeded
+        \end{itemize}
+\end{itemize}
+
+\subsection{ACK}
+Accusé de réception
+
+
+\section{Protocole à fenêtre}
+
+On continue à émettre tant qu'on n'a pas reçu un ACK (donc le timeout revient à calculer le roundtrip d'un message)
 
 \end{document}
