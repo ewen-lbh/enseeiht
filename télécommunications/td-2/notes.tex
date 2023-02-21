@@ -1,0 +1,123 @@
+\documentclass{article}
+
+\input{/home/ewen/enseeiht/.tooling/template.tex}
+
+\begin{document}
+    Après filtrage, le signal décodé en symboles est
+
+    \begin{align*}
+        z(t) = \sum_{k=0}^{n} a_k p(t-kT)
+    \end{align*}
+
+    Avec $p$ le signal après filtrage.
+
+    Donc les symboles sont obtenus tout les $mT + t_0$:
+
+    \begin{align*}
+        z(mT+t_0) &= \sum_{k=0}^{n} a_k p((m-k)T+t_0) \\
+                  &= a_m p(t_0) + \underbrace{\sum_{l\neq 0} a_{n-l} p(lT+t_0)}_{\text{interférence entre signaux IES}}  \\
+    \end{align*}
+
+    On voudrait juste $a_m p(t_0)$. Et l'IES existe même en l'absence de bruit (comme ici).
+
+    On veut donc
+\begin{theorem}[Nyquist-Temporel]
+
+
+\begin{align*}
+    \exists t_0, p(t_0) \neq  0 \land \forall l\neq 0, p(lT + t_0) = 0
+\end{align*}
+    \end{theorem}
+
+    Dans le domaine fréquentiel:
+
+    \begin{align*}
+        \sum_{k} P_{t_0}(f-\frac{k}{T}) \text{   est constante} 
+    \end{align*}
+
+    Avec un cas particulier $|P_{t_0}(f)| = 0$ pour $|f| > \frac{1}{T}$, la condition devient:
+
+    \begin{align*}
+        P_{t_0}(f) + P_{t_0}(f - \frac{1}{T}) \text{   est constante}
+    \end{align*}
+
+    On a un point de symmétrie $f = \frac{1}{2T}$ 
+
+\section{Exercice 1}
+\subsection{}
+En prenant $t_0\in [T_s/2, T_s]$, le critère et satisfait.
+
+\subsection{}
+On prend la forme d'onde $h \ast h_r$ et on la duplique tout les $T_s$ (ça se chevauche).
+Ensuite, on obtient le signal final en sommant les courbes.
+
+\subsection{}
+On se donne un graphe avec un axe temporel de $0$ à $T_s$. On prend chaque tronçon du signal de longueur  $T_s$, en commençant à $t=T_s$ (le premier symbole y'a l'initialisation).
+
+On obtient la figure \ref{fig:œil}
+
+ \begin{figure}[h]
+    \centering
+    \begin{tikzpicture}
+        \draw[->] (0, -5) -- (0, 5);
+        \draw[->] (-1, 0) -- (4, 0);
+        \draw[blue] (0, 4) -- (4, 4);
+        \draw[blue] (0, -4) -- (4, -4);
+        \draw[blue] (0, 4) -- (2, -4);
+        \draw[blue] (0, -4) -- (2, 4);
+        \draw[dashed] (2, -4) -- (2, 4);
+        \draw (2, 0) node[below right]{$\frac{T_s}{2}$};
+        \draw[<->] (2, 4.5) -- (4, 4.5) node[above]{valeurs de $t_0$ satisfiant Nyquist}
+    \end{tikzpicture}
+    \caption{Diagramme de l'œil}
+    \label{fig:œil}
+\end{figure}
+
+\paragraph{Interprétation}
+Avant $t=\frac{T_s}{2}$, il y a plus de deux valeurs, donc on ne peut pas échantilloner avec $t_0 < \frac{T_s}{2}$.
+
+\section{Impact d'un canal de propagation}
+
+Roll-off $\alpha$ d'un racine carrée de cosinus surélevé: dans  $[0, 1]$, tel que la durée où la courbe est non-maximale (``transition") est  $(1+\alpha) \frac{R_s}{2}$.
+
+\subsection{}
+
+On prend le critère en fréquence.
+
+On multiplie les réponses fréquentielles des trois filtres.
+
+Mais on connaît pas $R_s$.
+
+Donc on a deux cas: soit les phases de roll-off sont \emph{totalement} conservées par la multiplication par la porte, i.e. $(1+\alpha) \frac{R_s}{2} < 1200$, et le cas contraire.
+
+Si la conservation n'est que partielle, il y aura des bouts de signal présent en bas des courbes mais pas en haut, et on perd la symmétrie.
+
+\subsection{}
+
+La condition sur $R_s$ est $R_s < 2000$, donc on a maximum  $2000$ symboles.
+
+
+\subsection{}
+
+Pour $m$ bits, on a $M = 2^{m}$ symboles, donc $m = \log_2(M)$
+
+Donc on a $R_b = m R_s$.
+
+Donc  \begin{align*}
+    R_s &\le 2000 \\
+    \frac{R_b}{m} &\le  2000 \\
+    m &\ge  \frac{R_b}{2000} \\
+    M &\ge 4 \quad&\text{car $R_b = 4000$}
+\end{align*}
+
+\subsection{}
+\subsubsection{}
+Fréquentiellement, c'est une porte de largeur $\frac{1}{T_s}$. Une autre porte ne change rien vu qu'elle est de la même largeur.
+
+On a \begin{align*}
+    \sum_{k} P(f- \frac{k}{T_s}) \quad\text{est constante}
+\end{align*}
+
+Car en sommant chaque porte avec des décalages dans $\frac{1}{T_s} \Z$, la courbe devient constante.
+
+\end{document}

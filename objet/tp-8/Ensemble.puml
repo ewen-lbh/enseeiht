@@ -1,0 +1,39 @@
+interface Ensemble {
+    ---
+    cardinal: int
+    estVide: bool
+    contient(x: int): bool
+    ---
+    ajouter(x: int)
+    supprimer(x: int)
+}
+
+class EnsembleChaine implements Ensemble {
+    ---
+    cardinal: int
+    estVide: bool
+    contient(x: int): bool
+    ---
+    ajouter(x: int)
+    supprimer(x: int)
+}
+
+EnsembleChaine "1" --> "1" Cellule
+
+class Cellule {
+    #valeur: int
+    #suivant: Cellule
+    ---
+}
+
+interface EnsembleOrdonne extends Ensemble {
+    ---
+    ---
+    min: int
+}
+
+class EnsembleOrdonneChaine implements EnsembleOrdonne {
+    ---
+    ---
+    min: int
+}

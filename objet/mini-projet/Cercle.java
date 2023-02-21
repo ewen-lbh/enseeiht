@@ -8,11 +8,23 @@ interface Mesurable2D {
 
 class Cercle implements Mesurable2D {
     // C12
+    /**
+     * Valeur de la constante mathématique π.
+     */
     public static final double PI = Math.PI;
 
     // E8 & E18
+    /**
+     * Couleur du cercle.
+     */
     private Color couleur;
+    /**
+     * Centre du cercle.
+     */
     private Point centre;
+    /**
+     * Rayon du cercle.
+     */
     private double rayon;
 
     // E4
@@ -33,8 +45,8 @@ class Cercle implements Mesurable2D {
 
     // E2
     public Point getCentre() {
-        Point centre = new Point(this.centre.getX(), this.centre.getY());
-        return centre;
+        Point retour = new Point(this.centre.getX(), this.centre.getY());
+        return retour;
     }
 
     // E17

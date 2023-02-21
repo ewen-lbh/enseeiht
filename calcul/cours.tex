@@ -24,6 +24,7 @@
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\Q}{\mathbb{Q}}
 \newcommand{\C}{\mathbb{C}}
+\newcommand{\K}{\mathbb{K}}
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\Z}{\mathbb{Z}}
 \newcommand{\dx}{\mathrm{d}x}
@@ -31,11 +32,16 @@
 \newcommand{\dz}{\mathrm{d}z}
 \newcommand{\dt}{\mathrm{d}t}
 \newcommand{\df}{\mathrm{d}f}
+\renewcommand{\epsilon}{\varepsilon}
 
 
 \newenvironment{theorem}[1][\unskip]{
 	\paragraph{Théorème #1}
 
+}{}
+
+\newenvironment{remarque}{
+	\paragraph{Remarque}
 }{}
 
 \newenvironment{corollary}[1][\unskip]{
@@ -610,5 +616,256 @@ Soient $X_1, X_2$ deux solutions de $(MP)$ associées à $A$.
             \end{align*}
    \end{enumerate} 
 \end{proof}
+
+\ldots gros passage à rattraper \ldots
+
+\begin{definition}[Précision machine $\epsilon_n$ ]
+    Le nombre représentable en machine juste après 1.
+\end{definition}
+
+\begin{example}
+    Soit $x_1 \in \R_+^\ast$ représentable en machine.
+
+    \begin{align*}
+        x_1 &= \underbrace{(a_1 + \frac{a_2}{b} + \cdots + \frac{a_p}{b^{p-1}}}_{m} b^{e} \\
+    \end{align*}
+
+    Soit $x_2$ le nombre représentable en machine juste ``au dessus" de $x_1$ :
+
+    \begin{align*}
+        x_2 &= (a_1 + \frac{a_2}{b} + \cdots + \frac{a_p}{b^{p-1}} b^{e} \\
+    \end{align*}
+
+    d'où
+    \begin{align*}
+        \frac{|x_1 - x_2|}{|x_1|} &= \frac{b^{e}}{b^{p-1}} \frac{1}{m b^{e}} \\
+        &= \frac{1}{m b^{p-1}} \\
+        m b^{p-1} &= (a_1 + \frac{a_2}{b} + \cdots + \frac{a_p}{b^{p-1}} b^{p-1} \\
+        &= a_1 b^{p-1} + a_2 b^{p-2} + \cdots + a_p \\
+    \end{align*}
+
+    or $\forall i \in \llbracket 1, p \rrbracket$, $a_1\le b-1$
+
+    \begin{align*}
+        mb^{p-1} &\le (b-1) \underbrace{\sum_{k=0}^{p-1} b^{k}}_{\frac{1-b^{p}}{1-b}} \\
+                 &\le b^{p} - 1 \\
+                 &\le b^{p}
+    \end{align*}
+
+    Donc \begin{align*}
+        \frac{|x_2 - x_1|}{|x_1|} > \frac{1}{b^{p}} = \frac{\epsilon_n}{b}
+    \end{align*}
+
+\paragraph{Implication pour les critères d'arrêt}
+
+\begin{align*}
+    \frac{|x_{k+1} - x_k|}{|x_k|} \le \epsilon_{\text{tol}}
+\end{align*}
+
+Avec $\epsilon_{\text{tol}}$ précision définie par l'utilisateur.
+
+$\epsilon_\text{tol}$ à choisir en fonction de $\epsilon_n$ ( $\epsilon_\text{tol} \ge  \frac{\epsilon_n}{b}$ )
+
+
+\section{Sensibilité de la solution d'un système à des perturbations des données}
+
+Soit $(A, b) \in GL_n(\K)  \times \K^{n}$
+
+On cherche à résoudre $Ax=b$ 
+
+En pratique, on résoud plutôt
+
+\begin{align*}
+    (A + \Delta A)(x + \Delta x) &= b + \Delta b \\
+\end{align*}
+
+donc 
+\begin{align*}
+    \frac{\|\Delta x\|}{\|x\|}
+\end{align*}
+
+\subsection{Conditionnement d'une matrice}
+
+\begin{definition}[Conditionnement $K$]
+    Soit $A\in \cM_n(\K)$ inversible.
+
+    Soit $\|\|$ une norme sur $\K^{n}$ 
+
+On note également $\|\|$ la norme induite sur $\cM_n(\K)$.
+
+\begin{align*}
+    \|A\| = \sup_{x\neq 0} \frac{\|Ax\|}{\|x\|} = \sup_{\|x\|=1} \|Ax\|
+\end{align*}
+
+Le conditionnement de $A$, noté $K(A)$ est définit par $K(A) = \|A\| \|A^{-1}\|$
+
+\end{definition}
+
+\begin{definition}[Bon conditionnement]
+   Si $K(A)$ est petit 
+\end{definition}
+
+\begin{proposition}
+    \begin{enumerate}
+        \item Soit $\alpha\in \R$ alors $K(\alpha A) = K(A)$.
+        \item $K(A) \ge 1$.
+
+        \item Avec $\| \cdot \|_2$:
+            \begin{align*}
+                K_2(A) &= \frac{\sigma_1}{\sigma_n} \\
+            \end{align*}
+
+            Avec $\sigma_1 \ge \sigma_2 \ge \cdots \ge \sigma_n > 0$ les valeurs singulières de $A$.
+        \item Avec $\| \cdot \|_2$ 
+
+            \begin{align*}
+                K_2(A) = 1 &\iff \exists \alpha\in \K \setminus \{0\},\  \exists U\in \cO_n(\K), A = \alpha U
+            \end{align*}
+    \end{enumerate}
+\end{proposition}
+
+\begin{definition}[Distance relative à la non-inversibilité $d_s$]
+    
+
+    Soit $A\in \cM_n(\K)$ non-nulle.
+
+    
+    \begin{align*}
+        d_s(A) &:= \min \left\{\frac{\|\Delta A\|}{\|A\|},\ \Delta A \in \cM_n(\K), A + \Delta A \not\in GL_n(\K)\right\} \in [0, 1] \\
+    \end{align*}
+\end{definition}
+
+\begin{theorem}[Gastinel, Katram]
+    Soit $A\in GL_n(\K)$.
+
+    \begin{align*}
+        d_s(A) &= \frac{1}{K(A)} = \frac{1}{\|A\| \|A^{-1}\|} \\
+    \end{align*}
+\end{theorem}
+
+\begin{remarque}
+    Le conditionnement d'une matrice informe sur l'amplitude minimale des pertubations à ajouter à $A$ pour la rendre non inversible.
+
+    \paragraph{Exemples}
+    \begin{enumerate}
+        \item $K(A) \approx 1O^{6}$
+    \end{enumerate}
+    
+\end{remarque}
+
+\subsection{Sensibilité de la solution d'un système linéaire aux perturbations de $A$ et/ou $b$}
+
+\begin{proposition}
+    Soit $(A, b) \in GL_n(\K) \times \K^{n}$.
+
+    Soit $\| \cdot \|$ unr norme sur $\K^{n}$, et on note $\| \cdot \|$ la norme qu'elle induit sur $\cM_n(\K)$;
+
+    On a
+    \begin{description}
+        \item[Perturbation de $b$] Soit $y = x+\Delta x$ solution de  $Ay = b + \Delta b$ avec  $A b \in \K^{n}$
+
+            Alors \begin{align*}
+                \frac{\|\Delta x\|}{\|x\|} \le K(A) \frac{\|\Delta b\|}{\|b\|}.
+            \end{align*}
+        \item[Perturbation de $A$] Soit $y = x+\Delta x$ solution de $(A + \Delta A)x = b$.
+
+            On a 
+
+            \begin{align*}
+                \frac{\|\Delta x\|}{\|x + \Delta x\|} &\le \frac{K(A) \frac{\|\Delta A \|}{\|A\|}}{1 - K(A) \frac{\|\Delta A\|}{\|A\|}}  \\
+                &= K(A) + \frac{\|\Delta A\|}{\|A\|} + O\left( \frac{\|\Delta A\|^2}{\|A\|^2} \right)  \\
+            \end{align*}
+    \end{description}
+\end{proposition}
+
+\begin{remarque}
+    \begin{itemize}
+        \item 
+    \begin{align*}
+        K(A) \frac{\|\Delta A\|}{\|A\|} < 1 &\iff \frac{\|\Delta A\|}{\|A\|} < \frac{1}{K(A)} \\
+                                            &\iff \frac{\|\Delta A\|}{\|A\|} < d_s(A)
+    \end{align*}
+    \item On suppose que $A + \Delta A$ reste inversible
+    \end{itemize}
+\end{remarque}
+
+\begin{proof}
+\begin{enumerate}
+    \item \begin{align*}
+        A(x+\Delta x) = b + \Delta b \quad&\text{avec $A x = b$}
+    \end{align*}
+
+    d'où \begin{align*}
+        A \Delta x &= \Delta b \\
+        \iff \Delta x &= A^{-1} \Delta b \\
+    \end{align*}
+
+    Il vient \begin{align*}
+        \|\Delta x\| &= \|A^{-1} \Delta b\|  \\
+                     &\le \|A^{-1}\| \|\Delta b\| \frac{\|A\|}{\|A\|} \\
+        \|\Delta x\| &\le K(A) \frac{\|\Delta b\|}{\|A\|} \\
+        \frac{\|\Delta x\|}{\|x\|} &\le K(A) \frac{\|\Delta b\|}{\|A\| \|x\|}
+    \end{align*}
+
+    Or $Ax = b$ d'où $\|b\| \le \|A\| \|x\|$
+
+
+    et $\frac{\|\Delta x\|}{\|x\|} \le  K(A) \frac{\|\Delta b\|}{\|b\|}$
+
+ \item $(A+\Delta A)(x + \Delta x) = b$ avec  $Ax = b$
+
+     Donc  \begin{align*}
+         A \Delta x &= - \Delta A (x + \Delta x ) \\
+         \Delta x &= -A^{-1} \Delta A (x + \Delta x ) \\
+     \end{align*}
+
+
+     D'où $\|\Delta x\| \le \|A^{-1}\| \|\Delta A\| \|x + \Delta x \|$
+
+     et $\frac{\|\Delta x\|}{\|x + \Delta x \|} \le  \underbrace{\|A^{-1}\| \|A\|}_{K(A)} \frac{\|\Delta A\|}{\| A\|}$
+
+
+     Si de plus $K(A) \frac{\|\Delta A\|}{\|A\|} < 1$
+
+     \begin{align*}
+         \|\Delta x\| \le  K(A) \frac{\|\Delta A\|}{\|A\|} \underbrace{\|x + \Delta x \|}_{\|x\| + \|\Delta x\|} \\
+         \implies \overbrace{1 - K(A) \frac{\|\Delta A\|}{\|A\|} \|\Delta x\|}^{> 0} \le K(A) \frac{\|\Delta A\|}{\|A\|} \|x\| \\
+         \implies \frac{\|\Delta x\|}{\|x\| } \le \frac{K(A) \frac{\|\Delta A\|}{\|A\|}}{1 - K(A) \frac{\|\Delta A\|}{\|A\|}}
+     \end{align*}
+\end{enumerate} 
+\end{proof}
+
+\end{example}
+
+\section{Erreurs directe et inverse par la résolution de systèmes linéaires}
+
+Soit $(A, b) \in GL_n(\K)  \times \K^{n}$.
+ 
+On suppose disposer d'une application $f$, opérant en arithmétique exacte, et calculant $f(A, b) = x$ avec $x\in \K^{n}$ tel que $Ax = b$.
+
+( $f$ algorithme théorique)
+
+On dispose d'un algorithme numérique $g$, opérant en arithmétique finie, instanciant $f$ :
+
+\begin{align*}
+    g(A, b) = \tilde{x} \in \K^{n}
+\end{align*}
+
+\subsection{Erreur inverse d'un algorithme}
+
+\begin{definition}
+    Soit $g$ un algorithme numérique, opérant en arithmétique finie, et calculant la solution de $Ax=b$ par $A\in GL_n(\K)$ et $b\in \K^{n}$.
+
+    Soit $\| \cdot \|$ une norme sur $\K^{n}$. On note $\| \cdot \|$ la norme induite à $\cM_n(\K)$.
+
+    On appelle ``erreur inverse de $g$ ", notée $\text{Ben}$.
+
+    \begin{align*}
+        \text{Ben}&= \min \{\epsilon > 0,\ \exists \Delta A \in \cM_n(\K) \text{ tq } (A + \Delta A) \text{ et } \ldots \textbf{à récupérer} \ldots  \}  \\
+    \end{align*}
+\end{definition}
+
+
+\ldots à récupérer \ldots
 
 \end{document}
