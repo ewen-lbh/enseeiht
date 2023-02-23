@@ -1,0 +1,18 @@
+set n, %r1
+set fact, %r2
+set 1, %r6
+ld [%r1], %r4
+ld [%r2], %r5
+
+while: 	cmp %r4, %r6
+	bleu end
+	umul %r4, %r5, %r5
+	sub %r4, %r6
+	ba while
+end:	st %r5, [%r2]
+	ba stop	
+
+stop: ba stop
+
+n: .word 90
+fact: .word 1

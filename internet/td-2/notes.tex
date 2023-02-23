@@ -1,0 +1,124 @@
+\documentclass{article}
+\usepackage{minted}
+\input{/home/ewen/enseeiht/.tooling/template.tex}
+
+\begin{document}
+    \begin{description}
+        \item[MTU] Taille d'une trame
+        \item[Tp(CS), Tp(SC)] Temps de propagation client-serveur / serveur-client
+        \item[Awnd C/S] Capacité maximale de stockage de trames (il peut en recevoir plusieurs dans une même fenêtre de temps)
+        \item[RTO] Temps d'attente maximal de l'ACK
+    \end{description}
+
+    \begin{description}
+        \item[application] message
+        \item[transport] segment
+        \item[?] paquet
+        \item[Transmission] trame
+        \item[physique] signal
+    \end{description}
+
+    \section{Communication Web}
+    \subsection{Demande d'HTTP à TCP}
+    \begin{enumerate}
+        \item Établissement d'une connection \verb|SYN| C-S.
+        \item  Le serveur reçoit \verb|SYN ACK|: accusation de réception et établissement de la connection S-C.
+        \item \verb|ACK| pour la connection C-S.
+    \end{enumerate}
+
+    On inclus dans le \verb|SYN|
+    \begin{itemize}
+        \item adresse IP source
+        \item adresse IP destination
+        \item port destination
+    \end{itemize}
+
+    \section{Chronogramme}
+    \paragraph{Temps d'émission}
+    \begin{align*}
+        T_{e_\text{SYN}} = T_{e, \text{SYN ACK}} = \frac{64}{\SI{1}{mbps}} \quad\text{ négligeable} \\
+    \end{align*}
+    
+    \begin{align*}
+        T_{\text{ACK}} = \frac{40 + 120}{\SI{1}{mbps}} &= \frac{\SI{250}{o}}{\SI{1}{mbps}} = \SI{2}{ms} \\
+    \end{align*}
+
+    \begin{minted}
+        C --(SYN)-> S 50 ms
+        S --(SYN ACK)-> C 100 ms
+        102 ms C --(GET ACK)-> 152 ms
+    \end{minted}
+
+    On envoie 10 paquets avec un dernier paquet de taille $\SI{14}{ko} \mod (1500 - (\SI{20}{o} + \SI{20}{o})) = \SI{860}{o}$
+
+    Temps d'émission d'un paquet:
+
+    \begin{align*}
+        T_{e, \text{paquet \SI{1500}{o}}} &= \frac{\SI{1500}{o}}{\SI{1}{mbps}} = \SI{12}{ms} \\
+        T_{e, \text{paquet \SI{860+40}{o}}} &= \frac{\SI{900}{o}}{\SI{1}{mbps}} = \SI{7.2}{ms} \\
+    \end{align*}
+
+    \begin{minted}
+        C --(SYN)->     S 50 ms
+  100ms C <-(SYN ACK)-- S 
+ 152 ms C --(GET ACK)-> S 102 ms
+        C <-0--         S 164 ms
+ 214 ms C --(ACK 0)->   S 264 ms
+        C <-1--         S 176 ms
+        C <-2--         S 188 ms
+        C <-3--         S 200 ms
+
+on est limité par awnd du client, on attend ACK 0 pour 
+envoyer 1 paquet de plus (ACK = une place libérée)
+
+        C --ACK 1->    S 276 ms
+ 326 ms C <-4--        S 276 ms
+        C --ACK 2->    S 288 ms
+        C <-5--        S 288 ms
+        C --ACK 3->    S 300 ms
+        C <-6--        S 300
+        C <-7--        S 
+ 326 ms C --ACK 4->    S 376 ms
+        C --ACK 5->    S 388 ms
+        C --ACK 6->    S 395,2 ms
+        C --ACK 7->    S
+        C <-8--        S 388 ms
+  445.2 C <-9--        S 295,2 ms
+        C --ACK 8->    S
+  445.2 C --FIN ACK->  S 495,2 ms
+  545.2 C <-ACK --     S
+
+\end{minted}
+
+\section{Avec des pertes}
+    
+    \begin{minted}
+        C --(SYN)->     S 50 ms
+  100ms C <-(SYN ACK)-- S 
+ 152 ms C --(GET ACK)-> S 102 ms
+        C <-0--         S 164 ms
+ 214 ms C --(ACK 0)->   S 264 ms
+        C <-1--         S 176 ms
+        C <-2--         S 188 ms
+        C <-3--         S 200 ms
+        C --ACK 1->     S 276 ms
+ 326 ms C X-(4 perdu)-- S 276 ms
+        C <-5--         S 288 ms
+        C --ACK 3->     S
+        C <-6--         S 300 ms
+        C --ACK 3->     S
+        C <-7--         S 312 ms
+        C --ACK 3-> 
+
+on attend le RTO de l'envoi du paquet 4: 276 ms + 250 ms
+
+        C <-4--         S 538 ms
+ 588 ms C --ACK 7->     S 638 ms
+        C <-8--         S
+        C <-9--         S
+
+
+\end{minted}
+
+
+\end{document}

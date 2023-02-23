@@ -1,0 +1,17 @@
+set n, %r1
+set fact, %r2
+set 1, %r6
+ld [%r1], %r4
+ld [%r2], %r5
+
+loop: 	umul %r4, %r5, %r5
+	sub %r4, %r6
+	cmp %r4, %r6
+	bleu loop
+end:	st %r5, [%r2]
+	ba stop	
+
+stop: ba stop
+
+n: .word 127
+fact: .word 1

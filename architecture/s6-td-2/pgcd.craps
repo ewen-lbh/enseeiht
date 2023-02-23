@@ -1,0 +1,21 @@
+set a, %r1
+set b, %r2
+set pgcd, %r3
+
+ld [%r1], %r4
+ld [%r2], %r5
+
+while:    cmp %r4, %r5
+	  beq endwhile
+	  bleu AinfB
+	  sub %r5, %r4, %r3	
+	  ba endif
+AinfB:    sub %r4, %r5, %r3
+endif:    ba while
+endwhile: st %r4, [%r4]
+
+stop: ba stop
+
+a: .word 190
+b: .word 175
+pgcd: .word 0
