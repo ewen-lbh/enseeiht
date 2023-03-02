@@ -1,0 +1,79 @@
+\documentclass{article}
+
+% Language setting
+% Replace `english' with e.g. `spanish' to change the document language
+\usepackage[french]{babel}
+\usepackage[utf8]{inputenc}
+\newcommand{\TF}{\operatorname{TF}}
+\newcommand{\NRZ}{\operatorname{NRZ}}
+\usepackage{stmaryrd}
+
+\usepackage{float}
+
+% Set page size and margins
+% Replace `letterpaper' with `a4paper' for UK/EU standard size
+\usepackage[a4paper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{siunitx}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usetikzlibrary{plotmarks}
+\usetikzlibrary{arrows.meta}
+\usepgfplotslibrary{patchplots}
+\usepackage{grffile}
+\pgfplotsset{plot coordinates/math parser=false}
+\newlength\figureheight
+\newlength\figurewidth
+  
+\usepackage{graphicx}
+\usepackage{hyperref}
+%\newcommand{\TF}{\operatorname{TF}}
+\newcommand{\sinc}{\operatorname{sinc}} 
+
+
+
+
+\title{
+\includegraphics[width=0.2\textwidth]{n7.png}
+\\[1cm]
+Rapport de projet -- Calcul Scientifique
+
+}
+\author{Ewen Le Bihan}
+
+\date{ENSEEIHT, département Sciences du Numérique}
+
+\begin{document}
+
+\maketitle
+
+\setcounter{tocdepth}{3}
+\tableofcontents
+
+\section{Test des fournitures}
+
+On teste avec des matrices de types
+
+\begin{description}
+    \item[1] $\begin{pmatrix} 1 & & & & (0) \\ & 2 & & & \\ & & 3 & & \\ & & & \ddots & \\ (0) & & & & n \end{pmatrix}$
+    \item[2] $\operatorname{diag}(\verb|random(1e-10, 1)|)$
+    \item[3] $\operatorname{diag}\left( (10^{5})^{- \frac{i-1}{n-1}} \right)_{i\in \llbracket 1, n \rrbracket} $
+    \item[4] $\operatorname{diag}\left( 1 - (1 - 10^{-2}) \frac{i-1}{n-1} \right)_{i\in \llbracket 1, n \rrbracket} $
+\end{description}
+
+\begin{table}[H]
+    \centering
+    \label{tab:vitesse-algos}
+    \begin{tabular}{c|cccc}
+        Type / Algo & 1 & 2 & 3 & 4 \\\hline
+        \verb|eig| (10) & $\SI{20}{ms}$ & $\SI{0}{ms}$ & $\SI{10}{ms}$ & $\SI{10}{ms}$ \\
+        \verb|power| (11) & $\SI{1,77}{s}$ & $\SI{30}{ms}$ & $\SI{60}{ms}$ & $\SI{1,74}{s}$ \\
+        \verb|v0| (0) & 
+    \end{tabular}
+    \caption{Vitesse de calcul des différents algorithmes}
+\end{table}
+
+
+\end{document}

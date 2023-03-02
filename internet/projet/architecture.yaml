@@ -1,0 +1,93 @@
+Name: projet-reseau
+Hosts:
+  - Name: pisento_server
+    Type: WEB
+    Interfaces: "1"
+  - Name: pisento_thinkpad
+    Type: Client
+    Interfaces: "1"
+  - Name: Switch1
+    Type: Switch
+    Interfaces: "16"
+  - Name: ewen_nothing_phone
+    Type: Client
+    Interfaces: "1"
+  - Name: ewen_router
+    Type: Routeur
+    Interfaces: "2"
+  - Name: pisento_router
+    Type: Routeur
+    Interfaces: "2"
+  - Name: fai_router
+    Type: Routeur
+    Interfaces: "3"
+  - Name: Switch2
+    Type: Switch
+    Interfaces: "16"
+  - Name: r1
+    Type: Routeur
+    Interfaces: "2"
+  - Name: r2
+    Type: Routeur
+    Interfaces: "2"
+  - Name: Switch3
+    Type: Switch
+    Interfaces: "16"
+  - Name: fai_router_services
+    Type: Routeur
+    Interfaces: "2"
+  - Name: Switch4
+    Type: Switch
+    Interfaces: "16"
+  - Name: fai_server_web
+    Type: WEB
+    Interfaces: "1"
+  - Name: fai_server_dns
+    Type: DNS
+    Interfaces: "1"
+Links:
+  - H1: pisento_router
+    I1: eth1
+    H2: fai_router
+    I2: eth0
+  - H1: ewen_router
+    I1: eth1
+    H2: fai
+    I2: eth1
+  - H1: ewen_nothing_phone
+    I1: eth0
+    H2: ewen_router
+    I2: eth0
+Bridges:
+  - Hosts:
+      - pisento_router
+      - pisento_server
+      - pisento_thinkpad
+    Interfaces:
+      - eth0
+      - eth0
+      - eth0
+  - Hosts:
+      - r2
+      - r1
+      - fai_router
+    Interfaces:
+      - eth0
+      - eth0
+      - eth2
+  - Hosts:
+      - fai_router_services
+      - r1
+      - r2
+    Interfaces:
+      - eth0
+      - eth1
+      - eth1
+  - Hosts:
+      - fai_server_web
+      - fai_server_dns
+      - fai_router_services
+    Interfaces:
+      - eth0
+      - eth0
+      - eth1
