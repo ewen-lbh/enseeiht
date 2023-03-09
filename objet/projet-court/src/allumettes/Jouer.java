@@ -1,28 +1,88 @@
 package allumettes;
 
-/** Lance une partie des 13 allumettes en fonction des arguments fournis
+import java.util.Scanner;
+
+/**
+ * Lance une partie des 13 allumettes en fonction des arguments fournis
  * sur la ligne de commande.
- * @author	Xavier Crégut
- * @version	$Revision: 1.5 $
+ * 
+ * @author Xavier Crégut
+ * @version $Revision: 1.5 $
  */
 public class Jouer {
 
-	/** Lancer une partie. En argument sont donnés les deux joueurs sous
+	/**
+	 * Lancer une partie. En argument sont donnés les deux joueurs sous
 	 * la forme nom@stratégie.
+	 * 
 	 * @param args la description des deux joueurs
 	 */
 	public static void main(String[] args) {
+		Scanner scanneur = new Scanner(System.in);
 		try {
 			verifierNombreArguments(args);
+			boolean arbitreConfiant = args[0].equals("-confiant");
 
-			System.out.println("\n\tà faire !\n");
+			int indiceArguments = arbitreConfiant ? 1 : 0;
+			Joueur joueur1 = creerJoueur(args[indiceArguments++], scanneur);
+			Joueur joueur2 = creerJoueur(args[indiceArguments++], scanneur);
 
+			Arbitre arbitre = new Arbitre(joueur1, joueur2, arbitreConfiant);
+			Jeu jeu = new Plateau();
+
+			jouer(jeu, arbitre);
 		} catch (ConfigurationException e) {
 			System.out.println();
 			System.out.println("Erreur : " + e.getMessage());
 			afficherUsage();
 			System.exit(1);
+		} finally {
+			scanneur.close();
 		}
+	}
+
+	private static void jouer(Jeu jeu, Arbitre arbitre) {
+		while (true) {
+			try {
+				arbitre.arbitrer(jeu);
+				System.out.println("");
+			} catch (PartieTermineeException | PartieAbandonneeException e) {
+				System.out.println(e.getMessage());
+				break;
+			}
+		}
+	}
+
+	private static Joueur creerJoueur(String description, Scanner scanneur) {
+		String[] parts = description.split("@");
+		if (parts.length != 2) {
+			throw new ConfigurationException("Description de joueur invalide : "
+					+ description);
+		}
+		String nom = parts[0];
+		String strategie = parts[1];
+		Joueur joueur;
+		switch (strategie) {
+			case "naif":
+				joueur = new JoueurNaif(nom);
+				break;
+			case "rapide":
+				joueur = new JoueurRapide(nom);
+				break;
+			case "expert":
+				joueur = new JoueurExpert(nom);
+				break;
+			case "humain":
+				joueur = new JoueurHumain(nom, scanneur);
+				break;
+			case "tricheur":
+				joueur = new JoueurTricheur(nom);
+				break;
+			default:
+				throw new ConfigurationException("Stratégie inconnue : "
+						+ strategie);
+		}
+		return joueur;
 	}
 
 	private static void verifierNombreArguments(String[] args) {
@@ -46,9 +106,8 @@ public class Jouer {
 				+ "\n"
 				+ "\n\t" + "Exemple :"
 				+ "\n\t" + "	java allumettes.Jouer Xavier@humain "
-					   + "Ordinateur@naif"
-				+ "\n"
-				);
+				+ "Ordinateur@naif"
+				+ "\n");
 	}
 
 }

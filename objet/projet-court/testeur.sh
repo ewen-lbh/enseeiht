@@ -111,8 +111,8 @@ if javac $javacOpt -d $bin $src/$mainFile ; then
 	    echo "ok"
 	else
 	    echo "ERREUR"
-	    cat $diff
-	    echo ""
+	    # cat $diff
+	    # echo ""
 	fi
     done
 else
