@@ -1,5 +1,7 @@
 package allumettes;
 
+import java.util.Random;
+
 public class JoueurExpert extends Joueur {
 
     JoueurExpert(String nom) {
@@ -8,7 +10,10 @@ public class JoueurExpert extends Joueur {
 
     @Override
     public int getPrise(Jeu jeu) {
-        // TODO
-        return 0;
+        int prise = (jeu.getNombreAllumettes() - 1) % (Jeu.PRISE_MAX + 1);
+        if (prise <= 0) {
+            return new Random().nextInt(Math.min(jeu.getNombreAllumettes(), Jeu.PRISE_MAX)) + 1;
+        }
+        return prise;
     }
 }

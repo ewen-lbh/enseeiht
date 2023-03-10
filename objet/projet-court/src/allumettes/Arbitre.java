@@ -35,9 +35,10 @@ public class Arbitre {
         try {
             int prise = joueur.getPrise(plateauJoueur);
             System.out.printf("%s prend %d allumette%s.\n", joueur.getNom(), prise, prise > 1 ? "s" : "");
-            if (prise > Jeu.PRISE_MAX) {
+            int limite = Math.min(Jeu.PRISE_MAX, jeu.getNombreAllumettes());
+            if (prise > limite) {
                 throw new CoupInvalideException(prise,
-                        String.format("Nombre invalide : %d (> %d)", prise, Jeu.PRISE_MAX));
+                        String.format("Nombre invalide : %d (> %d)", prise, limite));
             }
             jeu.retirer(prise);
         } catch (CoupInvalideException e) {
