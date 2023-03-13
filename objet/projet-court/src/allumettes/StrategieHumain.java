@@ -2,7 +2,7 @@ package allumettes;
 
 import java.util.Scanner;
 
-public class StrategieHumain extends Strategie {
+public class StrategieHumain implements Strategie {
 
     private Scanner scanneur;
     private String nomJoueur;
@@ -11,7 +11,6 @@ public class StrategieHumain extends Strategie {
         this.scanneur = scanneur;
     }
 
-    @Override
     public int getPrise(Jeu jeu) {
         int prise = this.poserQuestionPrise(jeu);
         return prise;

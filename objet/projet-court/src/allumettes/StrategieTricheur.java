@@ -1,8 +1,8 @@
 package allumettes;
 
-public class StrategieTricheur extends Strategie {
+public class StrategieTricheur implements Strategie {
 
-    @Override
+    
     public int getPrise(Jeu jeu)
         throws OperationInterditeException, CoupInvalideException {
         System.out.println("[Je triche...]");

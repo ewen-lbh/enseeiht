@@ -1,8 +1,8 @@
 package allumettes;
 
-public class StrategieRapide extends Strategie {
+public class StrategieRapide implements Strategie {
 
-    @Override
+    
     public int getPrise(Jeu jeu) {
         return clamp(jeu.getNombreAllumettes(), 1, Jeu.PRISE_MAX);
     }

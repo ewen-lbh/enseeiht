@@ -2,9 +2,9 @@ package allumettes;
 
 import java.util.Random;
 
-public class StrategieExpert extends Strategie {
+public class StrategieExpert implements Strategie {
 
-    @Override
+    
     public int getPrise(Jeu jeu) {
         int prise = (jeu.getNombreAllumettes() - 1) % (Jeu.PRISE_MAX + 1);
         if (prise <= 0) {
