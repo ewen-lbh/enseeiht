@@ -1,6 +1,7 @@
 package allumettes;
 
 public class Arbitre {
+
     private int tourAuJoueur;
     private Joueur j1;
     private Joueur j2;
@@ -8,10 +9,11 @@ public class Arbitre {
 
     /**
      * Faire jouer un joueur, et contrôler la triche de son coup.
-     * 
+     *
      * @param jeu le jeu à arbitrer
      */
-    public void arbitrer(Jeu jeu) throws PartieTermineeException, PartieAbandonneeException {
+    public void arbitrer(Jeu jeu)
+        throws PartieTermineeException, PartieAbandonneeException {
         Joueur joueur = this.tourAuJoueur == 1 ? this.j1 : this.j2;
         Joueur adversaire = this.tourAuJoueur == 1 ? this.j2 : this.j1;
 
@@ -34,11 +36,18 @@ public class Arbitre {
 
         try {
             int prise = joueur.getPrise(plateauJoueur);
-            System.out.printf("%s prend %d allumette%s.\n", joueur.getNom(), prise, prise > 1 ? "s" : "");
+            System.out.printf(
+                "%s prend %d allumette%s.\n",
+                joueur.getNom(),
+                prise,
+                prise > 1 ? "s" : ""
+            );
             int limite = Math.min(Jeu.PRISE_MAX, jeu.getNombreAllumettes());
             if (prise > limite) {
-                throw new CoupInvalideException(prise,
-                        String.format("Nombre invalide : %d (> %d)", prise, limite));
+                throw new CoupInvalideException(
+                    prise,
+                    String.format("Nombre invalide : %d (> %d)", prise, limite)
+                );
             }
             jeu.retirer(prise);
         } catch (CoupInvalideException e) {
@@ -52,17 +61,17 @@ public class Arbitre {
 
     /**
      * Nouvel arbitre entre deux joueurs.
-     * 
+     *
      * @param j1 un joueur (le premier à jouer)
      * @param j2 l'autre joueur
      */
-    Arbitre(Joueur j1, Joueur j2) {
+    public Arbitre(Joueur j1, Joueur j2) {
         this.j1 = j1;
         this.j2 = j2;
         this.tourAuJoueur = 1;
     }
 
-    Arbitre(Joueur j1, Joueur j2, boolean confiant) {
+    public Arbitre(Joueur j1, Joueur j2, boolean confiant) {
         this(j1, j2);
         this.confiant = confiant;
     }

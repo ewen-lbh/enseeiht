@@ -1,4 +1,3 @@
 package allumettes;
 
-public class OperationInterditeException extends Exception {
-}
+public class OperationInterditeException extends Exception {}

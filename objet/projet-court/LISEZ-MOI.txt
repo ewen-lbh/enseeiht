@@ -1,6 +1,6 @@
-Nom       : 
-Prénom    : 
-Groupe TP : 
+Nom       : Le Bihan
+Prénom    : Ewen
+Groupe TP : F
 
 Les « ... » indiquent les endroits à compléter.
 
@@ -10,7 +10,7 @@ Ces informations de temps sont demandées à titre indicatif et ne sont pas
 prises en compte dans la notation du projet.
 
 
-* Temps passé sur la V1 : ... heures ... minutes
+* Temps passé sur la V1 : 3 heures 38 minutes
 * Temps passé sur la V2 : ... heures ... minutes
 
 Pour la V2 on ne tiendra pas compte du temps passé sur la V1.
@@ -32,7 +32,11 @@ exemple la stratégie lente (C13).  Pour plus de précision, on numérotera
 les étapes à faire.
 --------------------------------------------------------------------------------
 
-...
+1. On ajoute une classe `JoueurLent` qui extend `Joueur`
+2. On override la méthode `getPrise`
+3. On met à jour la méthode `Jouer.creerJoueur`:
+   1. On rajoute une case "lent" dans le switch
+   2. On instancie le joueur avec la nouvelle classe dans ce cas.
 
 
 --------------------------------------------------------------------------------
@@ -40,7 +44,8 @@ Expliquer ce qui permet, dans votre conception, de changer dynamiquement
 (en cours d'exécution du programme) la stratégie d'un joueur (C14).
 --------------------------------------------------------------------------------
 
-...
+Excepté lors de l'instanciation, aucune méthode ne demande une instance d'une classe `Joueur*` particulière.
+On peut donc changer la poignée sur un `Joueur` pendant l'éxécution, même lorsque le type concret est différent.
 
 
 =====[ Explications ]===========================================================
@@ -49,7 +54,5 @@ Expliquer ce qui permet, dans votre conception, de changer dynamiquement
 Donner ici les explications supplémentaires utiles à la compréhension du
 travail rendu.
 --------------------------------------------------------------------------------
-
-...
 
 --------------------------------------------------------------------------------

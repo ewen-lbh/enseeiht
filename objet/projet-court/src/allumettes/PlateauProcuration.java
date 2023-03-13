@@ -1,6 +1,7 @@
 package allumettes;
 
 public class PlateauProcuration implements Jeu {
+
     private Jeu jeu;
 
     PlateauProcuration(Jeu jeu) {

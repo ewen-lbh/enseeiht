@@ -3,7 +3,7 @@ package allumettes;
 public class JoueurRapide extends Joueur {
 
     JoueurRapide(String nom) {
-        super(nom);
+        super(nom, "rapide");
     }
 
     @Override

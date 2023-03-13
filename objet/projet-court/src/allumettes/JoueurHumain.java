@@ -7,7 +7,7 @@ public class JoueurHumain extends Joueur {
     private Scanner scanneur;
 
     JoueurHumain(String nom, Scanner scanneur) {
-        super(nom);
+        super(nom, "humain");
         this.scanneur = scanneur;
     }
 
@@ -26,9 +26,13 @@ public class JoueurHumain extends Joueur {
             if (brut.equals("triche")) {
                 try {
                     jeu.retirer(1);
-                    System.out.printf("[Une allumette en moins, plus que %d. Chut !]\n", jeu.getNombreAllumettes());
-                } catch (OperationInterditeException | CoupInvalideException tricheException) {
-                }
+                    System.out.printf(
+                        "[Une allumette en moins, plus que %d. Chut !]\n",
+                        jeu.getNombreAllumettes()
+                    );
+                } catch (
+                    OperationInterditeException | CoupInvalideException tricheException
+                ) {}
             } else {
                 System.out.println("Vous devez donner un entier.");
             }

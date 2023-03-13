@@ -1,10 +1,11 @@
 package allumettes;
+
 import java.util.Random;
 
 public class JoueurNaif extends Joueur {
 
     JoueurNaif(String nom) {
-        super(nom);
+        super(nom, "naif");
     }
 
     @Override
