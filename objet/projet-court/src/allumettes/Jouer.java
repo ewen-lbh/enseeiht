@@ -61,28 +61,29 @@ public class Jouer {
             );
         }
         String nom = parts[0];
-        String strategie = parts[1];
+        String nomStrategie = parts[1];
         Joueur joueur;
-        switch (strategie) {
+        Strategie strategie;
+        switch (nomStrategie) {
             case "naif":
-                joueur = new JoueurNaif(nom);
+                strategie = new StrategieNaif();
                 break;
             case "rapide":
-                joueur = new JoueurRapide(nom);
+                strategie = new StrategieRapide();
                 break;
             case "expert":
-                joueur = new JoueurExpert(nom);
+                strategie = new StrategieExpert();
                 break;
             case "humain":
-                joueur = new JoueurHumain(nom, scanneur);
+                strategie = new StrategieHumain(scanneur, nom);
                 break;
             case "tricheur":
-                joueur = new JoueurTricheur(nom);
+                strategie = new StrategieTricheur();
                 break;
             default:
-                throw new ConfigurationException("Stratégie inconnue : " + strategie);
+                throw new ConfigurationException("Stratégie inconnue : " + nomStrategie);
         }
-        return joueur;
+        return new Joueur(nom, strategie);
     }
 
     private static void verifierNombreArguments(String[] args) {

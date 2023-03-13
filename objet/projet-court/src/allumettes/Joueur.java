@@ -1,18 +1,20 @@
 package allumettes;
 
-public abstract class Joueur {
+public class Joueur {
 
     private String nom;
-    private String strategie;
+    private Strategie strategie;
 
     public String getNom() {
         return this.nom;
     }
 
-    public abstract int getPrise(Jeu jeu)
-        throws OperationInterditeException, CoupInvalideException;
+    public int getPrise(Jeu jeu)
+        throws OperationInterditeException, CoupInvalideException {
+        return this.strategie.getPrise(jeu);
+    }
 
-    Joueur(String nom, String strategie) {
+    public Joueur(String nom, Strategie strategie) {
         this.nom = nom;
         this.strategie = strategie;
     }

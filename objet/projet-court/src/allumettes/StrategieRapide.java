@@ -1,10 +1,6 @@
 package allumettes;
 
-public class JoueurRapide extends Joueur {
-
-    JoueurRapide(String nom) {
-        super(nom, "rapide");
-    }
+public class StrategieRapide extends Strategie {
 
     @Override
     public int getPrise(Jeu jeu) {

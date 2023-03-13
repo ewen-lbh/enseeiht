@@ -2,11 +2,7 @@ package allumettes;
 
 import java.util.Random;
 
-public class JoueurExpert extends Joueur {
-
-    JoueurExpert(String nom) {
-        super(nom, "expert");
-    }
+public class StrategieExpert extends Strategie {
 
     @Override
     public int getPrise(Jeu jeu) {

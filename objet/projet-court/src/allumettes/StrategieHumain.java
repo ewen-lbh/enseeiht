@@ -2,12 +2,12 @@ package allumettes;
 
 import java.util.Scanner;
 
-public class JoueurHumain extends Joueur {
+public class StrategieHumain extends Strategie {
 
     private Scanner scanneur;
+    private String nomJoueur;
 
-    JoueurHumain(String nom, Scanner scanneur) {
-        super(nom, "humain");
+    StrategieHumain(Scanner scanneur, String nomJoueur) {
         this.scanneur = scanneur;
     }
 
@@ -18,7 +18,7 @@ public class JoueurHumain extends Joueur {
     }
 
     private int poserQuestionPrise(Jeu jeu) {
-        System.out.print(this.getNom() + ", combien d'allumettes ? ");
+        System.out.print(this.nomJoueur + ", combien d'allumettes ? ");
         String brut = scanneur.nextLine();
         try {
             return Integer.parseInt(brut);
