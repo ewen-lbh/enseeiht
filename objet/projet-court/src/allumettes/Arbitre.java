@@ -18,7 +18,6 @@ public class Arbitre {
         Joueur adversaire = this.tourAuJoueur == 1 ? this.j2 : this.j1;
 
         try {
-            System.out.printf("Allumettes restantes : %d\n", jeu.getNombreAllumettes());
             this.faireJouer(joueur, jeu);
         } catch (OperationInterditeException e) {
             throw new PartieAbandonneeException(joueur);
@@ -34,6 +33,7 @@ public class Arbitre {
     private void faireJouer(Joueur joueur, Jeu jeu) throws OperationInterditeException {
         Jeu plateauJoueur = this.confiant ? jeu : new PlateauProcuration(jeu);
 
+        System.out.printf("Allumettes restantes : %d\n", jeu.getNombreAllumettes());
         try {
             int prise = joueur.getPrise(plateauJoueur);
             System.out.printf(
@@ -52,7 +52,6 @@ public class Arbitre {
             jeu.retirer(prise);
         } catch (CoupInvalideException e) {
             System.out.println("Impossible ! " + e.getProbleme());
-            System.out.printf("\nAllumettes restantes : %d\n", jeu.getNombreAllumettes());
             this.faireJouer(joueur, jeu);
         } catch (OperationInterditeException e) {
             throw e;
