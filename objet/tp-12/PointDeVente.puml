@@ -1,0 +1,6 @@
+class PointDeVente {
+    id: String
+    prix: Map<String, Float>
+}
+
+note right of PointDeVente : prix Implémenté avec HashMap
