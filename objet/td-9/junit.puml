@@ -1,0 +1,30 @@
+abstract class TestElementaire implements Test {
+    lancer(resultat: ResultatTest)
+}
+
+class SuiteTest implements Test {
+    lancer(resultat: ResultatTest)
+}
+
+interface Test {
+    lancer(resultat: ResultatTest)
+}
+
+Test "*" --* "0..1" SuiteTest
+
+note right of SuiteTest::"lancer()"
+    for (Test t : tests) {
+        t.lancer(resultat);
+    }
+end note
+
+class ResultatTest {
+    +lances: int
+    +echecs: int
+    ---
+    incrementer()
+    signalerEchec()
+}
+
+
+ResultatTest *- TestElementaire
