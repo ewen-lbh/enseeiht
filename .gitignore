@@ -596,3 +596,5 @@ poetry.toml
 .ruff_cache/
 
 # End of https://www.toptal.com/developers/gitignore/api/matlab,python,c,ada,java,latex
+.tooling/hudson-credentials
+objet/projet-court/node_modules

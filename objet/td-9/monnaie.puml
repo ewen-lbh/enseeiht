@@ -1,0 +1,23 @@
+class Monnaie {
+    valeur: int;
+    devise: String;
+    ----
+    +ajouter(autre: Monnaie): Monnaie
+    +soustraire(autre: Monnaie): Monnaie 
+    ---
+    +Monnaie(valeur: int, devise: String)
+}
+
+
+class DIE << Exception >> {
+
+}
+
+note right of Monnaie::"ajouter(autre: Monnaie): Monnaie"
+    if (!this.devise.equals(autre.getDevise())) {
+        throw new DIE("Les devises sont différentes");
+    }
+    this.valeur += autre.getValeur();
+end note
+
+

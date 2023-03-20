@@ -6,11 +6,10 @@ package allumettes;
  */
 public class ConfigurationException extends RuntimeException {
 
-	/** Initaliser une ConfigurationException avec le message précisé.
-	  * @param message le message explicatif
-	  */
-	public ConfigurationException(String message) {
-		super(message);
-	}
-
+    /** Initaliser une ConfigurationException avec le message précisé.
+     * @param message le message explicatif
+     */
+    public ConfigurationException(String message) {
+        super(message);
+    }
 }

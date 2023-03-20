@@ -1,0 +1,228 @@
+\documentclass{article}
+\input{/home/ewen/enseeiht/.tooling/template.tex}
+
+\begin{document}
+\section{Étude de chaînes de transmission en bande de base sur canal AWGN}
+
+\subsection{}
+\begin{description}
+    \item[Modulateur] jusqu'à $\oplus$
+    \item[Canal de propagation] $\oplus$
+    \item[Démodulateur] le reste
+\end{description}
+
+\subsection{}
+\subsubsection{Chaîne 1}
+
+\begin{itemize}
+    \item 
+$h, h_r$: carrés de 0 à $T_s$
+\item  $g$ : triangle symmétrique de 0 à $2T_s$, pic à $g(T_s) = T_s$.
+\end{itemize}
+
+\begin{enumerate}
+    \item $\exists t_0 = T_s, g(t_0) \neq 0 \text{ et } g(t_0 + pT_s) = 0 \ \forall \p\in \Z^\ast$
+        Donc la chaîne 1 respecte ta daronne.
+    \item En l'absence d'interférences entre symboles, l'échantillon $z(t_0+mT_s)$ utilisé pour restimer le symbole $a_m$ émis à $mT_s$ est de la forme
+
+         \begin{align*}
+            z(t_0+mT_s) = z_m  = a_m g(t_0) + w_m
+        \end{align*}
+
+        où 
+
+        \begin{align*}
+            w_m = w(t_0 + mT_s)
+        \end{align*}
+
+        \begin{align*}
+            \operatorname{SNR} := \frac{E(|a_mg(t_0)|^2)}{\sigma_w^2} = \frac{(\sigma^2a + |m_a|^2) |g(t_0)|^2}{\sigma_w^2} = \frac{2T_s}{N_0}
+        \end{align*}
+
+        Avec $\sigma a$ variance des symboles
+
+        et 
+\begin{align*}
+    \sigma_w^2 = P_w &= \int |H_r(f)|^2 S_m(f)  \\
+    &= \int |h(t)|^2 \dt  \times \frac{2N_0}{2} = T_s \frac{N_0}{2}  \\
+\end{align*}
+
+\item 
+
+\texttt{Figure: deux gaussiennes avec des pics à $\pm g(t_0)$, se croisent en $t=S=0$}
+
+On choisit le seuil de décision à $S=0$ car pour $z_m < 0$, $p(z_m | a_m = -1) > p(z_m - a_m = 1)$ et, pour $z_m = 0$, $p(z_m | a_m = +1) > p(z_m | a_m = 1)$
+
+\item $P_b = P(a_m = 1) \underbrace{P(\hat{a_m} = -1 | a_m = 1]}_A + P(a_m = -1) \underbrace{P(\hat{a_m} = +1 | a_m = -1)}_B$
+    Si les symboles sont iid alors $P(a_m = 1) = P(a_m = -1) = \frac{1}{2}$
+
+    \begin{align*}
+        A &= P(z_m < 0 | a_m = 1) \\
+          &= P(g(t_0) + w_m < 0 ] \\
+          &= P(w_m < g(t_0)]  \\
+          &= P(w_m > g(t_0)] \\
+          &= \int_{g(t_0)}^{\infty} \frac{1}{\sqrt{2 \pi} \sigma_w} e^{- \frac{x^2}{2 \sigma_w^2}} \dx \\
+          &= \int_{\frac{g(t_0)}{\sigma_w}}^{\infty} \frac{1}{\sqrt{2 \pi} \sigma_w} e^{-\frac{u^2}{2}} \sigma_w \du \\
+          &= Q\left( \frac{g(t_0)}{\sigma_w} \right)  \\
+          &= Q\left( \frac{T_s}{\sigma_w} \right)  \\
+    \end{align*}
+
+    \begin{align*}
+        B &= P(z_m > 0 | a_m = -1) \\
+          &= P(-g(t_0) + w_m > 0 ] \\
+          &= P(w_m > g(t_0)]  \\
+          &= Q\left( \frac{T_s}{\sigma_w} \right)  \\
+    \end{align*}
+
+    Donc \begin{align*}
+        P_s = P_b = Q\left( \frac{T_s}{\sigma_w} \right) 
+    \end{align*}
+
+\item 
+    \begin{align*}
+        \sigma_w^2 = \frac{N_0 T_s}{2}
+    \end{align*}
+
+    \item \begin{align*}
+        E_s = P_x T_s
+    \end{align*}
+
+    \begin{align*}
+        P_x &= \int S_x(f) \df \\
+        &= \frac{\sigma_a^2}{T_s} \int |H(f)|^2 \df \\
+        &= \sigma_a^2 \\
+        &= 1 \\
+    \end{align*}
+
+    \begin{align*}
+        E_s = T_s \quad&\text{car $E_s = g(t_0)$}
+    \end{align*}
+
+\item 
+    \begin{align*}
+        E_s = \log_2(M) E_b \quad&\text{$M=2$, $E_s = E_b = T_s$ et $P_b = Q\left( \frac{E_b}{\sqrt{N_0 E_b} } \right) = Q\left( \sqrt{\frac{2 E_b}{N_0}}  \right)  $}
+    \end{align*}
+
+\end{enumerate}
+
+\subsubsection{Chaîne 2}
+
+\begin{itemize}
+    \item $h$: carré de 0 à $T_s$
+    \item $h_r$ : carré de 0 à $\frac{T_s}{2}$
+    \item $g$ : 
+        \begin{tikzpicture}
+            \draw[->] (-0.5, 0) -- (4, 0);
+            \draw[->] (0, -0.5) -- (0, 1.5);
+            \draw[blue] (0, 0) -- (1, 1) -- (2, 1) -- (3, 0);
+            \draw[blue,--] (1, 1) -- (1, 0);
+            \draw[blue,--] (2, 1) -- (2, 0);
+        \end{tikzpicture}
+\end{itemize}
+
+\begin{enumerate}
+    \item $\exists t_0 \in [\frac{T_s}{2}, T_s], g(t_0) \neq 0 \text{ et } g(t_0 + pT_s) = 0 \ \forall \p\in \Z^\ast$
+        Donc la chaîne 2 respecte ta daronne.
+    \item En l'absence d'interférences entre symboles, l'échantillon $z(t_0+mT_s)$ utilisé pour restimer le symbole $a_m$ émis à $mT_s$ est de la forme
+
+         \begin{align*}
+            z(t_0+mT_s) = z_m  = a_m g(t_0) + w_m
+        \end{align*}
+
+        où 
+
+        \begin{align*}
+            w_m = w(t_0 + mT_s)
+        \end{align*}
+
+        \begin{align*}
+            \operatorname{SNR} := \frac{E(|a_mg(t_0)|^2)}{\sigma_w^2} = \frac{(\sigma^2a + |m_a|^2) |g(t_0)|^2}{\sigma_w^2} = \frac{T_s}{N_0}
+        \end{align*}
+
+        Avec $\sigma a$ variance des symboles
+
+        et 
+\begin{align*}
+    \sigma_w^2 = P_w &= \int |H_r(f)|^2 S_m(f)  \\
+    &= \int |h(t)|^2 \dt  \times \frac{2N_0}{2} = T_s \frac{N_0}{4}  \\
+\end{align*}
+
+\item 
+\texttt{Figure: deux gaussiennes avec des pics à $\pm g(t_0)$, se croisent en $t=S=0$}
+On choisit le seuil de décision à $S=0$ car pour $z_m < 0$, $p(z_m | a_m = -1) > p(z_m - a_m = 1)$ et, pour $z_m = 0$, $p(z_m | a_m = +1) > p(z_m | a_m = 1)$
+
+\item $P_b = P(a_m = 1) \underbrace{P(\hat{a_m} = -1 | a_m = 1]}_A + P(a_m = -1) \underbrace{P(\hat{a_m} = +1 | a_m = -1)}_B$
+    Si les symboles sont iid alors $P(a_m = 1) = P(a_m = -1) = \frac{1}{2}$
+
+    \begin{align*}
+        A &= P(z_m < 0 | a_m = 1) \\
+          &= P(g(t_0) + w_m < 0 ] \\
+          &= P(w_m < g(t_0)]  \\
+          &= P(w_m > g(t_0)] \\
+          &= \int_{g(t_0)}^{\infty} \frac{1}{\sqrt{2 \pi} \sigma_w} e^{- \frac{x^2}{2 \sigma_w^2}} \dx \\
+          &= \int_{\frac{g(t_0)}{\sigma_w}}^{\infty} \frac{1}{\sqrt{2 \pi} \sigma_w} e^{-\frac{u^2}{2}} \sigma_w \du \\
+          &= Q\left( \frac{g(t_0)}{\sigma_w} \right)  \\
+          &= Q\left( \frac{T_s}{2 \sigma_w} \right)  \\
+    \end{align*}
+
+    \begin{align*}
+        B &= P(z_m > 0 | a_m = -1) \\
+          &= P(-g(t_0) + w_m > 0 ] \\
+          &= P(w_m > g(t_0)]  \\
+          &= Q\left( \frac{T_s}{2 \sigma_w} \right)  \\
+    \end{align*}
+
+    Donc \begin{align*}
+        P_s = P_b = Q\left( \frac{T_s}{2 \sigma_w} \right) 
+    \end{align*}
+
+\item 
+    \begin{align*}
+        \sigma_w^2 = \frac{N_0 T_s}{2}
+    \end{align*}
+
+    \item \begin{align*}
+        E_s = P_x T_s
+    \end{align*}
+
+    \begin{align*}
+        P_x &= \int S_x(f) \df \\
+        &= \frac{\sigma_a^2}{T_s} \int |H(f)|^2 \df \\
+        &= \sigma_a^2 \\
+        &= 1 \\
+    \end{align*}
+
+    \begin{align*}
+        E_s = T_s \quad&\text{car $E_s = g(t_0)$}
+    \end{align*}
+
+\item 
+    \begin{align*}
+        E_s = \log_2(M) E_b \quad&\text{$M=2$, $E_s = E_b = T_s$ et $P_b = Q\left( \frac{E_b}{\sqrt{N_0 E_b} } \right) = Q\left( \sqrt{\frac{2 E_b}{N_0}}  \right)  $}
+    \end{align*}
+
+\end{enumerate}
+
+\subsection{}
+Le cas de la chaîne 1 correspond à l'utilisation d'un filtre adapté.
+Tout changement par rapport à ce cas est donc sous optimal en termes de probabilité d'erreur binaire.
+
+\section{Étude du mapping}
+
+
+\subsection{}
+
+Le mapping respecte le code de \emph{GRAY}.
+
+\texttt{Figure: 4 gaussiennes avec des pics en $\{\pm 1, \pm 3\} g(t_0)$}
+
+\begin{align*}
+    p(\hat{a_m} = -1 | a_m = -3) &= p(z_m < 0 | a_m = -3)  \\
+    &= p(z(t_0 + mT_s) < 0 | a_m = -3) \\
+    &= p(a_m g(t_0) + w_m < 0 | a_m = -3) \quad&\text{avec $w_m \sim \mathcal{N}(0, \delta_w^2)$ et $\delta_w^2 = \frac{N_0}{2} \int |h_r(t)|^2 \dt$} \\
+    &= p(-2g(t_0) < -3g(t_0) + w_m < 0)  \\
+    &= p(w_m \in [1, 3]g(t_0)) \\
+    &= Q\left( \frac{g(t_0)}{\delta_w} \right) - Q\left( \frac{3g(t_0)}{\delta_w} \right)  \\
+\end{align*}
+
+\end{document}
