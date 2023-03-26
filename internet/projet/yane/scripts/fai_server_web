@@ -1,4 +1,6 @@
 #!/bin/bash
 ip link set dev eth0 up
+
 ip addr add 200.204.22.195/26 dev eth0
-ip a
+
+ip route add default via 200.204.22.193

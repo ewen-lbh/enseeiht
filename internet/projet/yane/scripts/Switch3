@@ -1,2 +1,12 @@
 #!/bin/bash
 ip a
+touch testping
+echo "#!/bin/bash" >> testping
+echo ping ... >> testping
+chmod a+x testping
+cp testping /usr/bin
+touch testping
+echo "#!/bin/bash" >> testping
+echo ping -c 10 ... >> testping
+chmod a+x testping
+cp testping /usr/bin

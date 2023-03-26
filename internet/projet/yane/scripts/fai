@@ -2,8 +2,10 @@
 echo 1 > /proc/sys/net/ipv4/ip_forward
 ip link set dev eth0 up
 ip link set dev eth1 up
-ip link set dev eth2 up
+
 ip addr add 200.204.22.67/26 dev eth0 
 ip addr add 200.204.22.1/26 dev eth1
-ip addr add 200.204.22.4/26 dev eth2
-ip a
+
+ip route add default via 200.204.22.65
+ip route add 192.168.143.128/26 via 200.204.22.2
+ip route add 192.168.143.192/26 via 200.204.22.3
