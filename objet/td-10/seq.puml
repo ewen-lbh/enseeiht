@@ -1,0 +1,12 @@
+actor "×" as croix
+participant "Jeu du morpion" as jeu
+actor "o" as rond
+
+croix -> jeu : poser(C)
+rond -> jeu : poser(C)
+jeu --> rond : erreur
+rond -> jeu : poser(SW)
+croix -> jeu : poser(SE)
+rond -> jeu : poser(S)
+croix -> jeu : poser(NW)
+jeu -> croix : gagant

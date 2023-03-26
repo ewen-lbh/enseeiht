@@ -1,0 +1,6 @@
+
+class Evenements {
+    +poser(point)
+    +quitter()
+    +recommencer()
+}

@@ -1,0 +1,39 @@
+hide empty description
+
+state jeu {
+    state case {
+        [*] --> vide
+        vide --> croix : poser [joueur = ×]
+        vide --> rond : poser [joueur = ○]
+    }
+
+    ||
+
+    state joueur {
+        [*] --> joueur_croix
+        joueur_croix --> joueur_rond : changer
+        joueur_rond --> joueur_croix : changer
+    }
+
+    ||
+
+    state partie {
+        state c <<choice>>
+        [*] --> en_cours : /nb=0
+        en_cours --> c : poser(c)[case libre]/nb++
+        c --> gagnée : 3 alignées
+        c --> en_cours : [else]/changer
+        c --> nulle : [3 alignées et nb == 9]
+
+        state finie {
+            gagnée  : partie gagnée
+            nulle : partie nulle
+        }
+    }
+}
+
+[*] --> jeu
+
+jeu --> [*] : quitter
+
+jeu --> jeu : recommencer

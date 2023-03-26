@@ -1,0 +1,21 @@
+@startuml
+left to right direction
+actor Joueur as joueur
+' actor "J ×" as croix
+' actor "J o" as rond
+
+package jeu du morpion {
+    usecase "Créer une partie" as jouer
+    usecase "Poser un  symbole" as poser
+    usecase "Quitter" as quitter
+    usecase "Recommencer" as recommencer
+    usecase "Gérer les scores" as scores
+    usecase "Choisir un skin" as skin
+    usecase "Annuler un coup" as annuler
+}
+
+joueur --> (recommencer)
+joueur --> (jouer)
+joueur --> 
+
+@enduml

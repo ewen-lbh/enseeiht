@@ -23,7 +23,8 @@ typedef struct string string;
 void create(string *string_dest, char *chaine_src)
 {
     string_dest->N = strlen(chaine_src) + 1;
-    string_dest->str = chaine_src;
+    string_dest->str = malloc(sizeof(char) * string_dest->N);
+    strcpy(string_dest->str, chaine_src);
 }
 
 /**
@@ -46,10 +47,11 @@ int length(string str)
  */
 void add(string *chaine_dest, char c)
 {
-    // char *nouvelle_chaine = malloc(chaine_dest->N+1);
-    char *nouvelle_chaine = malloc(sizeof(char *));
-    
-    chaine_dest->str[chaine_dest->N] = c;
+    // char *nouvelle_chaine = malloc(sizeof(char*));
+    // char *nouvelle_chaine = malloc(sizeof(char *));
+
+    strcat(chaine_dest->str, &c);
+    // chaine_dest->str[chaine_dest->N] = c;
     chaine_dest->N++;
 }
 
@@ -61,16 +63,13 @@ void add(string *chaine_dest, char c)
 void delete(string *chaine_dest, int i)
 {
     chaine_dest->N--;
-    char *nouvelle_chaine = malloc(chaine_dest->N);
-    for (int j = 0; j < i; j++)
+    for (int j = 0; j < chaine_dest->N; j++)
     {
-        nouvelle_chaine[j] = chaine_dest->str[j];
+        if (j >= i)
+        {
+            chaine_dest->str[j] = chaine_dest->str[j + 1];
+        }
     }
-    for (int i = i + 1; i < chaine_dest->N; i++)
-    {
-        nouvelle_chaine[i] = chaine_dest->str[i];
-    }
-    chaine_dest->str = nouvelle_chaine;
 }
 
 /**
@@ -79,7 +78,8 @@ void delete(string *chaine_dest, int i)
  */
 void destroy(string *chaine)
 {
-    // ****** TODO *******
+    free(chaine->str);
+    chaine->str = NULL;
 }
 
 void test_create()
