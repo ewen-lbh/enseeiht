@@ -201,4 +201,74 @@ Accusé de réception
 
 On continue à émettre tant qu'on n'a pas reçu un ACK (donc le timeout revient à calculer le roundtrip d'un message)
 
+\subsection{Calcul du RTT}
+
+On prend un RTT lissé pour moins prendre enn compte les pics
+
+\begin{align*}
+    \text{SRTT} &= \alpha \text{RTT} + (1-\alpha) \text{SRTT} \\
+\end{align*}
+
+\subsection{Entêtes TCP}
+
+\begin{description}
+    \item[Port source] 00-15
+    \item[Port destination] 16-31
+    \item[Numéro de séquence] 
+    \item[Numéro d'ACK] 
+    \item[Taille du header] 
+    \item[Réservé] 
+    \item[U] Il y a une donnée urgente à transmettre en priorité
+    \item[A] Le numéro d'ACK est valide
+    \item[P] L'information n'a pas été demandée (push)
+    \item[R] Reset (du numéro de séquence)
+    \item[S] SYN
+    \item[F] FIN
+    \item[Taille de la fenêtre] Combien on peut recevoir de données
+    \item[Somme pour checker] 
+    \item[Pointeur d'urgence] 
+    \item[Options] 
+    \item[Data] 
+\end{description}
+
+\section{Protocole de routage RIP}
+
+\subsection{Besoins et définitions}
+
+\subsubsection{Vue d'ensemble}
+
+Des réseaux domestiques connectés aux autres avec des \emph{réseaux d'accès} :
+
+\begin{itemize}
+    \item 3G
+    \item 4G
+    \item 5G
+    \item ADSL
+    \item Fibre
+    \item \ldots
+\end{itemize}
+
+Mais on veut pouvoir communiquer avec ceux sur les autres FAIs, et avec des \emph{Service Providers}.
+
+\subsubsection{Besoins}
+
+\subsubsection{Définitions}
+
+\subsection{RIP, un protocole simple}
+
+\subsubsection{Principe}
+
+\subsubsection{Protocole}
+
+\subsubsection{Problèmes}
+
+
+
+
+
+
+
+
+
+
 \end{document}

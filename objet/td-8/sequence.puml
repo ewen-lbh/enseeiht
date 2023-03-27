@@ -1,0 +1,23 @@
+participant Scenario
+participant "Segment s" as s
+participant "Point p1" as p1
+participant "Point p2" as p2
+
+Scenario -> p1 : «create»(0, 0)
+Scenario -> p2 : «create»(5, 0)
+Scenario -> s : «create»(p1, p2)
+s -> p1 : ajouter(this)
+s -> p2 : ajouter(this)
+s -> p1 : lg = distance(p2)
+Scenario -> p2 : afficher
+Scenario -> s : afficher
+s -> p1: afficher
+s -> p2: afficher
+Scenario -> s : getLongueur
+Scenario -> p2 : translater(-2, 0)
+p2 -> s : majLongeur
+Scenario -> p2 : afficher
+Scenario -> s : afficher
+s -> p1 : afficher
+s -> p2: afficher
+Scenario -> s : getLongueur

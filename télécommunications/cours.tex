@@ -268,7 +268,111 @@ Quand le signal se propage sur plusieurs trajets.
 \subsection{Canal non-stationnaire}
 Les paramètres changent avec le temps.
 
+\subsection{Rapport signal sur bruit}
+
+Avec le critère de Nyquist vérifié, on a
+
+\begin{align*}
+    z(t_0 + mT_s) &= \underbrace{a_m g(t_0)}_{\text{terme utile}} + \underbrace{w(t_0 + mT_s)}_{\text{bruit du canal}}
+\end{align*}
+
+Le rapport SNR aux instants de décision est alors
+
+\begin{align*}
+    \text{SNR} &= \frac{P_{a_m g(t_0)}}{P_w} = \frac{\sigma_a^2 |\mathbf{g}(t_0)|^2}{\sigma_w^2} \\
+\end{align*}
+
+Or $g = h \ast h_c \ast h_r$ donc  \emph{SNR dépend de tout les filtres} 
+
+\begin{align*}
+    P_x &= \int_\R S_x(f) \df \\
+    &= R_x(0) \\
+    &= E\big(x(t) x^\ast(t-\tau)\big) \Large|_{\tau=0} \quad&\text{car signal aléatoire} \\
+    &= E(|x(t)|^2) \\
+\end{align*}
+
+\subsubsection{Maximisation}
+
+\begin{align*}
+    \text{Maximiser SNR} &\iff \text{Maximiser $\frac{|g(t_0)|}{\sigma_w}$} \\
+                         &\iff H_r \propto H_e^\ast e^{-j2 \pi ft_0} \quad&\text{avec Cauchy-Schwarz sur $\begin{cases}
+                                 a &= H_r \\
+                                 b^\ast &= H \cdot H_c e^{j_2 \pi ft_0} \\
+                         \end{cases}$} \\
+                         &\iff h_r(t) \propto h_e^\ast(-t)  \ast  \delta (t-t_0) \\
+                         &\iff h_r(t) \propto h_e^\ast(t_0-t)
+\end{align*}
+
+En notant $h_e = h \ast h_c$ la \emph{forme d'onde reçue}, c'est la forme d'onde associée à chaque symbole, \emph{à l'entrée du récepteur}.
+
+\subsubsection{Exemple}
+
+On prend $h(t) = \1_{T_s}$, $h_c(t) = \delta(t)$ (juste un bruit additif) et  $h_r(t) = \1_{T_s}$.
+
+\begin{description}
+    \item[Critère de Nyquist] En prenant $t_0 = T_s$, on a bien $\begin{cases}
+            g(t_0) &\neq 0 \\
+            \forall \p\in \Z^\ast,\  g(t_0 + pT_s) &= 0 \\
+    \end{cases}$.
+
+    \item[Maximisation du SNR] 
+
+        On a \begin{align*}
+            \begin{cases}
+                h_e(t) &= h(t) ^\ast h_c(t) = h(t) \\
+                h_r(t) &= \1_{T_s} = h_e(T_s - t) = h_e(t_0-t) \\
+            \end{cases}
+        \end{align*}
+
+        On a donc maximisation avec un coefficient de proportionnalité de 1.
+\end{description}
+
+\subsection{Taux d'erreur symbole TES}
+
+\subsubsection{Cas binaire ($a_m \in \{\pm V\} $)}
+
+On pose $Q(x) = P(x \le X)$ et $D_{\text{min}}$ la distance minimale en amplitude entre deux symboles
+
+\begin{align*}
+    \text{TES} &= Q\left( \frac{Vg(t_0)}{\sigma_w} \right)  \\
+    &= Q\left( \frac{D_{\text{min}}}{2\sigma_w} \right)  \\
+\end{align*}
 
 
+\subsubsection{TES en fonction de $\frac{E_b}{N_0}$}
+
+\begin{align*}
+    \frac{E_b}{N_0} &= \frac{P_\text{signal reçu} T_b}{N_0} \\
+\end{align*}
+
+\begin{align*}
+    \sigma_w^2 &= \frac{N_0}{2} \int_\R |H_r(f)^2| \df \\
+    &= \frac{N_0}{2} \int_\R \lambda G(f) e^{j 2 \pi f t_0} \df \quad&\text{si filtrage adapté} \\
+    &= \lambda \frac{N_0}{2} g(t_0) \\
+    E_b &= P_{\text{signal reçu}} N_b \\
+    &= \int_\R S_{\text{signal reçu}}(f) \df  \cdot T_b \\
+    &= \int_\R \frac{\sigma_a^2}{T_s} |H(f)^2| \df \cdot  T_b \quad&\text{$m_a = 0$ et $R_a(k) = 0 \  \forall k\neq 0$}  \\
+\end{align*}
+
+
+\begin{align*}
+    \text{TES} &= Q\left( \frac{V g(t_0)}{\sqrt{\lambda \frac{N_0}{2} g(t_0)} } \right)  \\
+    &= Q\left( V \sqrt{\frac{2 g(t_0)}{\lambda N_0}}  \right)  \\
+    &= Q\left( \cancel{V} \sqrt{\frac{2 \lambda E_b}{\cancel{\sigma_a^2} N_0}}  \right) \quad&\text{car $\sigma_a^2 = V^2$}  \\
+    &=  Q\left( \sqrt{\frac{2 E_b}{N_0}}  \right) \quad&\text{si Nyquist + filtrage adapté} \\
+\end{align*}
+
+\begin{center}
+{\Large\bf TES minimisé quand filtrage adapté et Nyquist respecté}
+\end{center}
+
+
+\subsection{TEB pour un mapping $n$-aire de GRAY}
+
+\begin{align*}
+    \text{TEB} &\approx \frac{\text{TES}}{\log_2 M}
+\end{align*}
+
+$\frac{E_b}{N_0}$ est lié à la puissnace d'émission requise
 
 \end{document}

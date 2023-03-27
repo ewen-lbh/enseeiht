@@ -1,0 +1,7 @@
+class Segment {
+    longueur: Long
+
+    majLongueur() 
+}
+
+note right of Segment: majLongueur() { lg = e1.distance(e2) }

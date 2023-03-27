@@ -1,0 +1,8 @@
+interface Agenda
+class AgendaAbstrait extends ObjetNomme implements Agenda
+class AgendaIndividuel extends AgendaAbstrait
+class GroupeAgenda extends AgendaAbstrait
+class LibreException extends Exception
+class OccupeException extends Exception
+class CreneauInvalideException extends Exception
+class ObjetNomme

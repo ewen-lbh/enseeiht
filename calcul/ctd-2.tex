@@ -1,0 +1,56 @@
+\documentclass{article}
+\input{/home/ewen/enseeiht/.tooling/template.tex}
+
+\begin{document}
+\section{Factorisation LU}
+
+Quand on triangularise un système linéaire pour un pivot de Gauss, on fait des CLs des lignes et on peut donc écrire la matrice du système comme
+\begin{align*}
+    A = LU
+\end{align*}
+
+Avec $A$ la matrice du système initial, $U$ celle du système triangularisé et $L^{-1}$ les opérations effectuées sur $A$ pour obtenir $U$.
+
+\subsection{Construction de $L$}
+
+\begin{definition}[Matrice de transvection $T_{i, j}(\lambda)$]
+    \begin{align*}
+        T_{i, j}(\lambda) &= I + \lambda E_{ij} &i \neq j
+    \end{align*}
+\end{definition}
+
+\subsubsection{Propriétés de la transvection}
+\begin{description}
+    \item[] 
+    \item[Produit] 
+        \begin{align*}
+            \prod_{i>j} T_{i, j}(\lambda_{i, j}  ) &= \begin{pmatrix} 1 \\ & 1 \\ & | \\ & \lambda_{ \cdot , j} & 1 \\ & | & &  1 \end{pmatrix}  \\
+        \end{align*}
+    \item[Inverse] \begin{align*}
+            T_{i, j}(\lambda)^{-1} &= T_{i, j}(-\lambda) \quad&\text{$T_{i, j} \in GL_n(\R)$ car $\operatorname{det} T_{i, j}(\lambda) = 1 $} \\
+    \end{align*}
+    \item[Produit de produits] 
+        \begin{align*}
+            \begin{pmatrix} 1 \\ | & 1 \\ \lambda_{ \cdot , 1} & & 1 \\ | & & & 1 \end{pmatrix}  \times 
+            \begin{pmatrix} 1 \\ & 1 \\ & | &  1 \\ & \lambda_{ \cdot , 2} & & 1 \end{pmatrix}  \times \cdots &= \begin{pmatrix} 1 \\ | & 1  \\ \lambda_{ \cdot , 1} & | & 1 \\ | & \lambda_{ \cdot , 2} & \ddots & 1 \end{pmatrix}  \\
+        \end{align*}
+
+        \emph{{\bf Attention} l'ordre est important} 
+\end{description}
+
+\subsection{Existance et unicité}
+
+\begin{theorem}
+   \begin{align*}
+       \exists L, U, \ A=LU &\iff \forall k\in \llbracket 1, n \llbracket, \det(A(1:k, 1:k)) \neq 0 
+   \end{align*} 
+   \begin{align*}
+       \exists L, U, A=LU \implies (L, U) \text{ unique et }\ldots
+   \end{align*}
+\end{theorem}
+
+\ldots
+
+
+
+\end{document}

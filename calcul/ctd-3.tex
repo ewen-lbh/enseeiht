@@ -1,0 +1,136 @@
+\documentclass{article}
+\input{/home/ewen/enseeiht/.tooling/template.tex}
+\begin{document}
+
+\section{Décompositions LU et Schur par blocs}
+
+\subsection{Exercice 1}
+
+Soit $A$ une matrice non singulière d'ordre $n$ telle que il existe $P$ une matrice de permutation telle que $PA$ peut être factorisé sans pivotation.
+Considérons la forme en blocs
+
+\begin{align*}
+    PA &= \begin{pmatrix} A_{11} & A_{12} \\ A_{21} & A_{22} \end{pmatrix}  \\
+\end{align*}
+
+On définit la \emph{matrice de Schur} $S = A_{21} A_{11}^{-1} A_{12}$
+
+\begin{enumerate}
+    \item Expliquez comment adapter l'algorithme de factorisation LU pour obtenir la décomposition de $PA$. On a $PA = \begin{pmatrix} L_{11} & 0 \\ L_{21} & I \end{pmatrix} \begin{pmatrix} U_{11} & U_{12} \\ 0 & S \end{pmatrix} = \begin{pmatrix} L_{11} & 0 \\ L_{21} & I \end{pmatrix} \begin{pmatrix} I & 0 \\ 0 & S \end{pmatrix} \begin{pmatrix} U_{11} & U_{12} \\ 0 & I \end{pmatrix} $
+    \item Montrez que $\det A = \det P \det A_{11} \det S$
+    \item On suppose savoir comment calculer $Y$ tel que $Y = S^{-1} Z$. Décrivez comment utiliser la factorisation par blocs incomplète précédente pour résoudre $AX=B$.
+\end{enumerate}
+
+\paragraph{Correction}
+
+\begin{enumerate}
+    \item On exécute l'algorithme de LU usr $PA$ et on l'arrête après $q$ étapes, $q$ étant la taille de $A_{11}$.
+
+        On a 
+        \begin{align*}
+            L^{(1)}\cdots L^{(q)} PA &= \begin{pmatrix} U_{11} & | & U_{12} \\ \hline 0 & | & C \end{pmatrix} \quad&\text{avec $U_{11}$ triangulaire supérieure.} \\
+            \implies PA &= \underbrace{(L^{(1)})^{-1} \cdots (L^{(q)})^{-1}}_{\begin{pmatrix} \cT_{n, s} & 0 \\ \cM_{n} & I \end{pmatrix} } \\
+                        &= \begin{pmatrix} L_{11} & \\ L_{12} & I \end{pmatrix} \begin{pmatrix} U_{11} & U_{12} \\ & C \end{pmatrix}  \\
+        \end{align*}
+
+        Vérifions que $C=S$.
+
+
+        On a donc, par blocs:
+
+        \begin{itemize}
+            \item $A_{11} = L_{11} U_{11}$ 
+            \item $A_{12}= L_{11} U_{12}$ i.e. $U_{12} = L_{11}^{-1} A_{12}$
+            \item $A_{21} = L_{21} U_{11}$ i.e. $L_{21} = A_{21} U_{11}^{-1}$
+            \item $A_{22} = L_{21} U_{12} + C = A_{21} \underbrace{U_{11}^{-1} L_{11}^{-1}}_{A_{11}^{-1}} A_{12} + C$ i.e. $C = A_{12} - A_{21} A_{11}^{-1} A_{12}$
+        \end{itemize}
+    \item \begin{align*}
+        \det(PA) &= \det A \det P \\
+    \end{align*}
+
+    Or $P$ est une permutation donc $P^\top = P^{-1}$.
+    Ainsi 
+    \begin{align*}
+        1 = \det I = \det (P P^{-1}) = \det P \det (P^\top ) = (\det P)^2
+    \end{align*}
+
+    \begin{align*}
+        \det P \det A &= \det \begin{pmatrix} L_{11} & 0 \\ L_{21} & I \end{pmatrix} \det \begin{pmatrix} U_{11} & U_{12} \\ 0 & S \end{pmatrix}  \\
+        &= \det L_{11} \det I \det U_{11} \det S \\
+        &= 1  \cdot 1  \cdot \det U_{11} \det S \quad&\text{car $L_{11}$ n'a que des 1 sur la diagonale} \\
+    \iff \det A &= \det P \det A_{11} \det S \quad&\text{$ \times \det P$} \\
+    \iff \det A &= \pm \underbrace{\det U_{11}}_\text{non nul car on a pu faire la LU} \det S \\
+    \end{align*}
+
+    Donc si $A$ inversible ssi $S$ inversible.
+
+\item On pose $\tilde{ \cdot } = P \cdot $
+
+    On a à résoudre:
+    \begin{align*}
+        PAX &= \tilde{B} \\
+        \iff \begin{pmatrix} L_{11} \\ L_{21} & I \end{pmatrix} \begin{pmatrix} I & \\ & S \end{pmatrix}  \begin{pmatrix} U_{11} & U_{12} \\ & S \end{pmatrix} \begin{pmatrix} X_1 \\ X_2 \end{pmatrix} &= \begin{pmatrix} \tilde{B_1} \\ \tilde{B_2} \end{pmatrix}  \\
+    \end{align*}
+
+    \begin{enumerate}
+        \item Résolution de $\begin{pmatrix} L_{11} \\ L_{12} & I \end{pmatrix} \begin{pmatrix} Z_1 \\ Z_2 \end{pmatrix} = \begin{pmatrix} \tilde{B_1} \\ \tilde{B_2} \end{pmatrix} $. On appelle ça la \emph{phase de condensation} .
+
+            \begin{align*}
+                \begin{pmatrix} L_{11} \\ L_{12} & I \end{pmatrix} \begin{pmatrix} Z_1 \\ Z_2 \end{pmatrix} &= \begin{pmatrix} \tilde{B_1} \\ \tilde{B_2} \end{pmatrix} \\
+            \end{align*}
+
+            \begin{itemize}
+                \item $Z_1 &= L_{11}^{-1} \tilde{B_1}$: facile (forward substitution\footnote{dernière étape de l'algo de Gauss})
+                \item $Z_2 = \tilde{B_2} - L_{12} Z_1$ : trivial
+            \end{itemize}
+        \item 2e phase
+
+            \begin{align*}
+                \begin{pmatrix} I \\ & S \end{pmatrix} \begin{pmatrix} Y_1 \\ Y_2 \end{pmatrix} = \begin{pmatrix} Z_1 \\ Z_2 \end{pmatrix} \iff \begin{cases}
+                    Y_1 &=  Z_1 \\
+                    Y_2 &= S^{-1} Z_2 \quad\text{méthode ``ad-hoc"} \\
+                \end{cases}
+            \end{align*}
+
+        \item \emph{Phase d'expansion} 
+
+            \begin{align*}
+                
+            \begin{pmatrix} U_{11} & U_{12} \\ & I \end{pmatrix} \begin{pmatrix} X_1 \\ X_2 \end{pmatrix} &= \begin{cases}
+                U_{11}X_1 + U_{12}X_2 &= Y_1 \\
+                X_2 &= Y_2 \\
+            \end{cases} \iff \begin{cases}
+                X_1 &= U_{11}^{-1} (Y_1 - U_{12} Y_2) \\
+                X_2 &= Y_2 \quad\text{backward substitution} \\
+            \end{cases} \\
+            \end{align*}
+    \end{enumerate}
+
+
+\end{enumerate}
+
+
+\subsection{Exercice 2 : Exhibition d'un presque-noyau \emph{(null space)} }
+
+cf transparent 19/38
+
+On fait l'hypothèse que $x=0$ et $\det U_{11} = \det A_{11} \neq 0$. On a $\ker(PA) = \ker A$ car  $A$ inversible.
+
+\begin{align*}
+    X \in \ker A &\iff PAX = 0 \\
+                 &\iff \begin{pmatrix} L_{11} & \\ L_{21} & I \end{pmatrix} \begin{pmatrix} U_{11} & U_{12} \\ & 0 \end{pmatrix} \begin{pmatrix} X_1 \\X_2 \end{pmatrix} = \begin{pmatrix} 0 \\ 0 \end{pmatrix} 
+                 &\iff \begin{pmatrix} U_{11} & U_{12} \\ & 0 \end{pmatrix} \begin{pmatrix} X_1 \\ X_2 \end{pmatrix} &= \begin{pmatrix} 0 \\ 0 \end{pmatrix} \\
+                 &\iff U_{11} X_1 + U_{12} X_2 = 0 \\
+                 &\iff X_1 = -U_{11}^{-1} U_{12} X_2 \\
+                 &\iff X = \begin{pmatrix} -U_{11}^{-1} &U_{12} \\ I_r \end{pmatrix} X_2 \in \cM_n
+\end{align*}
+
+\paragraph{Vérification:}
+
+\begin{align*}
+    PA \begin{pmatrix} U_{11}^{-1} U_{12} \\ I_r \end{pmatrix} &= \begin{pmatrix} L_{11} \\ L_{12} I \end{pmatrix} \begin{pmatrix} -U_{11} U_{11}^{-1} U_{12} + U_{12} I_r \\ 0 \end{pmatrix}  \\
+\end{align*}
+
+j'ai décroché là…
+
+\end{document}

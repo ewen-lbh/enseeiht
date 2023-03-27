@@ -1,0 +1,56 @@
+\documentclass{article}
+\input{/home/ewen/enseeiht/.tooling/template.tex}
+
+\begin{document}
+\section{Débit théorique d'une connexion TCP}
+
+\subsection{}
+C'est le \emph{RTT}\footnote{Round-trip time}, qui mesure le temps entre l'envoi et la réception du ACK correspondant.
+
+\subsection{}
+La taille d'une fenêtre (\emph{AWND})
+
+\subsection{}
+\begin{align*}
+    D_\text{max} = \frac{8  \cdot  \text{AWND}}{\text{RTT}}
+\end{align*}
+
+\section{Docteur réseau!}
+
+\subsection{Accès à internet}
+
+\subsubsection{}
+
+Les UEs\footnote{ \emph{User Equipement}  } communiquent entre eux et avec la box, donc la table de routage est correcte.
+
+\subsubsection{}
+
+Mettre une route par défaut vers la box (avec son addresse privée) dans les tables de routage des UEs
+
+\subsubsection{}
+
+\begin{itemize}
+    \item Vérifier que le routage est activée \verb|echo 1 > /\ldots/ip_forward|
+    \item L'adresse n'est pas routable car privée, donc on fait une translation d'adresse source, en remplaçant la privée par une publique.
+\end{itemize}
+
+\subsection{Serveur web}
+
+
+\subsubsection{}
+
+\verb|$ iptables -t net -A POSTROUTING -o internet -j MASQUERADE|
+
+\subsubsection{}
+
+    
+\verb|$ iptables -t net -A PREROUTING -d 80.1.1.102 -t tcp --dport 80 -j DNAT --to 192.168.0.32|
+
+\section{Traceroute}
+
+\subsection{}
+\subsection{}
+\subsection{}
+
+
+\end{document}
