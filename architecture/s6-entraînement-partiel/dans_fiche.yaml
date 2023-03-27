@@ -1,0 +1,11 @@
+- Schéma minicraps
+- Schéma graphe d'états
+- Trucs à pas oublier craps:
+	- Incrémenter i dans boucle
+	- Bien set taille du tableau dans les appelant
+	- Bien empilé dans un sens et dépiler dans l'autre
+        - ATTENTION VALEUR DU REGISTRE LEDS = 0xB0000000 (B puis 7 zéros)
+	- Initialiser %sp (PILE) et %r20 (LEDS)
+        - reti pour sortir du handler d'its
+- Registres spéciaux:
+	- LEDs (%r20)
