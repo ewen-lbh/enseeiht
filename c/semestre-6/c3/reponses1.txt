@@ -4,16 +4,22 @@ Dans ce fichier `reponses1.txt`,
 [Question 1.1] Indiquer 
 - comment obtenir le ou les exécutables par compilation séparée.
 
-
+    c99 -Wextra -pedantic -c *.c
+    c99 -Wextra -pedantic *.o -o programme
 
 - les dépendances entre les fichiers qui constituent l’application.
 
+    makedepend *.c -Y
+    
+    grep '^#include "(.*)"' | sed s/#include// | sed s/\"//g | sort -u
 
 - le rôle de la règle `.PHONY` dans Makefile.
 
+    liste les dépendances qui doivent être re-générées même lorsqu'elles sont déjà à jour.
 
 [Question 1.5] Indiquer
 - Quel est le sous-programme non-visible des autres modules et défini dans le module File.
+
 
 
 - Que se passe-t-il si on enlève le mot-clé static à la compilation ?  

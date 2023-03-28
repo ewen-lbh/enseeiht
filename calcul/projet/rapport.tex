@@ -2,7 +2,7 @@
 
 % Language setting
 % Replace `english' with e.g. `spanish' to change the document language
-\usepackage[french]{babel}
+\usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
 \newcommand{\TF}{\operatorname{TF}}
 \newcommand{\NRZ}{\operatorname{NRZ}}
@@ -38,10 +38,10 @@
 \title{
 \includegraphics[width=0.2\textwidth]{n7.png}
 \\[1cm]
-Rapport de projet -- Calcul Scientifique
+Project report -- Calcul scientifique
 
 }
-\author{Ewen Le Bihan}
+\author{Gautier Rancoule, Ewen Le Bihan}
 
 \date{ENSEEIHT, département Sciences du Numérique}
 
@@ -52,9 +52,9 @@ Rapport de projet -- Calcul Scientifique
 \setcounter{tocdepth}{3}
 \tableofcontents
 
-\section{Test des fournitures}
+\section{Limitations of the power method}
 
-On teste avec des matrices de types
+We test with matrices of the following shapes
 
 \begin{description}
     \item[1] $\begin{pmatrix} 1 & & & & (0) \\ & 2 & & & \\ & & 3 & & \\ & & & \ddots & \\ (0) & & & & n \end{pmatrix}$
@@ -67,13 +67,21 @@ On teste avec des matrices de types
     \centering
     \label{tab:vitesse-algos}
     \begin{tabular}{c|cccc}
-        Type / Algo & 1 & 2 & 3 & 4 \\\hline
+        Type / Alg & 1 & 2 & 3 & 4 \\\hline
         \verb|eig| (10) & $\SI{20}{ms}$ & $\SI{0}{ms}$ & $\SI{10}{ms}$ & $\SI{10}{ms}$ \\
-        \verb|power| (11) & $\SI{1,77}{s}$ & $\SI{30}{ms}$ & $\SI{60}{ms}$ & $\SI{1,74}{s}$ \\
+        \verb|power| (11) & $\SI{1.77}{s}$ & $\SI{40}{ms}$ & $\SI{60}{ms}$ & $\SI{1.81}{s}$ \\
+        \verb|power| (12) & $\SI{0.9}{s}$ & $\SI{60}{ms}$ & $\SI{60}{ms}$ & $\SI{0.93}{s}$ \\
         \verb|v0| (0) & 
     \end{tabular}
-    \caption{Vitesse de calcul des différents algorithmes}
+    \caption{Computation time comparisons}
 \end{table}
 
+
+
+\subsection{Main computing time drawback of the improved deflation method}
+
+
+\verb|power_v12| is slower than \verb|power_v11| on matrices of type {\bf 2} (diagonal matrices of random floating point values close to zero).
+It \emph{is} twice as fast on matrices of type {\bf 1} or {\bf 4}.
 
 \end{document}
