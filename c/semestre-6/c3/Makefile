@@ -1,6 +1,6 @@
 # Définition des Variables (à compléter)
 CC = gcc
-CFLAGS = -Wextra -pedantic
+CFLAGS = -Wextra -pedantic -g
 LDFLAGS = 
 EXE = test_file exemple_file
 
@@ -13,11 +13,11 @@ test_file: test_file.o file.o
 exemple_file: exemple_file.o file.o
 	$(CC) $(LDFLAGS) $^ -o $@
 
-makedepend:
+depend:
 	makedepend *.c -Y.
 
 clean:
-	rm $(EXE)
+	rm $(EXE) *.o
 
 .PHONY: clean all makedepend
 # DO NOT DELETE

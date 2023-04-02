@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <signal.h>
 
 /**
  * \brief Afficher la file
@@ -11,6 +12,7 @@
  * on extraie ses éléments pour les affichers et on les ajoute de nouveau.
  */
 void afficher_une_file(const char nom_file[], File *f) {
+    printf("wat");
     printf("%s = ", nom_file);
 
     // afficher la file.
@@ -33,11 +35,11 @@ int main()
 
     initialiser(&f1);
     assert(longueur(f1)==0);
-    afficher_une_file("f1", &f1);
+    // afficher_une_file("f1", &f1);
 
     inserer(&f1, 'X');
     printf("\ninsertion de : %c\n", 'X');
-    afficher_une_file("f1", &f1);
+    afficher_une_file("tamere", &f1);
 
     inserer(&f1, 'Y');
     printf("\ninsertion de : '%c'\n", 'Y');

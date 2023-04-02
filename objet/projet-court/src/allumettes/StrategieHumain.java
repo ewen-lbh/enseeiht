@@ -7,6 +7,11 @@ public class StrategieHumain implements Strategie {
     private Scanner scanneur;
     private String nomJoueur;
 
+    /**
+     * Créer une stratégie humain.
+     * @param scanneur le scanner à utiliser pour lire les entrées
+     * @param nomJoueur le nom du joueur
+     */
     StrategieHumain(Scanner scanneur, String nomJoueur) {
         this.scanneur = scanneur;
     }
@@ -16,6 +21,11 @@ public class StrategieHumain implements Strategie {
         return prise;
     }
 
+    /**
+     * 
+     * @param jeu
+     * @return
+     */
     private int poserQuestionPrise(Jeu jeu) {
         System.out.print(this.nomJoueur + ", combien d'allumettes ? ");
         String brut = scanneur.nextLine();

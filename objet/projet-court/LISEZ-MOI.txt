@@ -23,8 +23,7 @@ Pourquoi l'exception OperationInterditeException ne peut pas être définie
 comme vérifiée par le compilateur ?
 --------------------------------------------------------------------------------
 
-...
-
+`OperationInterditeException` hérite de `Error`. `OperationInterditeException` est donc un sous-type de `Error`, et n'est donc pas vérifiée.
 
 --------------------------------------------------------------------------------
 Expliquer ce qu'il faut faire pour ajouter un nouveau niveau de jeu, par

@@ -36,7 +36,7 @@ char tete(File f)
 
 bool est_vide(File f)
 {
-    return f.tete == NULL;
+    return f.tete == NULL && f.queue == NULL;
 }
 
 /**
@@ -45,33 +45,60 @@ bool est_vide(File f)
  */
 static Cellule *cellule(char valeur, Cellule *suivante)
 {
-    return &(Cellule){.suivante = suivante, .valeur = valeur};
+    Cellule *new = (Cellule *)malloc(sizeof(Cellule));
+    new->valeur = valeur;
+    new->suivante = suivante;
+    return new;
+}
+
+static int longueur_rec(Cellule *tete)
+{
+    if (tete == NULL)
+    {
+        return 0;
+    }
+    return 1 + longueur_rec(tete->suivante);
+}
+
+static void inserer_rec(Cellule *tete, Cellule *new)
+{
+    if (tete->suivante == NULL)
+    {
+        tete->suivante = new;
+    }
+    else
+    {
+        inserer_rec(tete->suivante, new);
+    }
 }
 
 void inserer(File *f, char v)
 {
     assert(f != NULL);
 
-    Cellule *new_cell = cellule(v, f->tete);
-    f->tete = new_cell;
+    Cellule *new = cellule(v, NULL);
+    if (est_vide(*f))
+    {
+        f->tete = new;
+    }
+    else
+    {
+        inserer_rec(f->tete, new);
+    }
 }
+
+
 
 void extraire(File *f, char *v)
 {
     assert(f != NULL);
     assert(!est_vide(*f));
 
-    // TODO
+    *v = f->tete->valeur;
+    f->tete = f->tete->suivante;
 }
 
 int longueur(File f)
 {
-    Cellule *current = f.tete;
-    int length = 0;
-    while (current != NULL)
-    {
-        length++;
-        current = current->suivante;
-    }
-    return length;
+    return longueur_rec(f.tete);
 }
