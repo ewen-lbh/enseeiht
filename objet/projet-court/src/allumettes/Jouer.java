@@ -57,7 +57,7 @@ public class Jouer {
             } catch (PartieTermineeException | PartieAbandonneeException e) {
                 // La partie est terminée.
                 System.out.println(e.getMessage());
-                jeuEnCours = false
+                jeuEnCours = false;
             }
         }
     }

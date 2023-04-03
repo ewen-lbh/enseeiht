@@ -63,6 +63,14 @@ public class Plateau implements Jeu {
      * @param nbAllumettes le nombre initial d'allumettes
      */
     Plateau(int nbAllumettes) {
+        if (nbAllumettes <= 0) {
+            throw new IllegalArgumentException(
+                String.format(
+                    "Nombre initial d'allumettes invalide : %d (<= 0)",
+                    nbAllumettes
+                )
+            );
+        }
         this.allumettesRestantes = nbAllumettes;
     }
 }
