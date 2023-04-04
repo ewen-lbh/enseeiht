@@ -14,6 +14,7 @@ int main(int argc, char *argv[])
     {
         printf(">>>mmsh: ");
         ret = scanf("%s", buf);
+        buf[29] = '\0'; // éviter un Net7Overflow: Cartel out of bounds exception
 
         if (ret == EOF)
         {
