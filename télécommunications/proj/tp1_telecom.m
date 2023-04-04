@@ -80,7 +80,7 @@ figure;
 dsp_2 = fftshift(pwelch(x, [], [], [], Fe, 'twosided'));
 f=linspace(-Fe/2, Fe/2, length(dsp_2));
 %semilogy(f, dsp_2)
-x%label("fréquence [Hz]")
+%label("fréquence [Hz]")
 %ylabel("Densité spectrale de puissance")
 %title("(2) Densité spectrale de puissance théorique")
 

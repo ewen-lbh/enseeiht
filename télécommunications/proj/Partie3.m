@@ -1,4 +1,4 @@
-% PARTIE 2
+  % PARTIE 2
 clear all;
 close all;
 
