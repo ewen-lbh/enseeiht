@@ -1,0 +1,33 @@
+\documentclass{article}
+\input{/home/ewen/enseeiht/.tooling/template.tex}
+
+\begin{document}
+\section{Paramètres limites d'Ethernet}
+
+\subsection{Borne maximae du temps d'aller-retour}
+
+\begin{align*}
+    2 \left(5 \cdot \frac{500}{200 \cdot 10^{6}} + 4  \cdot 3  \cdot 10^{-6}\right) &= \SI{49}{\micro\second} \\
+\end{align*}
+
+\subsection{Borne minimale d'une trame Ethernet}
+
+\begin{align*}
+    \frac{L_{\text{min}}}{D} &\ge T_{\text{aller/retour}} \\
+    \iff \frac{8n}{10 \cdot 10^{6}} \ge \SI{49}{\micro\second} \\
+    \iff n &\ge \frac{49}{0.8} \\
+    \implies \min n &= 64 \\
+\end{align*}
+
+\section{Algorithme d'Ethernet}
+
+\subsection{Chronogramme}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{chronogramme.png}
+    \caption{Chronogramme}
+    \label{fig:chronogramme}
+\end{figure}
+
+
+\end{document}
