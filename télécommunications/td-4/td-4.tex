@@ -1,0 +1,74 @@
+\documentclass{article}
+\input{/home/ewen/enseeiht/.tooling/template.tex}
+
+\begin{document}
+\section{Comparaison de systèmes de transmission sur fréquence porteuse}
+
+\subsection{}
+Fréquence porteuse
+
+\subsection{}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{1.2.png}
+    \caption{}
+    \label{fig:}
+\end{figure}
+
+\paragraph{Remarque}
+
+\begin{align*}
+    X(t) = \Re X_e(t) e^{2j \pi f_0 t}
+    &= \underbrace{\Re X_e(t)}_{I(t)} \cos(2 \pi f_0 t) - \underbrace{\Im X_e(t)}_{Q(t)} \sin(2 \pi f_0 t) \\
+\end{align*}
+
+Avec $X_e = I + Q$ ($I$ pour \emph{en phase } et $Q$ pour \emph{en quadrature})
+
+\subsection{}
+L'ordre est de 4 dans les 3 cas.
+
+\subsection{}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{1.4.png}
+    \caption{}
+    \label{fig:}
+\end{figure}
+
+\subsection{}
+$$R_s = \frac{R_b}{\log_2(16)} = \frac{R_b}{4}$$
+\subsection{}
+
+
+\begin{align*}
+    \eta &= \frac{R_b}{B} \\
+\end{align*}
+
+avec $B$ la bande passante
+
+Ici, on a une racine de  cosinus surélevé, donc $B = (1+\alpha) R_s$
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{1.6.png}
+    \caption{1}
+    \label{fig:1}
+\end{figure}
+
+\paragraph{Application numérique} avec $\alpha = 0.5, M = 16$
+
+\begin{align*}
+    \eta = \frac{4}{1,5} = \SI{8 / 3}{b s^{-1} Hz^{-1}}
+\end{align*}
+
+\subsection{}
+On a $\argmax_\alpha \eta(\alpha) = 0$. Donc $\max \eta = \SI{4}{b s^{-1} Hz^{-1}}$.
+
+Ainsi $B = (1+\alpha) R_s = \SI{12}{kHz}$ 
+
+
+
+
+\end{document}
