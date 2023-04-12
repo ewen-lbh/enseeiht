@@ -73,7 +73,7 @@ axis([ 0 10 -1 1.5 ])
 
 g=conv(h,h);
 
-teb = length(find((unmapped - bits_non_map ~= 0)))/length(bits_non_map)
+teb = length(find((unmapped - bits_non_map ~= 0)))/length(bits_non_map);
 
 
 

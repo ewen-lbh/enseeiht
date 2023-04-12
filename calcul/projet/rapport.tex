@@ -84,4 +84,92 @@ We test with matrices of the following shapes
 \verb|power_v12| is slower than \verb|power_v11| on matrices of type {\bf 2} (diagonal matrices of random floating point values close to zero).
 It \emph{is} twice as fast on matrices of type {\bf 1} or {\bf 4}.
 
+\section{Extending the power method to compute dominant eigenspace vectors}
+
+\subsection{\verb|subspace_iter_v0|: a basic method to compute a dominant eigenspace}
+
+Without orthonormalisation to force the vectors to evolve to different values during the iteration, there is a large chance that all output eigenvectors will be copies of one of the eigenvectors.
+
+\subsubsection{Rayleigh quotient}
+
+The size of $H$ is one order of magnitude less than $A$. Therefore, computing the spectral decompositon of $H$ is much less intensive than computing that of $A$'s.
+
+\subsection{\verb|subspace_iter_v1|: improved version making use of Raleigh-Ritz projection}
+
+\subsubsection{Convergence analysis step}
+
+
+\begin{table}[H]
+	\centering
+	\caption{Steps of Algorithm 4}
+	\label{tab:steps-alg-4}
+	\begin{tabular}{l|l}
+	Step & Code \\\hline
+	Generate an initial set of $m$ orthogonal vectors & 48-49 \\
+	$k=0$ & 38 \\
+	$\text{PercentReached}=0$ & 40 \\
+	$k=k+1$ 54 \\
+	Compute  $Y$ such that $Y=A \cdot V$ & 56 \\
+	$V \from \text{orthonormalization of the columns of $Y$}$ & 58 \\
+	Rayleigh-Ritz project applied on matrix $A$ and $V$ & 61 \\
+	Convergence analysis & 64-112 \\
+	\end{tabular}
+\end{table}
+
+\section{\verb|subspace_iter_v2| and \verb|subspace_iter_v3|: towards an efficient solver}
+
+\subsection{Block approach}
+
+\paragraph{Question 8}
+
+Let $n$ be the size of $A$ (such that $A \in \cM_{n, n}(\R)$). Computing $A^2$ takes $n^2(2n-1)$ flops.
+
+Therefore, the computation is
+
+\begin{align*}
+	p n^2 (2n-1) \quad \text{flops}
+\end{align*}
+
+We have $V \in \cM_{n, m}(\R)$, therefore, computing $A^{p} \cdot V$ takes
+
+\begin{align*}
+	pn^2(2n-1) + nm(2n-1) &= (2n-1)n(pn+m) \quad \text{flops} \\
+\end{align*}
+
+By computing $A \cdot V$ first, then pre-multiplying the resulting \emph{vector} by $A$ $p-1$ times, most of the matrix products will be with a vector instead of between two matrices:
+
+The cost is then
+
+\begin{align*}
+	nm(2n-1) + (p-1)nm(2n-1) &= pm(2n-1)  \quad \text{flops}
+\end{align*}
+
+
+
+\paragraph{Question 10}
+
+\begin{table}[H]
+	\centering
+	\caption{Performance for a range of $p$ values}
+	\label{tab:perf-p-values}
+	\begin{tabular}{l|l}
+		$p$ & # iterations \\\hline
+		1  & 86   \\
+		10 & 9  \\
+		20 & 5  \\
+		30 & 3  \\
+		50 & 2  \\
+		100 & 2  \\
+		200 & \emph{does not converge} 
+	\end{tabular}
+\end{table}
+
+By increasing the value of $p$, we do less orthonormalizations, and converge quicker to the result.
+
+But, similarly to the \emph{learning rate} hyperparameter in neural networks, if we try to converge too quickly, finding a local minimum will never happen and we'll oscillate around, because the steps taken are too big.
+
+
+
+
+
 \end{document}
