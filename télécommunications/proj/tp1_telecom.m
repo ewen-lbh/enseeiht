@@ -70,11 +70,12 @@ h_3 = rcosdesign(alpha,L ,Ns);
 sigma_a = std(signal_1_map);
 f = linspace(-Te/2, Te/2, length(dsp_2_exp));
 dsp_3_theorique = zeros(1, length(f));
-for freq = f
+for i = 1:length(f)
+    freq = f(i)
     if abs(freq) <= (1-alpha) / (2*Ts)
-        dsp_3_theorique(freq) = sigma_a^2;
+        dsp_3_theorique(i) = sigma_a^2;
     elseif abs(freq) <= (1+alpha) / (2*Ts)
-        dsp_3_theorique(freq) = sigma_a^2 / 2 * (1+cos((pi * Ts)/alpha * (abs(f) - (1-alpha)/(2*Ts))));
+        dsp_3_theorique(i) = sigma_a^2 / 2 * (1+cos((pi * Ts)/alpha * (abs(f) - (1-alpha)/(2*Ts))));
     end
 end
 dsp_3_exp = figures_modulateur(3, signal_1_map, h_3, Te, Fe, dsp_3_theorique);
@@ -92,6 +93,7 @@ xlabel("Fréquence [Hz]")
 ylabel("DSP")
 title("Comparaison des DSPs expérimentales des trois modulateurs")
 legend("Modulateur 1", "Modulateur 2", "Modulateur 3")
+tikzfigure("comparaison_dsps_expérimentales_trois_modulateurs")
 
 
 function dsp_exp = figures_modulateur(modulateur_no, nrz, h, Te, Fe, dsp_theo)
@@ -100,14 +102,16 @@ figure;
 plot(nrz)
 xlabel("temps [s]")
 ylabel("m_i(t)")
-title(strcat("Modulateur", int2str(modulateur_no), ": Signal généré"))
+title(strcat("Modulateur ", int2str(modulateur_no), ": Signal généré"))
+tikzfigure(strcat("modulateur_", int2str(modulateur_no), "_signal_généré"))
 
 figure;
 %x=filter(signal_1, 1, ones(1,Ns));
 x=filter(h,1 , nrz);
 t = 0:Te:(length(x)-1)*Te;
 plot(t, x)
-title(strcat("Modulateur", int2str(modulateur_no), ": Signal filtré"))
+title(strcat("Modulateur ", int2str(modulateur_no), ": Signal filtré"))
+tikzfigure(strcat("modulateur_", int2str(modulateur_no), "_signal_filtré"))
 
 figure;
 
@@ -116,7 +120,8 @@ f=linspace(-Fe/2, Fe/2, length(dsp_exp));
 semilogy(f, dsp_exp)
 xlabel("Fréquence [Hz]")
 ylabel("Densité spectrale de puissance")
-title(strcat("Modulateur", int2str(modulateur_no), ": DSP Expérimentale"))
+title(strcat("Modulateur ", int2str(modulateur_no), ": DSP Expérimentale"))
+tikzfigure(strcat("modulateur_", int2str(modulateur_no), "_dsp_expérimentale"))
 
 figure;
 
@@ -126,6 +131,15 @@ semilogy(f, dsp_theo)
 xlabel("Fréquence [Hz]")
 ylabel("Densité spectrale de puissance")
 title(strcat("Modulateur ", int2str(modulateur_no), ": Comparaison des DSPs"))
+tikzfigure(strcat("modulateur_", int2str(modulateur_no), "_comparaison_dsps"))
 legend("Expérimentale", "Théorique")
 hold off
+end
+
+
+function tikzfigure(name)
+    if exist('cleanfigure', 'file') & exist('matlab2tikz', 'file')
+        % cleanfigure;
+	    matlab2tikz(sprintf('figures/%s.tex', name));
+    end
 end
