@@ -57,7 +57,7 @@ g=conv(h,conv(h_c,h_r));
 figure (444)
 
 plot(g)
-title("Réponse impultionnelle filtre")
+title("Réponse impulsionnelle globale de la chaîne de transmission")
 
 unmapped = (sign(unfiltered_ech)+1)/2;
 
@@ -85,3 +85,4 @@ oeil = reshape(unfiltered, Ns, length(unfiltered)/Ns);
 
 figure;
 plot(oeil)
+title("Diagramme de l'oeil à la sortie du filtre de réception")

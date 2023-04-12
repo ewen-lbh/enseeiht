@@ -25,29 +25,8 @@ signal_1_map = kron(signal_1, [1 zeros(1, Ns-1)]);
 f = linspace(-Te/2, Te/2, Ns);
 h_2 = ones(1, Ns); 
 
-
-figure;
-plot(signal_1_map)
-xlabel("temps [s]")
-ylabel("m_i(t)")
-title("Signal aléatoire")
-
-figure;
-%x=filter(signal_1, 1, ones(1,Ns));
-x=filter(h_2,1 , signal_1_map);
-t = 0:Te:(length(x)-1)*Te;
-plot(t, x)
-title("(1) Signal filtré")
-
-figure;
-
-dsp_1 = fftshift(pwelch(x, [], [], [], Fe, 'twosided'));
-f=linspace(-Fe/2, Fe/2, length(dsp_1));
-%semilogy(f, dsp_1)
-%xlabel("fréquence [Hz]")
-%ylabel("Densité spectrale de puissance")
-%title("(1) Densité spectrale de puissance théorique")
-
+dsp_1_theorique = 0;
+dsp_1_exp = figures_modulateur(1, signal_1_map, h_2, Te, Fe, dsp_1_theorique);
 
 
 
@@ -57,33 +36,15 @@ n=2;
 Ts = n*Tb;
 Ns = floor(Ts/Te);
 
+% TODO à voir
 signal_2 = reshape(bits_non_map2, 2, [])';%bit_non_map, 2, []
 signal_2_kron = (2*bi2de(signal_2)-3)';
 %signal_2_kron = kron(signal_2_map, [1 zeros(1, Ns-1)]);
 
-figure(666);
-t = 0:Te:(length(signal_2_kron)-1)*Te;
-plot(t,signal_2_kron)
-xlabel("temps [s]")
-ylabel("amplitude")
-title("(2) Signal")
-axis([0 0.02 -3.3 3.5])
-
 h_2 = ones(1, Ns);
-figure(111);
-x=filter(h_2, 1, signal_2_kron);
-t = 0:Te:(length(x)-1)*Te;
-plot(t, x)
-title("(2) Signal filtré")
 
-figure; 
-dsp_2 = fftshift(pwelch(x, [], [], [], Fe, 'twosided'));
-f=linspace(-Fe/2, Fe/2, length(dsp_2));
-%semilogy(f, dsp_2)
-%label("fréquence [Hz]")
-%ylabel("Densité spectrale de puissance")
-%title("(2) Densité spectrale de puissance théorique")
-
+dsp_2_theorique = 0;
+dsp_2_exp = figures_modulateur(2, signal_2_kron, h_2, Te, Fe, dsp_2_theorique);
 
 
 %modulateur 3
@@ -97,38 +58,74 @@ signal_1 = 2*bits_non_map - 1;
 
 signal_1_map = kron(signal_1, [1 zeros(1, Ns-1)]);
 
-figure(99);
+alpha = 0.5;
+L = 20;figure(99);
 t = 0:Te:(length(signal_1_map)-1)*Te;
 plot(t, signal_1_map)
 xlabel("temps [s]")
 ylabel("m_i(t)")
 title("Signal aléatoire")
-
-alpha = 0.5;
-L = 20;
 h_3 = rcosdesign(alpha,L ,Ns);
 
-x = filter(h_3, 1, signal_1_map);
+sigma_a = std(signal_1_map);
+f = linspace(-Te/2, Te/2, length(dsp_2_exp));
+dsp_3_theorique = zeros(1, length(f));
+for freq = f
+    if abs(freq) <= (1-alpha) / (2*Ts)
+        dsp_3_theorique(freq) = sigma_a^2;
+    elseif abs(freq) <= (1+alpha) / (2*Ts)
+        dsp_3_theorique(freq) = sigma_a^2 / 2 * (1+cos((pi * Ts)/alpha * (abs(f) - (1-alpha)/(2*Ts))));
+    end
+end
+dsp_3_exp = figures_modulateur(3, signal_1_map, h_3, Te, Fe, dsp_3_theorique);
+
+
+f = linspace(-Te/2, Te/2, length(dsp_1_exp));
+figure;
+semilogy(f, dsp_1_exp)
+hold on
+semilogy(f, dsp_2_exp)
+hold on
+semilogy(f, dsp_3_exp)
+hold off
+xlabel("Fréquence [Hz]")
+ylabel("DSP")
+title("Comparaison des DSPs expérimentales des trois modulateurs")
+legend("Modulateur 1", "Modulateur 2", "Modulateur 3")
+
+
+function dsp_exp = figures_modulateur(modulateur_no, nrz, h, Te, Fe, dsp_theo)
+
+figure;
+plot(nrz)
+xlabel("temps [s]")
+ylabel("m_i(t)")
+title(strcat("Modulateur", int2str(modulateur_no), ": Signal généré"))
+
+figure;
+%x=filter(signal_1, 1, ones(1,Ns));
+x=filter(h,1 , nrz);
 t = 0:Te:(length(x)-1)*Te;
-
-figure (110)
-plot(h_3);
-
-figure (100) ;
 plot(t, x)
-title("signal 3 filtré")
-axis([0 0.02 -3.3 3.5])
+title(strcat("Modulateur", int2str(modulateur_no), ": Signal filtré"))
 
-dsp_3 = fftshift(pwelch(x, [], [], [], Fe, 'twosided'));
-f=linspace(-Fe/2, Fe/2, length(dsp_3));
-%semilogy(f, dsp_3)
-%xlabel("fréquence [Hz]")
-%ylabel("Densité spectrale de puissance")
-%title("(3) Densité spectrale de puissance théorique")
+figure;
 
-hold on;
-figure(500)
-semilogy(f, dsp_1, f, dsp_2, f, dsp_3)
-%semilogy(f, dsp_2)
-%semilogy(f, dsp_3)
+dsp_exp = fftshift(pwelch(x, [], [], [], Fe, 'twosided'));
+f=linspace(-Fe/2, Fe/2, length(dsp_exp));
+semilogy(f, dsp_exp)
+xlabel("Fréquence [Hz]")
+ylabel("Densité spectrale de puissance")
+title(strcat("Modulateur", int2str(modulateur_no), ": DSP Expérimentale"))
 
+figure;
+
+semilogy(f, dsp_exp)
+hold on
+semilogy(f, dsp_theo)
+xlabel("Fréquence [Hz]")
+ylabel("Densité spectrale de puissance")
+title(strcat("Modulateur ", int2str(modulateur_no), ": Comparaison des DSPs"))
+legend("Expérimentale", "Théorique")
+hold off
+end

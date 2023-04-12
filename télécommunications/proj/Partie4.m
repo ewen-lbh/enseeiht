@@ -16,10 +16,10 @@ Eb_N0_lineaire = 10.^(Eb_N0_dB/10);
 
 % Chaine 1
 
-tebs_1 = zeros(0, length(Eb_N0_dB))
+tebs_1 = zeros(0, length(Eb_N0_dB));
 
 for index = 1:length(Eb_N0_dB)
-    
+
     bits_non_map = randi([0, 1], 1, Nbits);
     
     signal_1 = 2*bits_non_map - 1;
@@ -39,7 +39,7 @@ for index = 1:length(Eb_N0_dB)
 
     unmapped = (sign(unmapped_ech ) + 1)/ 2;
     tebs_theorique_1(index) = qfunc(sqrt(2 .* Eb_N0_lineaire(index)));
-    tebs_1(index) = length(find((unmapped ~= bits_non_map)))/length(bits_non_map)
+    tebs_1(index) = length(find((unmapped ~= bits_non_map)))/length(bits_non_map);
 end
 
 
@@ -50,7 +50,7 @@ semilogy(Eb_N0_dB, tebs_theorique_1,'r')
 
 % Chaine 2
 
-tebs_2 = zeros(0, length(Eb_N0_dB))
+tebs_2 = zeros(0, length(Eb_N0_dB));
 
 for index = 1:length(Eb_N0_dB)
     bits_non_map = randi([0, 1], 1, Nbits);
@@ -72,7 +72,7 @@ for index = 1:length(Eb_N0_dB)
 
     unmapped = (sign(unmapped_ech ) + 1)/ 2;
     tebs_theorique_2(index) = qfunc(sqrt(Eb_N0_lineaire(index)));
-    tebs_2(index) = length(find((unmapped ~= bits_non_map)))/length(bits_non_map)
+    tebs_2(index) = length(find((unmapped ~= bits_non_map)))/length(bits_non_map);
 end
 
 
@@ -99,10 +99,10 @@ Ns = floor(Ts/Te);
 Eb_N0_dB = 0:0.5:8;
 Eb_N0_lineaire = 10.^(Eb_N0_dB/10);
 
-tebs_3 = zeros(0, length(Eb_N0_dB))
-tess_3 = zeros(0, length(Eb_N0_dB))
-tebs_theorique_3 = zeros(0, length(Eb_N0_dB))
-tess_theorique_3 = zeros(0, length(Eb_N0_dB))
+tebs_3 = zeros(0, length(Eb_N0_dB));
+tess_3 = zeros(0, length(Eb_N0_dB));
+tebs_theorique_3 = zeros(0, length(Eb_N0_dB));
+tess_theorique_3 = zeros(0, length(Eb_N0_dB));
 
 for index = 1:length(Eb_N0_dB)
     bits_non_map = randi([0, 1], 1, Nbits);
