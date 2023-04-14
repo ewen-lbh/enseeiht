@@ -49,7 +49,7 @@ hold on
 semilogy(Eb_N0_dB, tebs_theorique_1,'r')
 title("Chaîne 1")
 legend("TEB Simulé", "TEB Théorique")
-tikzfigure("comparaison_teb_simulé_théroqie_chaine_1")
+tikzfigure("comparaison_teb_simule_theorique_chaine_1")
 
 % Chaine 2
 
@@ -85,7 +85,7 @@ hold on
 semilogy(Eb_N0_dB, tebs_theorique_2,'r')
 title("Chaîne 2")
 legend("TEB Simulé", "TEB Théorique")
-tikzfigure("comparaison_teb_simulé_théroqie_chaine_1")
+tikzfigure("comparaison_teb_simule_theorique_chaine_1")
 
 % Chaine 3
 
@@ -158,25 +158,29 @@ semilogy(Eb_N0_dB, tess_theorique_3,'r--')
 
 legend('TEB Simulé', 'TEB Théorique', "TES Simulé", "TES Théorique")
 title("Chaîne 3")
-tikzfigure("comparaison_teb_tes_simulés_théoriques_chaine_3")
+tikzfigure("comparaison_teb_tes_simules_theoriques_chaine_3")
 
 figure
 semilogy(Eb_N0_dB, tebs_1, 'b')
 hold on
 semilogy(Eb_N0_dB, tebs_2, 'r')
 legend('Chaîne 1: TEB Simulé', 'Chaîne 2: TEB Simulé')
-tikzfigure("comparaison_teb_simulés_chaines_1_2")
+tikzfigure("comparaison_teb_simules_chaines_1_2")
 
 figure
 semilogy(Eb_N0_dB, tebs_1, 'b')
 hold on
 semilogy(Eb_N0_dB, tebs_3, 'g')
 legend('Chaîne 1: TEB Simulé', 'Chaîne 3: TEB Simulé')
-tikzfigure("comparaison_teb_simulés_chaines_1_3")
+tikzfigure("comparaison_teb_simules_chaines_1_3")
 
 function tikzfigure(name)
-    if exist('cleanfigure', 'file') & exist('matlab2tikz', 'file')
-        cleanfigure;
-	   matlab2tikz(sprintf('figures/%s.tex', name));
-    end
+    fprintf("Rendering %s\n", name)
+    saveas(gcf, sprintf('figures/%s.png', name))
+    % if exist('cleanfigure', 'file') & exist('matlab2tikz', 'file')
+    %    % cleanfigure;
+    %    fprintf("Rendering %s\n", name);
+	%    matlab2tikz(sprintf('figures/%s.tex', name));
+    % end
 end
+

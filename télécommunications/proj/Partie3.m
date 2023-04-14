@@ -48,7 +48,7 @@ figure(888);
 plot(unfiltered)
 title("Signal défiltré")
 
-n_0 = 8; % TEB = 0.472 pour n_0 = 3
+n_0 = 8; % TEB = 0.472 pour n_0 = 3; 0.492 pour n_0 = 8
 unfiltered_ech = unfiltered(n_0:Ns:end);
 
 
@@ -57,7 +57,8 @@ g=conv(h,conv(h_c,h_r));
 figure (444)
 
 plot(g)
-title("Réponse impulsionnelle globale de la chaîne de transmission")
+title(sprintf("Réponse impulsionnelle globale de la chaîne de transmission avec n_0 = %d", n_0))
+tikzfigure(sprintf("reponse_impulsionnelle_globale_chaine_transmission_%d", n_0))
 
 unmapped = (sign(unfiltered_ech)+1)/2;
 
@@ -78,6 +79,7 @@ plot(f, abs_hc / max(abs_hc))
 hold off
 legend("|H . H_r|", "|H_c|")
 title("Réponses fréquentielles")
+tikzfigure("reponses_frequentielles")
 
 teb = length(find((unmapped - bits_non_map ~= 0)))/length(bits_non_map)
 
@@ -85,4 +87,15 @@ oeil = reshape(unfiltered, Ns, length(unfiltered)/Ns);
 
 figure;
 plot(oeil)
-title("Diagramme de l'oeil à la sortie du filtre de réception")
+title(sprintf("Diagramme de l'oeil à la sortie du filtre de réception avec n_0 = %d", n_0))
+tikzfigure(sprintf("diagramme_oeil_sortie_filtre_reception_%d", n_0))
+
+function tikzfigure(name)
+    fprintf("Rendering %s\n", name)
+    saveas(gcf, sprintf('figures/%s.png', name))
+    % if exist('cleanfigure', 'file') & exist('matlab2tikz', 'file')
+    %    % cleanfigure;
+    %    fprintf("Rendering %s\n", name);
+	%    matlab2tikz(sprintf('figures/%s.tex', name));
+    % end
+end
