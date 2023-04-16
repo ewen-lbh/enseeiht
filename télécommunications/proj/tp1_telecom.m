@@ -22,8 +22,7 @@ bits_non_map2 = randi([0, 1], 1, 15*Nbits);
 
 signal_1 = 2*bits_non_map - ones(1, length(bits_non_map));
 signal_1_map = kron(signal_1, [1 zeros(1, Ns-1)]);
-f = linspace(-Te/2, Te/2, Ns);
-h_2 = ones(1, Ns); 
+h_2 = ones(1, Ns);
 
 dsp_1_theorique = @(f) var([-3 -1 1 3]) * Ts * sinc(Ts*f).^2;
 dsp_1_exp = figures_modulateur(1, signal_1_map, h_2, Te, Fe, dsp_1_theorique);
@@ -84,6 +83,7 @@ ylabel("DSP")
 title("Comparaison des DSPs expérimentales des trois modulateurs")
 legend("Modulateur 1", "Modulateur 2", "Modulateur 3")
 tikzfigure("comparaison_dsps_experimentales_trois_modulateurs")
+tikzfigure("comparaison_dsps_experimentales_trois_modulateurs")
 
 function dsp_theo = dsp_theo_module_3(f, alpha, Ts)
 sigma_a = std([-1 1]);
@@ -118,6 +118,7 @@ tikzfigure(strcat("modulateur_", int2str(modulateur_no), "_signal_filtre"))
 figure;
 
 dsp_exp = fftshift(pwelch(x, [], [], [], Fe, 'twosided'));
+length(dsp_exp)
 f=linspace(-Fe/2, Fe/2, length(dsp_exp));
 semilogy(f, dsp_exp)
 xlabel("Fréquence [Hz]")
@@ -137,7 +138,6 @@ tikzfigure(strcat("modulateur_", int2str(modulateur_no), "_comparaison_dsps"))
 legend("Expérimentale", "Théorique")
 hold off
 end
-
 
 function tikzfigure(name)
     fprintf("Rendering %s\n", name)

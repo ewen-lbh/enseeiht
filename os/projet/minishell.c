@@ -10,9 +10,10 @@ struct job
 {
     int pid;
     char *command;
+    bool running;
 };
 
-int main(int argc, char *argv[])
+int main()
 {
     int codeTerm;
     struct job jobs[999];
@@ -45,7 +46,7 @@ int main(int argc, char *argv[])
 
         if (strcmp(args[0], "lj") == 0)
         {
-            for (int i = 0; i < lastJob; i++)
+            for (int i = 0; i <= lastJob; i++)
             {
                 printf("  %d (%d) %s\n", i + 1, jobs[i].pid, jobs[i].command);
             }
@@ -68,8 +69,11 @@ int main(int argc, char *argv[])
         {
             if (commandline->backgrounded)
             {
-                struct job newJob = {child_pid, args[0]};
-                jobs[lastJob++] = newJob;
+                struct job *newJob = malloc(sizeof(struct job));
+                newJob->pid = child_pid;
+                newJob->running = true;
+                strcpy(newJob->command, args[0]);
+                jobs[++lastJob] = *newJob;
                 printf("💤️ %d (%d)\n", lastJob + 1, child_pid);
             }
             else
