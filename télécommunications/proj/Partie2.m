@@ -49,7 +49,6 @@ unfiltered = filter(h, 1, x);
 figure(888);
 plot(unfiltered)
 title("Signal en sortie du filtre de réception")
-tikzfigure("signal_sortie_filtre_reception")
 
 n_0 = 8; % TEB = 0.472 pour n_0 = 3
 unfiltered_ech = unfiltered(n_0:Ns:end);
@@ -59,13 +58,11 @@ figure (444)
 
 plot(g)
 title("Réponse impulsionnelle globale du filtre")
-tikzfigure("reponse_impulsionnelle_globale_filtre")
 
 oeil = reshape(unfiltered, Ns, length(unfiltered)/Ns);
 figure
 plot(oeil)
 title("Diagramme de l'oeil en sortie du filtre de réception")
-tikzfigure("diagramme_oeil_sortie_filtre_reception")
 
 unmapped = (sign(unfiltered_ech)+1)/2;
 
@@ -76,16 +73,7 @@ axis([ 0 10 -1 1.5 ])
 
 g=conv(h,h);
 
-teb = length(find((unmapped - bits_non_map ~= 0)))/length(bits_non_map);
+teb = length(find((unmapped - bits_non_map ~= 0)))/length(bits_non_map)
 
 
-function tikzfigure(name)
-    fprintf("Rendering %s\n", name)
-    saveas(gcf, sprintf('figures/%s.png', name))
-    % if exist('cleanfigure', 'file') & exist('matlab2tikz', 'file')
-    %    % cleanfigure;
-    %    fprintf("Rendering %s\n", name);
-	%    matlab2tikz(sprintf('figures/%s.tex', name));
-    % end
-end
 
