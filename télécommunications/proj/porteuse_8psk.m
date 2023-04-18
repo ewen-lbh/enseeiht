@@ -24,7 +24,7 @@ bits = randi([0, 1], 1, Nbits);
 
 
 % MAPPING
-symboles = pskmod(bi2de(reshape(bits, n, [])'), M, pi/M, "gray")
+symboles = pskmod(bi2de(reshape(bits, n, [])'), M, pi/M, "gray")'
 
 scatterplot(symboles)
 % title("Symboles")
@@ -46,7 +46,7 @@ enveloppe_complexe1 = filter(h, 1, [symboles_surech zeros(1,retard)]);
 enveloppe_complexe = enveloppe_complexe1(retard+1:end);
 % dsp(enveloppe_complexe, Fe, "DSP enveloppe complexe")
 
-Eb_N0_dBs = 0:1:6;
+Eb_N0_dBs = 0:1:20;
 tebs_exp = zeros(1, length(Eb_N0_dBs));
 tebs_theo = zeros(1, length(Eb_N0_dBs));
 
@@ -67,22 +67,50 @@ for i = 1:length(Eb_N0_dBs)
     apres_echantillonage = apres_filtre_reception(n_0:Ns:end);
     
     
-    scatterplot(apres_echantillonage)
-    title(sprintf("Signal après échantillonage avec Eb/N0 = %d dB", Eb_N0_dBs(i)))
-    
-    
+       
     % DÉCISION
-    apres_decision = zeros(1, length(apres_echantillonage) * 2);
-    apres_decision(1:2:end) = sign(real(apres_echantillonage));
-    apres_decision(2:2:end) = sign(imag(apres_echantillonage));
+    apres_decision = zeros(1, length(apres_echantillonage));
+    angles = (-(M-1):2:M).*(pi/M);
+    
+    for k = 1:length(apres_decision)
+        [~, indice_angle_plus_proche] = min(abs(angles - angle(apres_echantillonage(k))));
+        apres_decision(k) = 1 * exp(1i * angles(indice_angle_plus_proche));
+        %rad2deg(angle(apres_echantillonage(k)))
+        %abs(angles - angle(apres_echantillonage(k)))
+        %rad2deg(angle(apres_decision(k)))
+    end
+
+    if mod(Eb_N0_dBs(i), 5) == 0
+        figure
+        scatterplot(apres_echantillonage)
+        hold on 
+        scatterplot(apres_decision)
+        title(sprintf("Signal avec Eb/N0 = %d dB", Eb_N0_dBs(i)))
+        legend("Après échantillonage", "Après décision")
+    end
+    
+    
+    if Eb_N0_dBs(i) == 20
+        figure
+        %plot(t(1:200), symboles_surech(1:200))
+        plot(t(1:200), imag(symboles_surech(1:200)))
+        hold on
+        %plot(t(1:200), apres_filtre_reception(1:200))
+        plot(t(1:200), imag(apres_filtre_reception(1:200)))
+        title("Signaux")
+        legend("Symboles suréchantillonés", "Après filtre de réception")
+        saveas(gcf, "8psk_comparaison_surech_filtre_reception.png")
+    end
     
     % DEMAPPING
-    apres_demapping = floor((apres_decision + 1) / 2);
+    apres_demapping = reshape(de2bi(pskdemod(apres_decision, M, pi/8, 'gray')), 1, []);
     
     % TEB
-    teb_exp = teb(bits,   apres_demapping);
+    teb_exp = teb(bits, apres_demapping);
     Eb_N0_lineaire = 10.^(Eb_N0_dBs(i)/10);
-    teb_theo = qfunc(sqrt(2 * Eb_N0_lineaire));
+    P = mean(abs(enveloppe_complexe).^2);
+    sigma_a = sqrt((P * Ns) ./ (2 * log2(M) .* (Eb_N0_dBs(i))));
+    teb_theo = 2*(1-1/M)*qfunc((1/sigma_a)*sqrt(2*Eb_N0_dBs(i)))/log2(M);
     tebs_exp(i) = teb_exp;
     tebs_theo(i) = teb_theo;
 end

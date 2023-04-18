@@ -88,12 +88,15 @@ for i = 1:length(Eb_N0_dBs)
     tebs_theo(i) = teb_theo;
 end
 
+
 figure
 semilogy(Eb_N0_dBs, tebs_theo)
 hold on
 semilogy(Eb_N0_dBs, tebs_exp)
 legend("Théoriques", "Expérimentaux")
 title("Comparaison des TEBs pour une chaîne avec passe-bas équivalent") 
+
+
 
 function bruite = bruitage(signal, Eb_N0_dB, Ns, M)
     Eb_N0_lineaire = 10.^(Eb_N0_dB/10);
