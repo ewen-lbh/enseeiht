@@ -49,3 +49,19 @@ genere = 0;
 
 fprintf('Qualité des couples propres (par rapport au critère d''arrêt) = [%0.3e , %0.3e]\n', min(qv), max(qv));
 fprintf('Qualité des valeurs propres (par rapport au spectre de la matrice) = [%0.3e , %0.3e] \n', min(q), max(q));
+
+
+% méthode de calcul
+v = 2; % subspace iteration v2
+
+% taille du sous-espace (V1, v2, v3)
+m = 40;
+
+% pourcentage de la trace que l'on veut atteindre (v1, v2, v3)
+percentage = .1;
+
+genere = 0;
+[W, V, flag, q, qv] = eigen_2023(imat, n, v, m, eps, maxit, percentage, 1, genere);
+
+fprintf('Qualité des couples propres (par rapport au critère d''arrêt) = [%0.3e , %0.3e]\n', min(qv), max(qv));
+fprintf('Qualité des valeurs propres (par rapport au spectre de la matrice) = [%0.3e , %0.3e] \n', min(q), max(q));

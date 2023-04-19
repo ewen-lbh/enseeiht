@@ -1,0 +1,70 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=4.521in,
+height=3.566in,
+at={(0.758in,0.481in)},
+scale only axis,
+xmin=0,
+xmax=8,
+ymode=log,
+ymin=0.00577,
+ymax=0.15896,
+yminorticks=true,
+axis background/.style={fill=white},
+title style={font=\bfseries},
+title={Chaîne 2},
+legend style={legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=blue]
+  table[row sep=crcr]{%
+0	0.15896\\
+0.5	0.14506\\
+1	0.1321\\
+1.5	0.1152\\
+2	0.10339\\
+2.5	0.0905799999999999\\
+3	0.07895\\
+3.5	0.06742\\
+4	0.0566899999999999\\
+4.5	0.0470000000000001\\
+5	0.03768\\
+5.5	0.03028\\
+6	0.02253\\
+6.5	0.01665\\
+7	0.01258\\
+7.5	0.00943\\
+8	0.00576999999999999\\
+};
+\addlegendentry{TEB Simulé}
+
+\addplot [color=red]
+  table[row sep=crcr]{%
+0	0.158655253931457\\
+0.5	0.144742121667888\\
+1	0.130927296755524\\
+1.5	0.11731780139112\\
+2	0.104028637085389\\
+2.5	0.0911803734911521\\
+3	0.0788958719817245\\
+3.5	0.0672961279547928\\
+4	0.0564953017493617\\
+4.5	0.0465951226312955\\
+5	0.0376789881474633\\
+5.5	0.0298062285386198\\
+6	0.0230071388778661\\
+6.5	0.0172794660614405\\
+7	0.0125870331221446\\
+7.5	0.00886105109634785\\
+8	0.00600438640016357\\
+};
+\addlegendentry{TEB Théorique}
+
+\end{axis}
+\end{tikzpicture}%

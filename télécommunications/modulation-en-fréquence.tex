@@ -1,0 +1,62 @@
+\documentclass{article}
+\input{/home/ewen/enseeiht/.tooling/template.tex}
+
+\begin{document}
+
+\section{Transposition en fréquence}
+
+On prend le signal $m(t)$:
+
+ \begin{align*}
+    m(t) \cos(2 \pi f_p t)
+\end{align*}
+
+Ça translate la fréquence car 
+\begin{align*}
+    M(f) \ast \frac{1}{2} \left( \delta(f-f_p) + \delta(f+f_p) \right)  &= \frac{1}{2} \left( M(f-f_p) + M(f+f_p) \right)  \\
+\end{align*}
+
+\subsection{Pour $m(t)$ aléatoire}
+
+\begin{align*}
+    Rx(\tau) &= E(m(t) \cos(2 \pi f_p + \phi) m^\ast(t-\tau) \cos(2 \pi f_p(t-\tau) + \phi) \\
+    &= E(m(t) m^\ast(t-\tau)) E(\frac{1}{2} \cos(2 \pi f_p \tau) + \frac{1}{2} \cos(2 \phi + \ldots)) \\
+    &= R_m(\tau) \frac{1}{2} \cos(2 \pi f_p \tau) \\
+    S_x(f) &= S_m(f)  \ast \frac{1}{2} \left( \frac{1}{2} \left( \delta(f-f_p) + \delta(f+f_p) \right)  \right)  \\
+    &= \frac{1}{4} \left( S_m(f-f_p) + S_m(f+f_p)  \right)  \\
+\end{align*}
+
+\subsection{Rajout d'une porteuse}
+
+ \[
+     m(t) \cos(2 \pi f_p t) \rightsquigarrow \mathbf{( A + }m(t)\mathbf{)} \cos(2 \pi f_p t)
+\] 
+
+Avec $\mathbf{A}$ l'amplitude du signal original
+
+\begin{itemize}
+    \item On perd en puissance d'émission  (une partie de la puissance 
+    \item Mais on évite une enveloppe erronée lors de passage par zéro dans le signal original
+\end{itemize}
+
+\subsection{Modulation numérique}
+
+\subsubsection{Modulation bi-dimensionnelle}
+
+On module en bande de base 2 fois avec deux fréquences, puis on transpose en fréquence en multipliant:
+
+\begin{itemize}
+    \item Par un cos
+    \item par un sin (avec même fréquence et phase)
+\end{itemize}
+
+
+
+\subsection{Enveloppe complexe}
+
+\begin{align*}
+    x_e(t) = m_1(t) + jm_2(t)  = \sum_{k} \underbrace{(a_k + jb_k)}_{d_k} h(t-kT_s) 
+\end{align*}
+
+
+\end{document}

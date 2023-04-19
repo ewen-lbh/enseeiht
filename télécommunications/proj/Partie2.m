@@ -48,7 +48,7 @@ title("Signal filtré")
 unfiltered = filter(h, 1, x);
 figure(888);
 plot(unfiltered)
-title("Signal défiltré")
+title("Signal en sortie du filtre de réception")
 
 n_0 = 8; % TEB = 0.472 pour n_0 = 3
 unfiltered_ech = unfiltered(n_0:Ns:end);
@@ -57,7 +57,12 @@ g=conv(h,h);
 figure (444)
 
 plot(g)
-title("Réponse impultionnelle filtre")
+title("Réponse impulsionnelle globale du filtre")
+
+oeil = reshape(unfiltered, Ns, length(unfiltered)/Ns);
+figure
+plot(oeil)
+title("Diagramme de l'oeil en sortie du filtre de réception")
 
 unmapped = (sign(unfiltered_ech)+1)/2;
 
@@ -70,6 +75,5 @@ g=conv(h,h);
 
 teb = length(find((unmapped - bits_non_map ~= 0)))/length(bits_non_map)
 
-oeil = reshape(unfiltered, Ns, length(unfiltered)/Ns);
 
-plot(oeil)
+

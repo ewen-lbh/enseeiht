@@ -1,0 +1,4 @@
+#!/usr/bin/env fish
+
+./test2 
+echo done ":)"

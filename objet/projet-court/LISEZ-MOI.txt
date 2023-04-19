@@ -23,8 +23,11 @@ Pourquoi l'exception OperationInterditeException ne peut pas être définie
 comme vérifiée par le compilateur ?
 --------------------------------------------------------------------------------
 
-...
-
+C'est une exception qui est seulement levée dans des cas d'erreurs de programmation, 
+et n'a donc pas vocation a être récupérée et affichée convivialement, 
+il est donc inutile d'exiger son traitement. 
+Cependant, elle n'hérite pas de `Error` ni de `RuntimeException`, 
+donc son statut d'erreur non vérifiée n'est pas  
 
 --------------------------------------------------------------------------------
 Expliquer ce qu'il faut faire pour ajouter un nouveau niveau de jeu, par

@@ -1,0 +1,30 @@
+2:
+    1:
+        1:
+            Nombre total de processus: 
+                - réponse: 15
+                - figure: 2.1.1.1.png
+
+            Occurences:
+                1: 2
+                2: 4
+                3: 8
+
+            Ordre: pas prédictible
+        2: null
+        3: 
+            Conforme aux attentes: true
+            Intérêt sleep(180): sinon on a pas le temps de voir les procs
+            Même terminal: & à la fin
+
+    2:
+        juste après lancement:  on a les messages des deux processus
+        après fin du fils: Z
+        fin du père: les deux processus terminent.
+3:
+    1:
+        1: print du fils et du père, puis après 60s, print fin du fils, et print fin du fils par exit depuis le parent
+        2: pareil mais fin par signal
+
+    2: 
+        1: 

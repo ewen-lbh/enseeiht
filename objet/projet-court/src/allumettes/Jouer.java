@@ -41,18 +41,33 @@ public class Jouer {
         }
     }
 
+    /**
+     * Lancer une partie.
+     * @param jeu Le jeu sur lequel on joue
+     * @param arbitre L'arbitre qui arbitre la partie
+     */
     private static void jouer(Jeu jeu, Arbitre arbitre) {
-        while (true) {
+        // Je ne vois pas pourquoi while(true) ... break ... serait une mauvaise idée, mais une alternative est d'avoir une variable booléenne que l'on met à false quand la partie est terminée.
+        boolean jeuEnCours = true;
+        while (jeuEnCours) {
             try {
                 arbitre.arbitrer(jeu);
+                // Sauter une ligne
                 System.out.println("");
             } catch (PartieTermineeException | PartieAbandonneeException e) {
+                // La partie est terminée.
                 System.out.println(e.getMessage());
-                break;
+                jeuEnCours = false;
             }
         }
     }
 
+    /**
+     * Créer un joueur à partir de sa description (nom@stratégie)
+     * @param description la description du joueur au format nom@stratégie
+     * @param scanneur le scanneur pour lire les entrées de l'utilisateur
+     * @return le joueur créé
+     */
     private static Joueur creerJoueur(String description, Scanner scanneur) {
         String[] parts = description.split("@");
         if (parts.length != 2) {

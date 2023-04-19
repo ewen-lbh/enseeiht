@@ -1,0 +1,41 @@
+Les Q# font référence aux questions posées dans le fichier LISEZ-MOI.txt.
+Les pénalités '+' sont évaluées manuellement (enseignant de TP).
+Les pénalités '+' peuvent donner lieu à des pénalités définitives en V1 (si le travail est jugé insuffisant).
+
++ C3 : Qualité du source de l'application
+    + non respect des règles CM/TD/TP...
+    + droits d'accès, accesseurs, constructeurs, etc.
+    + choix des identifiants
+    + structuration/commentaires (en particulier pour traitement des arguments de la ligne de commande)
+    + redondance (en particulier pour traitement des arguments de la ligne de commande)
+    + ...
++ C9 : Constructeur sans nb initial d'allumettes
++ C11 : Pas d'utilisation des exceptions pour la robustesse du traitement des arguments de la ligne de commande
++ C13 : Impossible d'ajouter de nouvelles stratégies en ne modifiant que Jouer (cf Q2)
++ C13 : L'arbitre ne doit ni utiliser directement, ni tester la stratégie d'un joueur (instanceof, equals, etc)
++ C14 : Impossible de changer dynamiquement de stratégie (cf Q3)
++ C16 : Tests unitaires de la stratégie rapide
+	+ non complets
+	+ n'utilisent pas le minimum de classes
++ C20 : Méthodes non courtes
++ C21 : Deux ou plus répétitions imbriquées dans une méthode
+
++ Mauvaise mise en oeuvre du Proxy
+    + mauvaise compréhension/implantation
+
++ L3 : Fichier LISEZ-MOI.txt
+    + Question 1
+    + Question 2
+    + Question 3
+    + Explications non pertinentes
+    + Orthographe / grammaire
+
++ Autres remarques
+    - Revoir les réponses aux questions
+    - Rajouter des commentaires et de la documentation
+    - Rajouter des tests unitaires
+    - While True -> break à changer dans Jouer
+
+
++ Correction sur les pénalités automatiques : 0
+

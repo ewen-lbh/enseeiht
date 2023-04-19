@@ -1,0 +1,35 @@
+1:
+    1:
+        1:
+            après lancement: S+
+            après Ctrl-Z: T
+            après kill -CONT XXXX: S
+            après fg 1: S+
+            après Ctrl-C: (absent)
+
+        2:
+            SIGSTOP: capturé
+            SIGCONT: capturé
+            SIGKILL: ça stoppe quand même
+        
+        3: null
+
+        4: 
+            sleep(100): le fils est devenu un zombie
+            100.times(do sleep(1)): le fils n'est pas zombifié
+        
+        5:
+            Ctrl-C: zombifié
+            Ctrl-Z: 
+                fils: stoppé
+                père: reçu 17
+            kill -CONT XXXX:
+                fils: zombifié
+                père: reçu 17
+        
+    2:
+        1: 
+            SIGUSR1: 0
+            SIGUSR2: 2
+        2: les deux sigusr2
+        3: 25s

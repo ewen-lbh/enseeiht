@@ -1,4 +1,4 @@
-% PARTIE 2
+  % PARTIE 2
 clear all;
 close all;
 
@@ -35,13 +35,13 @@ t = 0:Te:(length(x)-1)*Te;
 plot(t, x)
 title("Signal filtré")
 
-bw = 8000;
-H = fft(h, 4096)
-ordre = 131
+bw = 1000;
+H = fft(h, 4096);
+ordre = 131;
 h_c = 2*(bw/Fe) * sinc(2*(bw/Fe) * -(ordre-1)/2:(ordre-1)/2);
-H_c = fft(h_c, 4096)
-h_r = h
-H_r = fft(h_r, 4096)
+H_c = fft(h_c, 4096);
+h_r = h;
+H_r = fft(h_r, 4096);
 
 unfiltered = filter(conv(h_c, h_r), 1, x);
 figure(888);
@@ -57,7 +57,7 @@ g=conv(h,conv(h_c,h_r));
 figure (444)
 
 plot(g)
-title("Réponse impultionnelle filtre")
+title("Réponse impulsionnelle globale de la chaîne de transmission")
 
 unmapped = (sign(unfiltered_ech)+1)/2;
 
@@ -69,11 +69,11 @@ axis([ 0 10 -1 1.5 ])
 g=conv(h,h);
 
 figure;
-abs_h_hr = abs(fftshift(H .* H_r))
-f = linspace(-Fe/2, Fe/2, 4096)
+abs_h_hr = abs(fftshift(H .* H_r));
+f = linspace(-Fe/2, Fe/2, 4096);
 plot(f, abs_h_hr / max(abs_h_hr))
 hold on
-abs_hc = abs(fftshift(H_c))
+abs_hc = abs(fftshift(H_c));
 plot(f, abs_hc / max(abs_hc))
 hold off
 legend("|H . H_r|", "|H_c|")
@@ -85,3 +85,4 @@ oeil = reshape(unfiltered, Ns, length(unfiltered)/Ns);
 
 figure;
 plot(oeil)
+title("Diagramme de l'oeil à la sortie du filtre de réception")

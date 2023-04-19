@@ -55,7 +55,7 @@ function [ V, D, n_ev, it, itv, flag ] = subspace_iter_v2( A, m, percentage, p, 
         
         k = k+1;
         %% Y <- A*V
-        Y = A*Vr;
+        Y = fast_power(A, Vr, p);
         %% orthogonalisation
         Vr = mgs(Y);
         
@@ -141,5 +141,14 @@ function [ V, D, n_ev, it, itv, flag ] = subspace_iter_v2( A, m, percentage, p, 
         else
             flag = -3;
         end
+    end
+end
+
+function Y = fast_power(A, V, p)
+    Y = V;
+    i = 0;
+    while (i < p)
+        Y = A * Y;
+        i = i + 1;
     end
 end
