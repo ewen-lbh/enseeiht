@@ -24,13 +24,14 @@ bits = randi([0, 1], 1, Nbits);
 
 
 % MAPPING
-symboles = pskmod(bi2de(reshape(bits, n, [])'), M, pi/M, "gray")'
+symboles = pskmod(bits', M, pi/M, "gray", "InputType", "bit");
+% apres_demapping = reshape(de2bi(pskdemod(apres_decision, M, pi/8, 'gray')), 1, []);
 
 scatterplot(symboles)
 % title("Symboles")
 
 % SURECHANTILLONAGE
-symboles_surech = kron(symboles, [1 zeros(1, Ns-1)]);
+symboles_surech = reshape(kron(symboles, [1 zeros(1, Ns-1)]),1, []);
 t = 0:Te:(length(symboles_surech)-1)*Te;
 
 % plot_complex(symboles_surech, t,"Symboles surechantillonés")
@@ -101,9 +102,17 @@ for i = 1:length(Eb_N0_dBs)
         legend("Symboles suréchantillonés", "Après filtre de réception")
         saveas(gcf, "8psk_comparaison_surech_filtre_reception.png")
     end
-    
+
+
     % DEMAPPING
-    apres_demapping = reshape(de2bi(pskdemod(apres_decision, M, pi/8, 'gray')), 1, []);
+    apres_demapping = reshape(pskdemod(apres_decision, M, pi/M, 'gray', 'OutputType', 'bit'), 1, []);
+
+    %figure
+    %title("Comparaison bits au début et à la fin de la chaîne")
+    %plot(bits(1:20))
+    %hold on
+    %plot(apres_demapping(1:20))
+    %legend("Début" ,"Fin")
     
     % TEB
     teb_exp = teb(bits, apres_demapping);
@@ -136,6 +145,7 @@ function ret = teb(in, out)
 end
 
 function dsp (signal, Fe, titre)
+    figure
     dddd = fftshift(pwelch(signal, [], [], [], Fe, "twosided"));
     f=linspace(-Fe/2, Fe/2, length(dddd));
     semilogy(f, dddd)
