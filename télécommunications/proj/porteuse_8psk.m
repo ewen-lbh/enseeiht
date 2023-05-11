@@ -1,6 +1,6 @@
 clear all;
 close all;
-
+clc;
 Fp = 2000;
 Fe = 6000;
 Te = 1/Fe;
@@ -11,7 +11,7 @@ rolloff = 0.2;
 n=3;
 M = 2^n;
 Ts = n*Tb;
-Nbits = 100002;
+Nbits = 1000002;
 Ns = floor(Ts/Te);
 
 
@@ -24,14 +24,14 @@ bits = randi([0, 1], 1, Nbits);
 
 
 % MAPPING
-symboles = pskmod(bi2de(reshape(bits, n, [])'), M, pi/M, "gray")';
+symboles = pskmod(bits', M, pi/M, "gray", "InputType", "bit")';
 % apres_demapping = reshape(de2bi(pskdemod(apres_decision, M, pi/8, 'gray')), 1, []);
 
 scatterplot(symboles)
 % title("Symboles")
 
 % SURECHANTILLONAGE
-symboles_surech = kron(symboles, [1 zeros(1, Ns-1)]);
+symboles_surech = (kron(symboles, [1 zeros(1, Ns-1)]));
 t = 0:Te:(length(symboles_surech)-1)*Te;
 
 % plot_complex(symboles_surech, t,"Symboles surechantillonés")
@@ -47,7 +47,8 @@ enveloppe_complexe1 = filter(h, 1, [symboles_surech zeros(1,retard)]);
 enveloppe_complexe = enveloppe_complexe1(retard+1:end);
 % dsp(enveloppe_complexe, Fe, "DSP enveloppe complexe")
 
-Eb_N0_dBs = 0:1:20;
+Eb_N0_dBs = 0:1:6;
+Eb_N0_lin= 10.^(Eb_N0_dBs);
 tebs_exp = zeros(1, length(Eb_N0_dBs));
 tebs_theo = zeros(1, length(Eb_N0_dBs));
 
@@ -106,8 +107,9 @@ for i = 1:length(Eb_N0_dBs)
     % DEMAPPING
 
 
-
-    apres_demapping = reshape(de2bi(pskdemod(apres_decision, M, pi/M, 'gray')), 1, []);
+    % DEMAPPING    
+%    apres_demapping = reshape(pskdemod(apres_decision, M, pi/M, 'gray', 'OutputType', 'bit'), 1, []);
+   apres_demapping = (pskdemod(apres_echantillonage', M, pi/M, 'gray', 'OutputType', 'bit'))';
 
     %figure
     %title("Comparaison bits au début et à la fin de la chaîne")
@@ -118,12 +120,13 @@ for i = 1:length(Eb_N0_dBs)
     
     % TEB
     teb_exp = teb(bits, apres_demapping);
-    Eb_N0_lineaire = 10.^(Eb_N0_dBs(i)/10);
+    Eb_N0_lineaire = 10.^(Eb_N0_dBs/10);
     P = mean(abs(enveloppe_complexe).^2);
-    sigma_a = sqrt((P * Ns) ./ (2 * log2(M) .* (Eb_N0_dBs(i))));
-    teb_theo = 2*(1-1/M)*qfunc((1/sigma_a)*sqrt(2*Eb_N0_dBs(i)))/log2(M);
+    sigma_a = sqrt((P * Ns) ./ (2 * log2(M) * ( Eb_N0_lineaire(i))));
+    teb_theo = 2*qfunc(sqrt(6*Eb_N0_lineaire)*sin(pi/M))/log2(M);
+%     teb_theo = 2*(1-1/M)*qfunc((1/sigma_a)*sqrt(2* Eb_N0_dBs(i)))/log2(M);
     tebs_exp(i) = teb_exp;
-    tebs_theo(i) = teb_theo;
+    tebs_theo = teb_theo;
 end
 
 figure
@@ -133,8 +136,8 @@ semilogy(Eb_N0_dBs, tebs_exp)
 legend("Théoriques", "Expérimentaux")
 title("Comparaison des TEBs pour une chaîne avec passe-bas équivalent") 
 
-function bruite = bruitage(signal, Eb_N0_dB, Ns, M)
-    Eb_N0_lineaire = 10.^(Eb_N0_dB/10);
+function bruite = bruitage(signal, Eb_N0_dBs, Ns, M)
+    Eb_N0_lineaire = 10.^(Eb_N0_dBs/10);
     P = mean(abs(signal).^2);
     sigma = sqrt((P * Ns) ./ (2 * log2(M) .* (Eb_N0_lineaire)));
     bruit_reel = sigma .* randn(1, length(signal));
