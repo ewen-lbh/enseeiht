@@ -2,6 +2,8 @@ close all
 clear all
 
 n=1;
+% TODO METTRE PHI=40 et PHI=100 SUR LA MEME FIGURE
+
 M=2^n;
 
 Fe = 24000;
@@ -35,6 +37,7 @@ Eb_N0_dBs = 0:0.5:8;
 Eb_N0_lineaires = 10.^(Eb_N0_dBs/10);
 
 teb_exp_sans_erreur = zeros(size(Eb_N0_dBs));
+teb_exp_avec_erreur_sans_correction = zeros(size(Eb_N0_dBs));
 teb_exp_avec_erreur = zeros(size(Eb_N0_dBs));
 teb_theo_sans_erreur = zeros(size(Eb_N0_dBs));
 teb_theo_avec_erreur = zeros(size(Eb_N0_dBs));
@@ -51,13 +54,13 @@ for index = 1:length(Eb_N0_dBs)
         % FILTRAGE RECEPTION
         h_r = h;
         apres_filtrage_reception = filter(h_r, 1, apres_bruitage);
-        
-        % CORRECTION ERREUR DE PHASE
-        estimation_erreur_phase = 0; % deg
-        apres_correction_erreur_phase = apres_filtrage_reception .* exp(-1j * estimation_erreur_phase);
-        
+                       
         % ECHANTILLONAGE
-        apres_echantillonage = apres_correction_erreur_phase(Ns:Ns:end);
+        apres_echantillonage = apres_filtrage_reception(Ns:Ns:end);
+
+        % CORRECTION ERREUR DE PHASE
+        estimation_erreur_phase = 1/2 * angle(sum(apres_echantillonage .^ 2)); % rad
+        apres_correction_erreur_phase = apres_echantillonage .* exp(-1j * estimation_erreur_phase);
 
         if mod(index, length(Eb_N0_lineaires)/2) == 0
             figure
@@ -66,7 +69,8 @@ for index = 1:length(Eb_N0_dBs)
         end
         
         % DECISION
-        apres_decision = sign(real(apres_echantillonage));
+        apres_decision = sign(real(apres_correction_erreur_phase));
+        
         
         % DEMAPPING
         apres_demapping = (apres_decision+1)/2;
@@ -78,25 +82,28 @@ for index = 1:length(Eb_N0_dBs)
         else
             teb_exp_avec_erreur(index) = length(find((apres_demapping ~= bits))) / length(bits);
             teb_theo_avec_erreur(index) = qfunc(sqrt(2 * Eb_N0_lineaires(index)) * cos(deg2rad(erreur_phase)));
+            teb_exp_avec_erreur_sans_correction(index) = length(find((sign(real((apres_echantillonage+1)/2)) ~= bits))) / length(bits);
         end
-        
     end
 end
+
 figure
-semilogy(teb_theo_sans_erreur)
-hold on
-semilogy(teb_theo_avec_erreur)
-hold on
+% semilogy(teb_theo_sans_erreur)
+% hold on
+% semilogy(teb_theo_avec_erreur)
+% hold on
 semilogy(teb_exp_sans_erreur)
 hold on
+semilogy(teb_exp_avec_erreur_sans_correction)
+hold on
 semilogy(teb_exp_avec_erreur)
-legend("Théorique sans erreur", sprintf("Théorique avec \\phi = %d", erreur_de_phase) ,"Expérimental sans erreur", sprintf("Expérimental avec \\phi = %d", erreur_de_phase))
+legend("Expérimental sans erreur de phase", sprintf("Expérimental avec \\phi = %d sans correction de phase", erreur_de_phase), sprintf("Expérimental avec \\phi = %d et correction de phase", erreur_de_phase))
 title(sprintf("Comparaison des TEBs avec \\phi = %d", erreur_de_phase))
 xlabel("E_b / n_0")
 ylabel("TEB")
 
 % Figures à faire
-% (comparaison TEBs + constellation) avec phi 0 et 40 puis 0 et 100
+% (comparaison TEBs + constellation) avec phi 0 et 40 et 100
 
 
 function bruite = bruitage(signal, Eb_N0_dB, Ns, M)
