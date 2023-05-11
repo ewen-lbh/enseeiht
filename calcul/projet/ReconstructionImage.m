@@ -85,9 +85,64 @@ puiss = 1;
 
 %%eig
 
-%VP(I,eps,maxit,search_space,percentage,puiss,"eig",U, S, V)
-%VP(I,eps,maxit,search_space,percentage,puiss,"power method",U, S, V)
-%VP(I,eps,maxit,search_space,percentage,puiss,"sub_space_0",U, S, V)
-VP(I,eps,maxit,search_space,percentage,puiss,"sub_space_1",U, S, V)
-VP(I,eps,maxit,search_space,percentage,puiss,"sub_space_2",U, S, V)
-VP(I,eps,maxit,search_space,percentage,puiss,"sub_space_3",U, S, V)
+VP(I,eps,maxit,search_space,percentage,puiss,"eig")
+%VP(I,eps,maxit,search_space,percentage,puiss,"power method")
+VP(I,eps,maxit,search_space,percentage,puiss,"sub_space_0")
+VP(I,eps,maxit,search_space,percentage,puiss,"sub_space_1")
+VP(I,eps,maxit,search_space,percentage,puiss,"sub_space_2")
+VP(I,eps,maxit,search_space,percentage,puiss,"sub_space_3")
+
+%%Couleurs
+
+Im=imread('BD_Asterix_Colored.jpg');
+Image_final=zeros(size(Im,1),size(Im,2),3);
+for color=1:3
+    I=Im(:,:,color);
+    I=double(I);
+
+    [q,p]=size(I);
+    %svd
+    tic
+    [U, S, V] = svd(I);
+    toc
+
+    
+    l = min(p,q);
+
+    inter = 1:40:(200+40);
+    inter(end) = 200;
+    differenceSVD = zeros(size(inter,2), 1);
+
+    % images reconstruites en utilisant de 1 à 200 vecteurs (avec un pas de 40)
+    ti = 0;
+    td = 0;
+    for k = inter
+
+        % Calcul de l'image de rang k
+        Im_k = U(:, 1:k)*S(1:k, 1:k)*V(:, 1:k)';
+
+        % Affichage de l'image reconstruite
+        ti = ti+1;
+        Image_final(:,:,color)=Im_k;
+
+        % Calcul de la différence entre les 2 images
+        td = td + 1;
+        differenceSVD(td) = sqrt(sum(sum((I-Im_k).^2)));
+    end
+end
+    figure(ti)
+    Image_final=Image_final/max(max(max(Image_final)));
+    imagesc(Image_final)
+
+    % Figure des différences entre image réelle et image reconstruite
+    ti = ti+1;
+    figure(ti)
+    hold on 
+    plot(inter, differenceSVD, 'rx')
+    ylabel('RMSE')
+    xlabel('rank k')
+    pause
+
+
+
+
