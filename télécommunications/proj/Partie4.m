@@ -33,7 +33,7 @@ for index = 1:length(Eb_N0_dB)
     P = mean(abs(x).^2);
     sigma = sqrt((P * Ns) ./ (2 * log2(M) .* (Eb_N0_lineaire(index))));
     bruit = sigma .* randn(1, length(signal_1_map));
-    r = x+bruit;
+    r = x;%+bruit;
     z = filter(hr,1,r);
     unmapped_ech = z(n_0:Ns:end);
 
