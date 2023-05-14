@@ -1,0 +1,13 @@
+# Civic engagement: Progress report
+
+Throughout the school year, I have engaged in various extracurricular activities that have allowed me to develop new skills, grow personally, and network with others. 
+
+Since the beginning of the school year, I have done quite a bit of engagements. I started in November, with the Capitole du Libre, a two-day event comprising conferences on open source software. I volunteered for this event, handling the recording of talks, as a TVn7 member (ENSEEIHT's video production student association). I continued to volunteer for diverse events throughout the school year, as a TVn7 member: for the _Concert des Enfoiros de l'INSA_, a 4-hour show of music, dances and sketches performed by INSA students, with all financial benefits given to _les Restos du Cœur_, one of France's largest nonprofit helping the poorest in the country that struggle to even pay for food; then for the INSA Raid, a student-organized sports event where more than 100 people compete on a multi-sport race. We fimed them, edited a recap video during the event to show it at the end of the event. 
+
+Then, I completely re-made _Loca7_, ENSEEIHT's platform to help students find appartments that is managed by students. I designed and coded the website from scratch, as a net7 member (ENSEEIHT's programming association, that manages all of Toulouse INP's student services). It's available at https://loca7.fr. This project provided me with valuable experience in web development and project management, as I was in regular communication with the "client" of the project, _AEn7_'s Loca7 manager.
+
+Later, when arrived time to elect new people at the board of student associations, I was elected as TVn7's new IT manager, and later as net7's new president. These positions not only recognize my hard work but also give me a leadership role in the student community, which can help with networking and personal growth.
+
+In conclusion, my strong commitment to extracurricular activities throughout the school year has allowed me to develop new skills, grow personally, and network with others. Volunteering for events, completing significant projects, and taking on leadership positions has demonstrated my dedication to my community and willingness to go above and beyond. These experiences will undoubtedly benefit me in my future endeavors and make me a well-rounded individual.
+
+I plan on continuing this civic engagement next year, by organizing activities in the associations I am a member of. For example, I plan to give out classes to teach web programming as net7's president, and to incorporate concepts of accessibility in those classes, to ensure that future developers include people with disabilities in the software they write. 
