@@ -1,0 +1,27 @@
+pb optimisation convexe
+	ensemble contraintes convexe
+	fonction convexe
+pb opti linéaire 
+	fonctions des contraintes (h_l et g_i dans C = { t in R^n, h_l(t) = 0 and g_i(t) < 0 forall l, i) affines
+min local faible
+	il existe un boule dans laquelle la solution est minimale
+min local fort
+	la solution est minimale dans n'importe quel boule
+forme quadra
+	q(x) = f(x, x), f forme bilin
+id polarisation
+	f(u, v) = 1/4 [ q(u+v) - q(u-v) ] = 1/2 [ q(u+v) - q(u) - q(v) ]
+semi-def pos
+	q(forall x) >= 0
+semi-def neg
+	-q semi-def pos
+indef
+	ni semi-def pos ni semi-def neg
+def pos
+	semi-def pos et q^-1(0) = {0}
+thm du rg pour les formes quadra
+	dim E = dim N(q) + rg q
+methode mq semi-def pos
+	décomposer en somme de carrés de termes du 1er deg
+
+	

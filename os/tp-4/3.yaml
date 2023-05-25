@@ -1,0 +1,4 @@
+- erreur car il se peut qu'on essaye de lire dans le tube avant d'avoir écrit dedans, il faudrait forker apres
+- là ça marche
+- on aura le résultat attendu (pas d'erreurs)
+- on aura le résutlat attendu (pas d'erreurs)
