@@ -19,6 +19,7 @@ Eb_N0_dBs = 0:0.5:8;
 Eb_N0_lineaires = 10.^(Eb_N0_dBs/10);
 
 teb_exp_sans_erreur = zeros(size(Eb_N0_dBs));
+teb_exp_avec_erreur_sans_correction = zeros(size(Eb_N0_dBs));
 teb_exp_avec_erreur = zeros(size(Eb_N0_dBs));
 teb_theo_sans_erreur = zeros(size(Eb_N0_dBs));
 teb_theo_avec_erreur = zeros(size(Eb_N0_dBs));
@@ -53,9 +54,13 @@ for index = 1:length(Eb_N0_dBs)
                        
         % ECHANTILLONAGE
         apres_echantillonage = apres_filtrage_reception(Ns:Ns:end);
+
+        % CORRECTION ERREUR DE PHASE
+        estimation_erreur_phase = 1/2 * angle(sum(apres_echantillonage .^ 2)); % rad
+        apres_correction_erreur_phase = apres_echantillonage .* exp(-1j * estimation_erreur_phase);
        
         % DECISION
-        apres_decision = sign(real(apres_echantillonage));
+        apres_decision = sign(real(apres_correction_erreur_phase));
       
         % DEMAPPING
         apres_demapping = (apres_decision+1)/2;
@@ -65,17 +70,18 @@ for index = 1:length(Eb_N0_dBs)
             teb_exp_sans_erreur(index) = length(find((apres_demapping ~= bits))) / length(bits);
             teb_theo_sans_erreur(index) = qfunc(sqrt(2 * Eb_N0_lineaires(index)) * cos(deg2rad(erreur_phase)));
         else
+            teb_exp_avec_erreur(index) = length(find((apres_demapping ~= bits))) / length(bits);
             teb_theo_avec_erreur(index) = qfunc(sqrt(2 * Eb_N0_lineaires(index)) * cos(deg2rad(erreur_phase)));
-            teb_exp_avec_erreur(index) = length(find((sign(real((apres_echantillonage+1)/2)) ~= bits))) / length(bits);
+            teb_exp_avec_erreur_sans_correction(index) = length(find((sign(real((apres_echantillonage+1)/2)) ~= bits))) / length(bits);
         end
     end
 end
 
 figure
-semilogy(teb_exp_sans_erreur)
+semilogy(teb_exp_avec_erreur_sans_correction)
 hold on
 semilogy(teb_exp_avec_erreur)
-legend("Expérimental sans erreur de phase", "Expérimental avec erreur de phase")
+legend("Expérimental avec erreur de phase", sprintf("Expérimental avec correction", erreur_de_phase))
 title(sprintf("Comparaison des TEBs avec \\phi = %d", erreur_de_phase))
 xlabel("E_b / n_0")
 ylabel("TEB")
