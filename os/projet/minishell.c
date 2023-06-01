@@ -220,6 +220,7 @@ void child_handler_action()
 		{
 			UNWRAP(remove_job(pid));
 			TRACE("job pid=%d removed", pid);
+			if (WEXITSTATUS(status))
 		}
 
 		if (pid == current_pid)
