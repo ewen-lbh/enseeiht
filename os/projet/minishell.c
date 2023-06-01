@@ -128,7 +128,7 @@ int remove_job(int pid)
 	if (i == -1)
 	{
 		TRACE("job %d not found", pid);
-		return -1;
+		return 0;
 	}
 
 	free(jobs[i].command);
@@ -138,15 +138,6 @@ int remove_job(int pid)
 		jobs[j - 1] = jobs[j];
 	}
 	return 0;
-}
-
-void list_jobs()
-{
-	TRACE("listing jobs");
-	for (int i = 0; i <= last_job_index(); i++)
-	{
-		printf("%s %d (%d) %s\n", jobs[i].running ? "🏃" : "🛑", i + 1, jobs[i].pid, jobs[i].command);
-	}
 }
 
 static bool got_signal;
@@ -161,7 +152,7 @@ struct cmdline *prompt()
 			char working_directory[9999];
 			getcwd(working_directory, 9999);
 			style(ITALIC, MAGENTA);
-			printf("\n%s", working_directory);
+			printf("\n\n%s", working_directory);
 			style(RESET, BLACK);
 			printf("\n🐚 ");
 			style(BOLD, CYAN);
@@ -342,12 +333,12 @@ int get_job_index_from_arg(char *arg)
 	return atoi(arg);
 }
 
-char* expand_home_prefix(char* path)
+char *expand_home_prefix(char *path)
 {
 	if (path[0] == '~')
 	{
-		char* home = getenv("HOME");
-		char* new_path = malloc(strlen(home) + strlen(path) + 1);
+		char *home = getenv("HOME");
+		char *new_path = malloc(strlen(home) + strlen(path) + 1);
 		strcpy(new_path, home);
 		strcat(new_path, path + 1);
 		return new_path;
@@ -376,19 +367,30 @@ int main()
 	while ((commandline = prompt()))
 	{
 		style(RESET, BLACK);
+		for (int _ = 0; _ < 50; _++)
+		{
+			printf("─");
+		}
+
+		printf("\n");
 		char **first_command_args = *(commandline->seq);
 		char *first_command = first_command_args[0];
 
 		if (streq(first_command, "cd"))
 		{
-			if (chdir(expand_home_prefix(first_command_args[1])) < 0) {
+			if (chdir(expand_home_prefix(first_command_args[1])) < 0)
+			{
 				perror("chdir");
 			}
 			continue;
 		}
 		if (streq(first_command, "lj"))
 		{
-			list_jobs();
+			TRACE("listing jobs");
+			for (int i = 0; i <= last_job_index(); i++)
+			{
+				printf("%s %d (%d) %s\n", jobs[i].running ? "🏃" : "🛑", i + 1, jobs[i].pid, jobs[i].command);
+			}
 			continue;
 		}
 
