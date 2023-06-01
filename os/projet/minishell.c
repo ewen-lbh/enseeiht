@@ -1,569 +1,479 @@
-#define _POSIX_SOURCE  /* pour que kill fonctionne */
-#include <stdlib.h>	   /* pour EXIT_SUCCESS */
-#include <stdio.h>	   /* pour printf */
-#include <stdbool.h>   /* pour bool */
-#include <unistd.h>	   /* pour fork */
-#include <sys/types.h> /* pour utiliser pid_t… */
-#include <sys/wait.h>  /* waitpid */
-#include <string.h>	   /* strcmp et ses potes */
-#include <signal.h>	   /* gérer les signaux */
-#include <errno.h>	   /* variable errno */
-#include <fcntl.h>	   /* pour open */
-#include <sys/stat.h>  /* pour déclarer S_IRUSR et ses potes */
-#include "readcmd.h"   /* parseur de la ligne de commande */
+#define _POSIX_SOURCE
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdbool.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <string.h>
+#include <signal.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <stdarg.h>
+#include "readcmd.h"
 
-#define TEST_ERR(appel_sys)                                       \
-	if ((appel_sys) < 0)                                          \
-	{                                                             \
-		perror("FATAL_ERROR");                                    \
-		fprintf(stderr, "appel qui a échoué : %s\n", #appel_sys); \
-		exit(EXIT_FAILURE);                                       \
+#define UNWRAP(expression)   \
+	if ((expression) < 0)    \
+	{                        \
+		perror(#expression); \
+		exit(EXIT_FAILURE);  \
 	}
 
-enum state
+enum style_tag
 {
-	ACTIF,
-	SUSPENDU,
+	RESET,
+	BOLD,
+	DIM,
+	ITALIC,
+	UNDERLINED,
+	SLOW_BLINK,
+	FAST_BLINK,
+	INVERTED,
+	HIDDEN,
+	CROSSED_OUT,
 };
+
+enum color_tag
+{
+	BLACK,
+	RED,
+	GREEN,
+	YELLOW,
+	BLUE,
+	MAGENTA,
+	CYAN,
+	WHITE,
+};
+
+static bool tracing = false;
+
+void TRACE(const char *format, ...)
+{
+	if (tracing)
+	{
+		printf("\033[0m\033[2m[trace] ");
+		va_list args;
+		va_start(args, format);
+		vprintf(format, args);
+		va_end(args);
+		printf("\033[0m\n");
+	}
+}
 
 struct job
 {
-	int id;
 	pid_t pid;
-	enum state etat;
-	char *commande;
+	bool running;
+	char *command;
 };
 
-/** Récupérer l'id maximal
- * @param jobs la liste des taches
- * @param len la longueur de jobs
- * @return id maximal ou -1 si aucune tache
- */
-int max_id(struct job *jobs, int len)
-{
-	int id = -1;
+static struct job jobs[999];
 
-	for (int i = 0; i < len; i++)
-	{
-		if (jobs[i].id > id)
-			id = jobs[i].id;
-	}
-	return id;
+void style(enum style_tag style_tag, enum color_tag color_tag)
+{
+	// TRACE("set style style=%d color=%d", style_tag, color_tag);
+	printf("\033[3%dm", color_tag);
+	printf("\033[%dm", style_tag);
 }
 
-/** Copier une commande pour avoir la ligne écrite par l'user
- * @param commande la commande obtenue avec readcmd
- * @return la string qui était écrite par l'user ou NULL si erreur
- */
-char *commande_string(char ***commande)
+bool streq(char *a, char *b)
 {
-	char *commande_texte = NULL;
-	char ***pointeur = commande;
-	int taille = 0;
-	while (*pointeur != NULL)
+	return strcmp(a, b) == 0;
+}
+
+int last_job_index()
+{
+	TRACE("get last job index");
+	int i = 0;
+	while (jobs[i].command != NULL)
 	{
-		char **pointeur_bis = *pointeur;
-		while (*pointeur_bis != NULL)
+		i++;
+	}
+	TRACE("last job index is %d", i - 1);
+	return i - 1;
+}
+
+int job_index_by_pid(int pid)
+{
+	TRACE("get job index by pid %d", pid);
+	int i = 0;
+	while (jobs[i].command != NULL)
+	{
+		if (jobs[i].pid == pid)
 		{
-			int new_taille = taille + strlen(*pointeur_bis) + 1; /* le + 1 pour le séparateur */
-			if ((commande_texte = realloc(commande_texte, sizeof(char) * new_taille)) == NULL)
-				return NULL;
-			strcpy(commande_texte + taille, *pointeur_bis);
-			taille = new_taille;
-			commande_texte[taille - 1] = ' ';
-			pointeur_bis++;
+			TRACE("job index is %d", i);
+			return i;
 		}
-		commande_texte[taille - 1] = '|';
-		pointeur++;
+		i++;
 	}
-	commande_texte[taille - 1] = '\0';
-	return commande_texte;
+	TRACE("job index not found");
+	return -1;
 }
 
-/** Ajouter une tache active à la liste des taches
- * @param jobs la liste des taches
- * @param len la longueur de jobs
- * @param pid le pid du process de la nouvelle tache
- * @param commande la commande du processus
- * @return la nouvelle taille de jobs (len + 1) ou -1 en cas d'erreur
- */
-int add_job(struct job **jobs, int len, int pid, char ***commande)
+void add_job(int pid, char ***commandline)
 {
-	if ((*jobs = realloc(*jobs, sizeof(struct job) * (len + 1))) == NULL)
+	int newJobIndex = last_job_index() + 1;
+	jobs[newJobIndex].pid = pid;
+	jobs[newJobIndex].running = false;
+	jobs[newJobIndex].command = malloc(sizeof(char) * (strlen(commandline[0][0]) + 1));
+	strcpy(jobs[newJobIndex].command, commandline[0][0]);
+	TRACE("added jobs[%d] (%d) %s", newJobIndex, pid, jobs[newJobIndex].command);
+}
+
+int remove_job(int pid)
+{
+	TRACE("remove job %d", pid);
+	int i = job_index_by_pid(pid);
+	if (i == -1)
+	{
+		TRACE("job %d not found", pid);
 		return -1;
-
-	(*jobs)[len].id = max_id(*jobs, len) + 1;
-	(*jobs)[len].pid = pid;
-	(*jobs)[len].etat = ACTIF;
-	(*jobs)[len].commande = commande_string(commande);
-
-	return len + 1;
-}
-
-/** Supprimer une tache à partir de son pid ou rien si le pid n'est pas attribué
- * @param jobs la liste des taches
- * @param len la longeur de jobs
- * @param pid le pid du processus de la tache
- * @return la nouvelle taille de jobs (len - 1 ou len) ou -1 si erreur
- */
-int del_job_pid(struct job **jobs, int len, int pid)
-{
-	for (int i = 0; i < len; i++)
-	{
-		if ((*jobs)[i].pid == pid)
-		{
-			/* on n'oublie pas de libérer la chaine qui contient la commande */
-			free((*jobs)[i].commande);
-
-			/* on décale tous les éléments qui suivent */
-			for (int j = i + 1; j < len; j++)
-				(*jobs)[j - 1] = (*jobs)[j];
-
-			len--;
-			/* devrait toujours réussir car on diminue la taille */
-			*jobs = realloc(*jobs, sizeof(struct job) * len);
-		}
 	}
-	return len;
+
+	free(jobs[i].command);
+	jobs[i].command = NULL;
+	for (int j = i + 1; j <= last_job_index(); j++)
+	{
+		jobs[j - 1] = jobs[j];
+	}
+	return 0;
 }
 
-/** Mettre à jour le status d'une tache à partir de son pid (ou rien si pid pas attribué)
- * @param jobs la liste des taches
- * @param len la longueur de jobs
- * @param pid le pid du processus de la tache
- * @param etat le nouvel état du processus
- */
-void update_status_job_pid(struct job **jobs, int len, int pid, enum state etat)
+void list_jobs()
 {
-	for (int i = 0; i < len; i++)
+	TRACE("listing jobs");
+	for (int i = 0; i <= last_job_index(); i++)
 	{
-		if ((*jobs)[i].pid == pid)
-			(*jobs)[i].etat = etat;
+		printf("%s %d (%d) %s\n", jobs[i].running ? "🏃" : "🛑", i + 1, jobs[i].pid, jobs[i].command);
 	}
 }
 
-/** Afficher toutes les taches en cours
- * @param jobs la liste des taches
- * @param len la longeur de jobs
- */
-void print_jobs(struct job *jobs, int len)
-{
-	printf("id  pid   etat       commande\n");
-	for (int i = 0; i < len; i++)
-	{
-		switch (jobs[i].etat)
-		{
-		case ACTIF:
-			printf("[%d] %d ACTIF    > %s\n", jobs[i].id, jobs[i].pid, jobs[i].commande);
-			break;
-		case SUSPENDU:
-			printf("[%d] %d SUSPENDU > %s\n", jobs[i].id, jobs[i].pid, jobs[i].commande);
-			break;
-		}
-	}
-}
-
-/** Indique qu'un signal a été reçu si égal à true */
 static bool got_signal;
 
-/** Afficher le message du prompt et lire l'entrée. */
 struct cmdline *prompt()
 {
-	struct cmdline *ligne;
+	struct cmdline *commandline;
 	do
 	{
 		do
 		{
-			printf("pi-sh $ ");
+			char working_directory[9999];
+			getcwd(working_directory, 9999);
+			style(ITALIC, MAGENTA);
+			printf("\n%s", working_directory);
+			style(RESET, BLACK);
+			printf("\n🐚 ");
+			style(BOLD, CYAN);
 			fflush(stdin);
 
 			got_signal = false;
-			/* ON A AUCUN MOYEN DE DISTINGUER UN EOF
-			 * D'UNE ERREUR CAUSÉE PAR UN SIGNAL DONC ON
-			 * UTILISE LA VARIABLE got_signal */
-			ligne = readcmd();
+			commandline = readcmd();
+			style(RESET, BLACK);
 		} while (got_signal);
 
-		if (ligne == NULL)
+		if (commandline == NULL)
 		{
 			return NULL;
 		}
 
-		if (ligne->err)
+		if (commandline->err)
 		{
-			printf("erreur de lecture %s\n", ligne->err);
+			printf("error: %s\n", commandline->err);
 			return NULL;
 		}
+	} while (*(commandline->seq) == NULL);
 
-	} while (*(ligne->seq) == NULL);
-
-	if (!strcmp(**(ligne->seq), "exit"))
-		return NULL;
-
-	return ligne;
-}
-
-/** Pid du processus en premier plan,
- * 0 indique qu'aucun processus n'est en premier plan */
-static pid_t pid_fj;
-
-/** Renvoyer le signal reçu au processus
- * en premier plan (signal handler) */
-void send_signal_fj(int signal)
-{
-	/* on met un pid negatif pour kill tous les process du groupe */
-	if (signal == SIGTSTP)
-		kill(-pid_fj, SIGSTOP);
-	else if (signal == SIGINT)
-		kill(-pid_fj, SIGTERM);
-	else
-		kill(-pid_fj, signal);
-
-	got_signal = true; /* informer qu'on a reçu un signal */
-}
-
-/* liste des taches en cours d'execution */
-static struct job *jobs = NULL;
-/* nombre de taches actuellement en cours */
-static int jobs_number = 0;
-
-/** Handler pour gérer le signal SIGCHLD */
-void gerer_fils_handler()
-{
-	int pid_wait;	   /* pid récupéré par le wait */
-	int status;		   /* status du fils */
-	got_signal = true; /* informer qu'on a reçu un signal */
-
-	/* on récupère le statut de tous les fils jusqu'à avoir une erreur
-	 * car on ne reçoit le signal qu'une fois si plusieurs processus
-	 * meurent en même temps. */
-	while ((pid_wait = waitpid(-1, &status, WNOHANG | WUNTRACED)) > 0)
+	if (streq(**(commandline->seq), "exit"))
 	{
+		return NULL;
+	}
 
+	return commandline;
+}
+
+static int current_pid = 0;
+
+void send_signal_to_current_process(int signal)
+{
+	if (signal == SIGTSTP)
+	{
+		kill(-current_pid, SIGTSTP);
+	}
+	else if (signal == SIGINT)
+	{
+		kill(-current_pid, SIGTERM);
+	}
+	else
+	{
+		kill(-current_pid, signal);
+	}
+
+	got_signal = true;
+}
+
+void child_handler_action()
+{
+	int pid;
+	int status;
+	got_signal = true;
+
+	while ((pid = waitpid(-1, &status, WNOHANG | WUNTRACED)) > 0)
+	{
 		if (WIFSTOPPED(status))
 		{
-			update_status_job_pid(&jobs, jobs_number, pid_wait, SUSPENDU);
-			printf("le processus de pid %d a été stoppé\n", pid_wait);
+			jobs[job_index_by_pid(pid)].running = false;
+			TRACE("job %d stopped", pid);
 		}
 		else
 		{
-			TEST_ERR(jobs_number = del_job_pid(&jobs, jobs_number, pid_wait))
-			printf("fils de pid %d quitté avec le code %d\n", pid_wait, WEXITSTATUS(status));
+			UNWRAP(remove_job(pid));
+			TRACE("job pid=%d removed", pid);
 		}
 
-		if (pid_wait == pid_fj)
-			pid_fj = 0; /* la tache en premier plan est stoppée */
+		if (pid == current_pid)
+		{
+			current_pid = 0;
+		}
 	}
 
-	if (pid_wait < 0)
+	if (pid < 0 && errno != ECHILD)
 	{
-		switch (errno)
-		{
-		case ECHILD:
-			/* si on a plus de fils on fait rien */
-			break;
-		default:
-			perror("waitpid");
-			exit(EXIT_FAILURE);
-			break;
-		}
+		perror("waitpid");
+		exit(EXIT_FAILURE);
 	}
 }
 
-/** Attendre la fin de l'execution de la tache en premier plan
- * @param pid le pid de la tache à mettre en premier plan
- */
-void attendre_tache_fg(int pid)
+void switch_current_process(int pid)
 {
+	struct sigaction child_handler;
+	sigemptyset(&child_handler.sa_mask);
+	child_handler.sa_flags = 0;
 
-	/* structure utilisée pour gérer les signaux */
-	struct sigaction traiterSig;
-	sigemptyset(&(traiterSig.sa_mask));
-	traiterSig.sa_flags = 0;
+	current_pid = pid;
 
-	/* gérer les signaux sigint et sigstop si on a un process en premier plan */
-	pid_fj = pid; /* on met à jour le pid du processus en premier plan */
+	tcsetpgrp(STDERR_FILENO, pid);
 
-	tcsetpgrp(STDERR_FILENO, pid); /* changer le groupe en premier plan
-									  (celui qui recevra les signaux du terminal) */
 	do
+	{
 		pause();
-	while (pid_fj > 0);
+	} while (current_pid > 0);
+
 	tcsetpgrp(STDERR_FILENO, getpgrp());
 
-	/* on ignore à nouveau les signaux */
-	traiterSig.sa_handler = SIG_IGN;
-	sigaction(SIGINT, &traiterSig, NULL);
-	sigaction(SIGTSTP, &traiterSig, NULL);
+	child_handler.sa_handler = SIG_DFL;
+	sigaction(SIGTSTP, &child_handler, NULL);
+	sigaction(SIGINT, &child_handler, NULL);
 }
 
-/** Lancer un fils.
- * @param pgid le pgid du groupe de processus
- *        (ou 0 pour utiliser le pid du nouveau fils, dans ce cas la valeur du groupe sera affectée à l'adresse donnée)
- * @param in entrée standard du fils
- * @param out sortie standard du fils ou -1 si on doit créer un nouveau pipe
- * @param args le tableau d'arguments pour exec
- * @return si on est dans le fils, cette fonction ne retourne pas.
- *         Dans le père: retourne le file descriptor de l'entrée du pipe créé si un pipe a été créé ou stdin
- */
-int lancer_fils(pid_t *pgid, int in, int out, char **args)
+int start_child(int *group_pid, int child_stdin, int child_stdout, char **args)
 {
-	pid_t pid;
-	/* structure utilisée pour gérer les signaux */
-	struct sigaction traiterSig;
-	sigemptyset(&(traiterSig.sa_mask));
-	traiterSig.sa_flags = 0;
+	int pid;
+	struct sigaction child_handler;
+	sigemptyset(&child_handler.sa_mask);
+	child_handler.sa_flags = 0;
 
-	/* créer un pipe si demandé */
-	int tuyau[2];
-	if (out < 0)
+	int pipe_to_next_child[2];
+	bool outputs_to_pipe = child_stdout < 0;
+	if (outputs_to_pipe)
 	{
-		TEST_ERR(pipe(tuyau));
+		style(RESET, BLACK);
+		UNWRAP(pipe(pipe_to_next_child));
+		child_stdout = pipe_to_next_child[1];
 	}
 
-	TEST_ERR(pid = fork());
+	UNWRAP(pid = fork());
 
 	if (pid == 0)
 	{
-		/* Code du fils */
-
-		if (out < 0)
+		if (outputs_to_pipe)
 		{
-			/* on ferme le coté lecture */
-			TEST_ERR(close(tuyau[0]));
-
-			/* on utilise le pipe créé comme sortie standard */
-			out = tuyau[1];
+			UNWRAP(close(pipe_to_next_child[0]));
+			child_stdout = pipe_to_next_child[1];
 		}
 
-		TEST_ERR(setpgid(getpid(), *pgid));
+		UNWRAP(setpgid(getpid(), *group_pid));
 
-		/* remettre les handlers par défaut dans le fils */
-		traiterSig.sa_handler = SIG_DFL;
-		sigaction(SIGINT, &traiterSig, NULL);
-		sigaction(SIGTSTP, &traiterSig, NULL);
+		child_handler.sa_handler = SIG_DFL;
+		sigaction(SIGTSTP, &child_handler, NULL);
+		sigaction(SIGINT, &child_handler, NULL);
+		sigaction(SIGTTOU, &child_handler, NULL);
+		sigaction(SIGTTIN, &child_handler, NULL);
 
-		sigaction(SIGTTOU, &traiterSig, NULL);
-		sigaction(SIGTTIN, &traiterSig, NULL);
-
-		/* on remplace stdin par le fichier */
-		TEST_ERR(dup2(in, STDIN_FILENO));
-
-		/* on remplace stdout par le fichier */
-		TEST_ERR(dup2(out, STDOUT_FILENO));
+		UNWRAP(dup2(child_stdin, STDIN_FILENO));
+		UNWRAP(dup2(child_stdout, STDOUT_FILENO));
 
 		execvp(args[0], args);
-		perror("cannot start process");
+		perror("execvp");
 		exit(EXIT_FAILURE);
 	}
 
-	/* =================== Code du père ==================== */
-	/* on met à jour le pgid si celui-ci était inconnu */
-	if (*pgid == 0)
-		*pgid = pid;
-
-	if (in != STDIN_FILENO)
+	if (*group_pid == 0)
 	{
-		/* on ferme in si c'est un file descriptor sur un fichier */
-		TEST_ERR(close(in));
+		*group_pid = pid;
 	}
 
-	/* si on a créé un pipe */
-	if (out < 0)
+	if (child_stdin != STDIN_FILENO)
 	{
-		/* on ferme le coté écriture utilisé par le fils */
-		TEST_ERR(close(tuyau[1]));
-
-		/* on renvoie le côté lecture du pipe qu'on pourra réutiliser */
-		return tuyau[0];
+		UNWRAP(close(child_stdin));
 	}
-	else if (out != STDOUT_FILENO)
+
+	if (outputs_to_pipe)
 	{
-		/* on ferme out si c'est un file descriptor sur un fichier */
-		TEST_ERR(close(out));
+		UNWRAP(close(pipe_to_next_child[1]));
+		return pipe_to_next_child[0];
+	}
+	else if (child_stdout != STDOUT_FILENO)
+	{
+		UNWRAP(close(child_stdout));
 	}
 
 	return STDIN_FILENO;
 }
 
+// returns the last job index if NULL is given
+int get_job_index_from_arg(char *arg)
+{
+	if (arg == NULL)
+	{
+		return last_job_index();
+	}
+
+	return atoi(arg);
+}
+
+char* expand_home_prefix(char* path)
+{
+	if (path[0] == '~')
+	{
+		char* home = getenv("HOME");
+		char* new_path = malloc(strlen(home) + strlen(path) + 1);
+		strcpy(new_path, home);
+		strcat(new_path, path + 1);
+		return new_path;
+	}
+
+	return path;
+}
+
 int main()
 {
-	/* structure utilisée pour gérer les signaux */
-	struct sigaction traiterSig;
-	sigemptyset(&(traiterSig.sa_mask));
-	traiterSig.sa_flags = 0;
+	struct sigaction signals_handler;
+	sigemptyset(&signals_handler.sa_mask);
+	signals_handler.sa_flags = 0;
 
-	/* définir le handler quand un fils meurt */
-	traiterSig.sa_handler = gerer_fils_handler;
-	sigaction(SIGCHLD, &traiterSig, NULL);
+	signals_handler.sa_handler = child_handler_action;
+	sigaction(SIGCHLD, &signals_handler, NULL);
 
-	traiterSig.sa_handler = SIG_IGN;
-	sigaction(SIGINT, &traiterSig, NULL);
-	sigaction(SIGTSTP, &traiterSig, NULL);
+	signals_handler.sa_handler = SIG_IGN;
+	sigaction(SIGTSTP, &signals_handler, NULL);
+	sigaction(SIGINT, &signals_handler, NULL);
+	sigaction(SIGTTOU, &signals_handler, NULL);
+	sigaction(SIGTTIN, &signals_handler, NULL);
 
-	/* on bloque ces signaux en + */
-	sigaction(SIGTTOU, &traiterSig, NULL);
-	sigaction(SIGTTIN, &traiterSig, NULL);
+	struct cmdline *commandline;
 
-	/* la ligne lu après passage dans le parser */
-	struct cmdline *ligne_commande;
-
-	while ((ligne_commande = prompt()))
+	while ((commandline = prompt()))
 	{
+		style(RESET, BLACK);
+		char **first_command_args = *(commandline->seq);
+		char *first_command = first_command_args[0];
 
-		/* pour l'instant on ne regarde que le premier élément de seq */
-		char **commande = *(ligne_commande->seq);
-
-		if (!strcmp(commande[0], "cd"))
+		if (streq(first_command, "cd"))
 		{
-			if (chdir(commande[1]) < 0)
-				perror("cannot open directory");
-			continue; /* ne pas lancer de fils ! */
+			if (chdir(expand_home_prefix(first_command_args[1])) < 0) {
+				perror("chdir");
+			}
+			continue;
+		}
+		if (streq(first_command, "lj"))
+		{
+			list_jobs();
+			continue;
 		}
 
-		if (!strcmp(commande[0], "lj"))
+		if (streq(first_command, "sj"))
 		{
-			print_jobs(jobs, jobs_number);
-			continue; /* ne pas lancer de fils ! */
+			int job_index = get_job_index_from_arg(first_command_args[1]);
+			kill(-jobs[job_index].pid, SIGSTOP);
+			continue;
 		}
 
-		if (!strcmp(commande[0], "sj"))
+		if (streq(first_command, "susp"))
 		{
-			int id;
-
-			if (commande[1] == NULL)
-			{
-				/* si on ne precise pas de numéro, on choisit la dernière tache lancée */
-				id = jobs_number - 1;
-			}
-			else
-			{
-
-				char *out;
-				id = strtol(commande[1], &out, 10);
-				if (commande[1] == out)
-				{ /* si rien n'a été lu */
-					printf("you must give a valid number\n");
-					continue;
-				}
-			}
-
-			for (int i = 0; i < jobs_number; i++)
-			{
-				if (jobs[i].id == id)
-					kill(-jobs[i].pid, SIGSTOP);
-			}
-
-			continue; /* ne pas lancer de fils ! */
-		}
-
-		if (!strcmp(commande[0], "susp"))
 			kill(getpid(), SIGSTOP);
-
-		if ((!strcmp(commande[0], "bg")) || (!strcmp(commande[0], "fg")))
-		{
-			int id;
-
-			if (commande[1] == NULL)
-			{
-				/* si on ne precise pas de numéro, on choisit la dernière tache lancée */
-				id = jobs_number - 1;
-			}
-			else
-			{
-
-				char *out;
-				id = strtol(commande[1], &out, 10);
-				if (commande[1] == out)
-				{ /* si rien n'a été lu */
-					printf("you must give a valid number\n");
-					continue;
-				}
-			}
-
-			for (int i = 0; i < jobs_number; i++)
-			{
-				if (jobs[i].id == id)
-				{
-					kill(-jobs[i].pid, SIGCONT);
-					jobs[i].etat = ACTIF;
-
-					if (!strcmp(commande[0], "fg")) /* si on met en premier plan, attendre la fin du process */
-						attendre_tache_fg(jobs[i].pid);
-				}
-			}
-
-			continue; /* ne pas lancer de fils ! */
 		}
 
-		/* lancer les fils */
-		int in = STDIN_FILENO;			  /* entrée du pipeline */
-		int pipeline_out = STDOUT_FILENO; /* sortie du pipeline */
-		/* contiendra le pid du groupe de processus */
-		pid_t pgid = 0;
-
-		/* rediriger l'entrée du pipeline vers le fichier demandé */
-		if (ligne_commande->in)
+		if (streq(first_command, "trace"))
 		{
-			int fd_src;
-
-			if ((fd_src = open(ligne_commande->in, O_RDONLY)) < 0)
-			{
-				perror("cannot open input file");
-				continue; /* on ne lance pas de fils car erreur */
-			}
-			in = fd_src;
+			tracing = !tracing;
+			style(ITALIC, YELLOW);
+			printf("trace is %s.\n", tracing ? "on" : "off");
+			style(RESET, RESET);
+			continue;
 		}
 
-		/* rediriger la sortie du pipeline vers le fichier demandé */
-		if (ligne_commande->out)
+		if (streq(first_command, "fg") || streq(first_command, "bg"))
 		{
-			int fd_dst;
+			int job_index = get_job_index_from_arg(first_command_args[1]);
+			int pid = jobs[job_index].pid;
 
-			if ((fd_dst = open(ligne_commande->out,
-							   O_WRONLY | O_TRUNC | O_CREAT,
-							   S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)) < 0)
+			kill(-pid, SIGCONT);
+
+			if (streq(first_command, "fg"))
 			{
-				perror("cannot open output file");
-				continue; /* on ne lance pas de fils car erreur */
+				jobs[job_index].running = true;
+				switch_current_process(pid);
 			}
-			pipeline_out = fd_dst;
+
+			continue;
 		}
 
-		char ***seq = ligne_commande->seq;
-		while (*seq)
+		int current_child_stdin = STDIN_FILENO;
+		int pipeline_stdout = STDOUT_FILENO;
+		int group_pid = 0;
+
+		if (commandline->in)
 		{
-			if (seq[1])
+			current_child_stdin = open(commandline->in, O_RDONLY);
+			if (current_child_stdin < 0)
 			{
-				/* lancer un fils en redirigeant la sortie vers un nouveau pipe */
-				in = lancer_fils(&pgid, in, -1, *seq);
+				perror("open stdin redirector");
+				continue;
 			}
-			else
-			{
-				/* on lance le dernier fils en redirigeant la sortie vers celle du pipeline */
-				lancer_fils(&pgid, in, pipeline_out, *seq);
-			}
-			seq++;
 		}
 
-		/* Ajouter une tache à la liste des taches */
-		TEST_ERR(jobs_number = add_job(&jobs, jobs_number, pgid, ligne_commande->seq));
+		if (commandline->out)
+		{
+			pipeline_stdout = open(commandline->out, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			if (pipeline_stdout < 0)
+			{
+				perror("open stdout redirector");
+				continue;
+			}
+		}
 
-		if (ligne_commande->backgrounded == NULL)
-			attendre_tache_fg(pgid);
+		char ***commands_left = commandline->seq;
+		while (*commands_left)
+		{
+			bool is_last_command = *(commands_left + 1) == NULL;
+			current_child_stdin = start_child(&group_pid, current_child_stdin, is_last_command ? pipeline_stdout : -1, *commands_left);
+			commands_left++; // XXX c'est vraiment dégueulasse d'itérer comme ça.
+		}
+
+		add_job(group_pid, commandline->seq);
+
+		if (!commandline->backgrounded)
+		{
+			switch_current_process(group_pid);
+		}
 	}
 
-	printf("sortie du shell\n");
-
-	for (int i = 0; i < jobs_number; i++)
+	// kill everyone
+	for (int i = 0; i <= last_job_index(); i++)
 	{
-		printf("kill du process %d\n", jobs[i].pid);
 		kill(-jobs[i].pid, SIGKILL);
 	}
-	/* on ne wait pas car systemd s'en occupera :) */
-
-	/* on n'oublie pas de libérer tout ce qu'il reste */
-	free(jobs);
 
 	return EXIT_SUCCESS;
 }
