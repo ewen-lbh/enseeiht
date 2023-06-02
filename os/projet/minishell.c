@@ -217,24 +217,13 @@ void send_signal_to_current_process(int signal)
 }
 void switch_current_process(int pid)
 {
-	struct sigaction child_handler;
-	sigemptyset(&child_handler.sa_mask);
-	child_handler.sa_flags = 0;
-
 	current_pid = pid;
-
 	tcsetpgrp(STDERR_FILENO, pid);
-
 	do
 	{
 		pause();
 	} while (current_pid > 0);
-
 	tcsetpgrp(STDERR_FILENO, getpgrp());
-
-	child_handler.sa_handler = SIG_DFL;
-	sigaction(SIGTSTP, &child_handler, NULL);
-	sigaction(SIGINT, &child_handler, NULL);
 }
 int start_child(int *group_pid, int child_stdin, int child_stdout, char **args)
 {
@@ -311,9 +300,12 @@ void child_handler_action()
 		{
 			UNWRAP(remove_job(pid));
 			TRACE("job pid=%d removed", pid);
-			if (WEXITSTATUS(status) == 0) {
-				printf("✅ 0");
-			} else {
+			if (WEXITSTATUS(status) == 0)
+			{
+				// printf("✅ 0");
+			}
+			else
+			{
 				printf("❌ %d", WEXITSTATUS(status));
 			}
 		}
@@ -387,7 +379,7 @@ int main()
 			tracing = !tracing;
 			style(ITALIC, YELLOW);
 			printf("trace is %s.\n", tracing ? "on" : "off");
-			style(RESET, RESET);
+			style(RESET, BLACK);
 			continue;
 		}
 		if (streq(first_command, "fg") || streq(first_command, "bg"))
@@ -451,4 +443,3 @@ int main()
 
 	return EXIT_SUCCESS;
 }
-

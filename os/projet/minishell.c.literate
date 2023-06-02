@@ -317,31 +317,19 @@ Cela implique de:
 
 1. Mettre à jour notre variable globale `current_pid`
 2. Signaler ce changement au système via `tcsetpgrp` (ce qui met à jour le groupe de processus en premier plan)
-3. Attendre que l'on reçoive un signal // TODO
-4. De nouveau `tcstepgrp` // TODO
-5. // TODO
+3. Attendre que l'on reçoive un signal
+4. De nouveau `tcstepgrp`, pour notifier au système que le shell est de nouveau en premier plan. Cela permet au shell d'accéder de nouveau à l'entrée et aux sorties standards.
 
 --- minishell.c +=
 void switch_current_process(int pid)
 {
-	struct sigaction child_handler;
-	sigemptyset(&child_handler.sa_mask);
-	child_handler.sa_flags = 0;
-
 	current_pid = pid;
-
 	tcsetpgrp(STDERR_FILENO, pid);
-
 	do
 	{
 		pause();
 	} while (current_pid > 0);
-
 	tcsetpgrp(STDERR_FILENO, getpgrp());
-
-	child_handler.sa_handler = SIG_DFL;
-	sigaction(SIGTSTP, &child_handler, NULL);
-	sigaction(SIGINT, &child_handler, NULL);
 }
 ---
 
@@ -401,13 +389,13 @@ On ferme le côté lecture du pipe que l'on va donner au prochain fils, car l'on
 		}
 ---
 
-On change le groupe du fils pour le rattacher au groupe du père.
+On change le groupe du fils pour le rattacher au groupe de toute la pipeline.
 
 --- minishell.c +=
 		UNWRAP(setpgid(getpid(), *group_pid));
 ---
 
-On change les handlers de `SIGTSTP`, `SIGINT`, `SIGTTOU` et `SIGTTIN` pour les remettre à leur handler par défaut. // TODO pk
+On change les handlers de `SIGTSTP`, `SIGINT`, `SIGTTOU` et `SIGTTIN` pour les remettre à leur handler par défaut.
 
 --- minishell.c +=
 		child_handler.sa_handler = SIG_DFL;
@@ -433,7 +421,7 @@ Enfin, on exécute la commande.
 	}
 ---
 
-Depuis le père, // TODO pk pas dans else{}? on met à jour le PID du groupe passé en argument lorsque celui-ci n'était pas connu // TODO
+Depuis le père, on met à jour le PID du groupe passé en argument lorsque celui-ci n'était pas connu.
 
 On ferme ensuite les descripteurs:
 
@@ -476,7 +464,7 @@ On attend que le fils se termine avec `waitpid`, et on agit en fonction du résu
 
 De plus, si le fils était le processus en premier plan, il faut mettre à jour `current_pid` pour le remettre à `0` (signifiant que le shell est en premier plan).
 
-Enfin, si `waitpid` a échoué, et que l'erreur n'est pas `ECHILD` (signifiant qu'il n'y a pas de fils à attendre // TODO), on affiche l'erreur.
+Enfin, si `waitpid` a échoué, et que l'erreur n'est pas `ECHILD` (signifiant qu'il n'y a pas de fils à attendre), on affiche l'erreur.
 
 
 --- minishell.c +=
@@ -498,7 +486,7 @@ void child_handler_action()
 			UNWRAP(remove_job(pid));
 			TRACE("job pid=%d removed", pid);
 			if (WEXITSTATUS(status) == 0) {
-				printf("✅ 0");
+				// printf("✅ 0");
 			} else {
 				printf("❌ %d", WEXITSTATUS(status));
 			}
@@ -603,7 +591,7 @@ On commence par gérer les commandes "spéciales" que le shell va interpréter d
 			tracing = !tracing;
 			style(ITALIC, YELLOW);
 			printf("trace is %s.\n", tracing ? "on" : "off");
-			style(RESET, RESET);
+			style(RESET, BLACK);
 			continue;
 		}
 ---
@@ -684,7 +672,7 @@ On ajoute le PID du groupe à la liste des jobs, et on passe le processus en pre
 		}
 ---
 
-Enfin, quand on sort de la boucle principale (par une valeur de retour égale à `NULL` de la fonction `prompt`), on tue tout les jobs avec un `SIGKILL`, pour s'assurer de ne pas laisser des processus zombies // TODO confirmer.
+Enfin, quand on sort de la boucle principale (par une valeur de retour égale à `NULL` de la fonction `prompt`), on tue tout les jobs avec un `SIGKILL`, pour s'assurer de ne pas laisser des processus toujours en train de tourner, qu'on ne pourrait pas tuer avec un `SIGINT` une fois le shell fermé.
 
 --- minishell.c +=
 	}
