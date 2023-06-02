@@ -31,7 +31,6 @@ li.L9 {
   list-style-type: decimal;
 }
 
-@media screen {
 
   /* string content */
 
@@ -116,4 +115,3 @@ li.L9 {
   .fun {
     color: #516aec;
   }
-}

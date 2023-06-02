@@ -69,7 +69,6 @@ li.L9 {
   list-style-type: decimal;
 }
 
-@media screen {
 
   /* string content */
 
@@ -154,7 +153,6 @@ li.L9 {
   .fun {
     color: #516aec;
   }
-}
 body{min-width:200px;max-width:850px;margin:0 auto;padding:30px;}.chapter-nav{font-size: 10pt;}a:link,a:visited{color:#00f}.codeblock_name,code,pre.prettyprint{font-family:Monaco,"Lucida Console",monospace}body{font-size:14pt}.codeblock_name,.math,.seealso,code{font-size:10pt}.codeblock{page-break-inside:avoid;padding-bottom:15px}.math{text-indent:0}pre.prettyprint{font-size:10pt;padding:10px;border-radius:10px;border:none;white-space:pre-wrap}.codeblock_name{margin-top:1.25em;display:block}a:link{text-decoration:none}a:link:not(.lit):hover{color:#00f;text-decoration:underline}a:link:active{color:red}h4{padding-right:1.25em}h4.noheading{margin-bottom:0}h1{text-align:center}code{padding:2px}pre{-moz-tab-size:4;-o-tab-size:4;tab-size:4}p:not(.notp){margin:0;text-indent:2em}.two-col{list-style-type:none}.two-col li:before{content:'-';padding:5px;margin-right:5px;color:orange;background-color:#fff;display:inline-block}@media print{body{font-size:10pt}pre.prettyprint{font-size:8pt}.seealso{font-size:9pt}.codeblock_name,.math,code{font-size:8pt}.math{text-indent:0}}
 .seealso, .codeblock_name {
     display: none;
@@ -165,13 +163,198 @@ body{min-width:200px;max-width:850px;margin:0 auto;padding:30px;}.chapter-nav{fo
 <section>
 <h1>Minishell</h1>
 <a name="1:1"><div class="section"><h4>1. Introduction</h4></a>
+<p>La méthodologie de test a été d'interagir avec le shell et d'observer son comportement, en vérifiant que celui-ci était conforme aux spécifications.
+</p>
+<p>La structure et les choix d'immplémentations seront ensuite expliqués au fur et à mesure du code, en se basant sur le principe du <a href="https://fr.wikipedia.org/wiki/Programmation_litt%C3%A9raire"><em>literate programming</em></a>.
+</p>
+<p>Tout le minishell est compris dans un seul fichier.
+</p>
+
 </div>
-<a name="1:2"><div class="section"><h4>2. Importations</h4></a>
+<a name="1:2"><div class="section"><h4>2. Procédure des tests</h4></a>
+<ul>
+<li><p>Question 1
+</p>
+</li>
+</ul>
+
+<div class="codeblock">
+<span class="codeblock_name">{{test} <a href="minishell.c.html#1:2">2</a>}</span>
+<pre class="prettyprint lang-c">
+/home/ewen/enseeiht/os/projects
+🐚 ls
+...
+</pre>
+
+
+
+</div>
+<ul>
+<li><p>Question 3
+</p>
+</li>
+</ul>
+
+<div class="codeblock">
+<span class="codeblock_name">{{test} <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+/home/ewen/enseeiht/os/projects
+🐚 sleep 3
+
+(3 secondes plus tard)
+
+/home/ewen/enseeiht/os/projects
+🐚 ls
+</pre>
+
+
+
+</div>
+<ul>
+<li><p>Question 4
+</p>
+</li>
+</ul>
+
+<div class="codeblock">
+<span class="codeblock_name">{{test} <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+/home/ewen/enseeiht/os/projects
+🐚 cd ~
+
+/home/ewen/
+🐚 exit
+
+(le shell termine)
+</pre>
+
+
+
+</div>
+<ul>
+<li><p>Question 5 et 6
+</p>
+</li>
+</ul>
+
+<div class="codeblock">
+<span class="codeblock_name">{{test} <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+/home/ewen/enseeiht/os/projects
+🐚 sleep 600 &amp;
+
+(immédiatement)
+
+/home/ewen/enseeiht/os/projects
+🐚 lj
+🏃‍♂️ 1 (26625) sleep
+
+/home/ewen/enseeiht/os/projects
+🐚 sj 1
+
+/home/ewen/enseeiht/os/projects
+🐚 fg 1
+(600 secondes après ...)
+
+/home/ewen/enseeiht/os/projects
+🐚 
+</pre>
+
+
+
+</div>
+<ul>
+<li><p>Question 7
+</p>
+</li>
+</ul>
+
+<div class="codeblock">
+<span class="codeblock_name">{{test} <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+/home/ewen/enseeiht/os/projects
+🐚 sleep 600
+
+(on envoie ^Z)
+
+/home/ewen/enseeiht/os/projects
+🐚 lj
+🛑 1 (26625) sleep
+</pre>
+
+
+
+</div>
+<ul>
+<li><p>Question 8
+</p>
+</li>
+</ul>
+
+<div class="codeblock">
+<span class="codeblock_name">{{test} <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+/home/ewen/enseeiht/os/projects
+🐚 sleep 600
+
+(on envoie ^C)
+
+/home/ewen/enseeiht/os/projects
+🐚 lj
+(rien)
+</pre>
+
+
+
+</div>
+<ul>
+<li><p>Question 9
+</p>
+</li>
+</ul>
+
+<div class="codeblock">
+<span class="codeblock_name">{{test} <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+/home/ewen/enseeiht/os/projects
+🐚 echo quoi &gt; feur
+
+/home/ewen/enseeiht/os/projects
+🐚 cat &lt; feur
+quoi
+</pre>
+
+
+
+</div>
+<ul>
+<li><p>Question 10 et 11
+</p>
+</li>
+</ul>
+
+<div class="codeblock">
+<span class="codeblock_name">{{test} <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+/home/ewen/enseeiht/os/projects
+🐚 ls | wc -l
+23
+
+/home/ewen/enseeiht/os/projects
+🐚 wget https://loca7.fr/appartements.json -O- | grep -o hasBicycleParking | uniq | wc -l
+1
+</pre>
+
+
+
+</div>
+</div>
+<a name="1:3"><div class="section"><h4>3. Importations</h4></a>
 <p>On commence par imporeter toutes les dépendances. 
 </p>
 
 <div class="codeblock">
-<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>}</span>
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:3">3</a>}</span>
 <pre class="prettyprint lang-c">
 #define _POSIX_SOURCE
 #include &lt;stdlib.h&gt;
@@ -188,17 +371,17 @@ body{min-width:200px;max-width:850px;margin:0 auto;padding:30px;}.chapter-nav{fo
 #include &lt;stdarg.h&gt;
 #include "readcmd.h"
 </pre>
-<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:9">9</a></p>
 
 
 </div>
 </div>
-<a name="1:3"><div class="section"><h4>3. Fonctions utilitaires</h4></a>
+<a name="1:4"><div class="section"><h4>4. Fonctions utilitaires</h4></a>
 <p>Ensuite, on définit une macro spéciale permettant de checker la valeur de retour d'une expression, et d'afficher une erreur en indiquant d'où elle provient avec, puis ensuite de quitter le programme avec <code>EXIT_FAILURE</code>. Le nom est inspiré de la méthode <code>.unwrap()</code> en <a href="https://www.rust-lang.org/">Rust</a>.
 </p>
 
 <div class="codeblock">
-<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:3">3</a>} +=</span>
 <pre class="prettyprint lang-c">
 #define UNWRAP(expression)   \
 	if ((expression) &lt; 0)    \
@@ -207,7 +390,7 @@ body{min-width:200px;max-width:850px;margin:0 auto;padding:30px;}.chapter-nav{fo
 		exit(EXIT_FAILURE);  \
 	}
 </pre>
-<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:9">9</a></p>
 
 
 </div>
@@ -215,7 +398,7 @@ body{min-width:200px;max-width:850px;margin:0 auto;padding:30px;}.chapter-nav{fo
 </p>
 
 <div class="codeblock">
-<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:3">3</a>} +=</span>
 <pre class="prettyprint lang-c">
 enum style_tag
 {
@@ -250,7 +433,7 @@ void style(enum style_tag style_tag, enum color_tag color_tag)
 	printf("\033[%dm", style_tag);
 }
 </pre>
-<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:9">9</a></p>
 
 
 </div>
@@ -258,11 +441,11 @@ void style(enum style_tag style_tag, enum color_tag color_tag)
 </p>
 
 <div class="codeblock">
-<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:3">3</a>} +=</span>
 <pre class="prettyprint lang-c">
 static bool tracing = false;
 </pre>
-<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:9">9</a></p>
 
 
 </div>
@@ -270,7 +453,7 @@ static bool tracing = false;
 </p>
 
 <div class="codeblock">
-<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:3">3</a>} +=</span>
 <pre class="prettyprint lang-c">
 void TRACE(const char *format, ...)
 {
@@ -285,7 +468,7 @@ void TRACE(const char *format, ...)
 	}
 }
 </pre>
-<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:9">9</a></p>
 
 
 </div>
@@ -293,7 +476,7 @@ void TRACE(const char *format, ...)
 </p>
 
 <div class="codeblock">
-<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:3">3</a>} +=</span>
 <pre class="prettyprint lang-c">
 char *expand_home_prefix(char *path)
 {
@@ -309,19 +492,19 @@ char *expand_home_prefix(char *path)
 	return path;
 }
 </pre>
-<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:9">9</a></p>
 
 
 </div>
 </div>
-<a name="1:4"><div class="section"><h4>4. Gestion des jobs</h4></a>
+<a name="1:5"><div class="section"><h4>5. Gestion des jobs</h4></a>
 <p>Ensuite, il nous faut un moyen de stocker les jobs en cours.
 </p>
 <p>On stocke leur état avec un booléen <code>running</code>, et leur id interne au shell correspond simplement à l'indice du job dans l'array.
 </p>
 
 <div class="codeblock">
-<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:3">3</a>} +=</span>
 <pre class="prettyprint lang-c">
 struct job
 {
@@ -332,7 +515,7 @@ struct job
 
 static struct job jobs[999];
 </pre>
-<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:9">9</a></p>
 
 
 </div>
@@ -340,14 +523,14 @@ static struct job jobs[999];
 </p>
 
 <div class="codeblock">
-<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:3">3</a>} +=</span>
 <pre class="prettyprint lang-c">
 bool streq(char *a, char *b)
 {
 	return strcmp(a, b) == 0;
 }
 </pre>
-<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:9">9</a></p>
 
 
 </div>
@@ -357,7 +540,7 @@ bool streq(char *a, char *b)
 </p>
 
 <div class="codeblock">
-<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:3">3</a>} +=</span>
 <pre class="prettyprint lang-c">
 int last_job_index()
 {
@@ -396,14 +579,14 @@ int get_job_index_from_arg(char *arg)
 		return last_job_index();
 	}
 
-	return atoi(arg);
+	return atoi(arg) - 1;
 }
 
 void add_job(int pid, char ***commandline)
 {
 	int newJobIndex = last_job_index() + 1;
 	jobs[newJobIndex].pid = pid;
-	jobs[newJobIndex].running = false;
+	jobs[newJobIndex].running = true;
 	jobs[newJobIndex].command = malloc(sizeof(char) * (strlen(commandline[0][0]) + 1));
 	strcpy(jobs[newJobIndex].command, commandline[0][0]);
 	TRACE("added jobs[%d] (%d) %s", newJobIndex, pid, jobs[newJobIndex].command);
@@ -428,21 +611,21 @@ int remove_job(int pid)
 	return 0;
 }
 </pre>
-<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:9">9</a></p>
 
 
 </div>
 </div>
-<a name="1:5"><div class="section"><h4>5. Prompt</h4></a>
+<a name="1:6"><div class="section"><h4>6. Prompt</h4></a>
 <p>Une partie essentielle d'un shell, c'est ce qui apparaît avant l'entrée utilisateur quand le shell attend une commande de lui. C'est l'occasion d'afficher des informations utiles comme le répertoire de travail actuel, ou encore l'état d'un repo git si on se trouve à l'intérieur d'un, le niveau de batterie, etc. Il existe même des logiciels dédiés qui ne s'occupe que de la partie <em>affichage du prompt</em>, tel que <a href="https://starship.rs">Starship</a>
 </p>
 
 <div class="codeblock">
-<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:3">3</a>} +=</span>
 <pre class="prettyprint lang-c">
 static bool got_signal;
 </pre>
-<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:9">9</a></p>
 
 
 </div>
@@ -456,7 +639,7 @@ static bool got_signal;
 </p>
 
 <div class="codeblock">
-<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:3">3</a>} +=</span>
 <pre class="prettyprint lang-c">
 struct cmdline *prompt()
 {
@@ -499,25 +682,29 @@ struct cmdline *prompt()
 	return commandline;
 }
 </pre>
-<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:9">9</a></p>
 
 
 </div>
 </div>
-<a name="1:6"><div class="section"><h4>6. Gestion du processus en premier plan</h4></a>
+<a name="1:7"><div class="section"><h4>7. Gestion du processus en premier plan</h4></a>
 <p>On stocke tout d'abord le PID du processus en premier plan dans une variable globale.
 </p>
 
 <div class="codeblock">
-<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:3">3</a>} +=</span>
 <pre class="prettyprint lang-c">
 static int current_pid = 0;
 </pre>
-<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:9">9</a></p>
 
 
 </div>
-<p>Ensuite, il nous faut une fonction pour envoyer un signal au processus en premier plan. On a des cas particulier, avec <code>SIGTSTP</code> qui devient <code>SIGSTOP</code> et <code>SIGINT</code> qui devient <code>SIGTERM</code>. // TODO
+<p>Ensuite, il nous faut une fonction pour envoyer un signal au processus en premier plan. On a des cas particulier, avec <code>SIGTSTP</code> qui devient <code>SIGSTOP</code> et <code>SIGINT</code> qui devient <code>SIGTERM</code>.
+</p>
+<p>La raison pour ce changement est que <code>SIGTSTP</code> pourrait être ignoré par le processus auquel on envoie le signal, mais <code>SIGSTOP</code> ne peut pas l'être.
+</p>
+<p>De la même façon, <code>SIGINT</code> est la version "envoyée par le terminal" de <code>SIGTERM</code>. <code>SIGINT</code> peut être ignoré, mais <code>SIGTERM</code> ne peut pas l'être.
 </p>
 <p>L'utilisation du <code>-</code> dans le premier argument de <code>kill</code> signifie que l'on envoie le signal à tout les processus du <em>groupe</em> du PID donné.
 </p>
@@ -525,7 +712,7 @@ static int current_pid = 0;
 </p>
 
 <div class="codeblock">
-<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:3">3</a>} +=</span>
 <pre class="prettyprint lang-c">
 void send_signal_to_current_process(int signal)
 {
@@ -545,7 +732,7 @@ void send_signal_to_current_process(int signal)
 	got_signal = true;
 }
 </pre>
-<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:9">9</a></p>
 
 
 </div>
@@ -564,7 +751,7 @@ Cela implique de:
 </ol>
 
 <div class="codeblock">
-<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:3">3</a>} +=</span>
 <pre class="prettyprint lang-c">
 void switch_current_process(int pid)
 {
@@ -577,12 +764,12 @@ void switch_current_process(int pid)
 	tcsetpgrp(STDERR_FILENO, getpgrp());
 }
 </pre>
-<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:9">9</a></p>
 
 
 </div>
 </div>
-<a name="1:7"><div class="section"><h4>7. Gestion des fils</h4></a>
+<a name="1:8"><div class="section"><h4>8. Gestion des fils</h4></a>
 <p>Gérer les fils implique principalement deux choses:
 </p>
 <ul>
@@ -595,7 +782,7 @@ void switch_current_process(int pid)
 </p>
 
 <div class="codeblock">
-<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:3">3</a>} +=</span>
 <pre class="prettyprint lang-c">
 int start_child(int *group_pid, int child_stdin, int child_stdout, char **args)
 {
@@ -605,7 +792,7 @@ int start_child(int *group_pid, int child_stdin, int child_stdout, char **args)
 	child_handler.sa_flags = 0;
 
 </pre>
-<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a> and <a href="minishell.c.html#1:9">9</a></p>
 
 
 </div>
@@ -617,7 +804,7 @@ int start_child(int *group_pid, int child_stdin, int child_stdout, char **args)
 </p>
 
 <div class="codeblock">
-<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:3">3</a>} +=</span>
 <pre class="prettyprint lang-c">
 	int pipe_to_next_child[2];
 	bool outputs_to_pipe = child_stdout &lt; 0;
@@ -628,7 +815,7 @@ int start_child(int *group_pid, int child_stdin, int child_stdout, char **args)
 		child_stdout = pipe_to_next_child[1];
 	}
 </pre>
-<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a> and <a href="minishell.c.html#1:9">9</a></p>
 
 
 </div>
@@ -636,14 +823,14 @@ int start_child(int *group_pid, int child_stdin, int child_stdout, char **args)
 </p>
 
 <div class="codeblock">
-<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:3">3</a>} +=</span>
 <pre class="prettyprint lang-c">
 	UNWRAP(pid = fork());
 
 	if (pid == 0)
 	{
 </pre>
-<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a> and <a href="minishell.c.html#1:9">9</a></p>
 
 
 </div>
@@ -651,7 +838,7 @@ int start_child(int *group_pid, int child_stdin, int child_stdout, char **args)
 </p>
 
 <div class="codeblock">
-<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:3">3</a>} +=</span>
 <pre class="prettyprint lang-c">
 		if (outputs_to_pipe)
 		{
@@ -659,7 +846,7 @@ int start_child(int *group_pid, int child_stdin, int child_stdout, char **args)
 			child_stdout = pipe_to_next_child[1];
 		}
 </pre>
-<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a> and <a href="minishell.c.html#1:9">9</a></p>
 
 
 </div>
@@ -667,11 +854,11 @@ int start_child(int *group_pid, int child_stdin, int child_stdout, char **args)
 </p>
 
 <div class="codeblock">
-<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:3">3</a>} +=</span>
 <pre class="prettyprint lang-c">
 		UNWRAP(setpgid(getpid(), *group_pid));
 </pre>
-<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a> and <a href="minishell.c.html#1:9">9</a></p>
 
 
 </div>
@@ -679,7 +866,7 @@ int start_child(int *group_pid, int child_stdin, int child_stdout, char **args)
 </p>
 
 <div class="codeblock">
-<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:3">3</a>} +=</span>
 <pre class="prettyprint lang-c">
 		child_handler.sa_handler = SIG_DFL;
 		sigaction(SIGTSTP, &amp;child_handler, NULL);
@@ -687,7 +874,7 @@ int start_child(int *group_pid, int child_stdin, int child_stdout, char **args)
 		sigaction(SIGTTOU, &amp;child_handler, NULL);
 		sigaction(SIGTTIN, &amp;child_handler, NULL);
 </pre>
-<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a> and <a href="minishell.c.html#1:9">9</a></p>
 
 
 </div>
@@ -695,12 +882,12 @@ int start_child(int *group_pid, int child_stdin, int child_stdout, char **args)
 </p>
 
 <div class="codeblock">
-<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:3">3</a>} +=</span>
 <pre class="prettyprint lang-c">
 		UNWRAP(dup2(child_stdin, STDIN_FILENO));
 		UNWRAP(dup2(child_stdout, STDOUT_FILENO));
 </pre>
-<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a> and <a href="minishell.c.html#1:9">9</a></p>
 
 
 </div>
@@ -708,14 +895,14 @@ int start_child(int *group_pid, int child_stdin, int child_stdout, char **args)
 </p>
 
 <div class="codeblock">
-<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:3">3</a>} +=</span>
 <pre class="prettyprint lang-c">
 		execvp(args[0], args);
 		perror("execvp");
 		exit(EXIT_FAILURE);
 	}
 </pre>
-<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a> and <a href="minishell.c.html#1:9">9</a></p>
 
 
 </div>
@@ -733,7 +920,7 @@ int start_child(int *group_pid, int child_stdin, int child_stdout, char **args)
 </p>
 
 <div class="codeblock">
-<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:3">3</a>} +=</span>
 <pre class="prettyprint lang-c">
 	if (*group_pid == 0)
 	{
@@ -758,7 +945,7 @@ int start_child(int *group_pid, int child_stdin, int child_stdout, char **args)
 	return STDIN_FILENO;
 }
 </pre>
-<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a> and <a href="minishell.c.html#1:9">9</a></p>
 
 
 </div>
@@ -778,7 +965,7 @@ int start_child(int *group_pid, int child_stdin, int child_stdout, char **args)
 </p>
 
 <div class="codeblock">
-<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:3">3</a>} +=</span>
 <pre class="prettyprint lang-c">
 void child_handler_action()
 {
@@ -817,22 +1004,22 @@ void child_handler_action()
 	}
 }
 </pre>
-<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a> and <a href="minishell.c.html#1:9">9</a></p>
 
 
 </div>
 </div>
-<a name="1:8"><div class="section"><h4>8. Boucle principale</h4></a>
+<a name="1:9"><div class="section"><h4>9. Boucle principale</h4></a>
 <p>Le point d'entrée du shell. La boucle "infinie" qui va demander à l'utilisateur d'entrer une commande, et l'exécuter.
 </p>
 
 <div class="codeblock">
-<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:3">3</a>} +=</span>
 <pre class="prettyprint lang-c">
 int main()
 {
 </pre>
-<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a> and <a href="minishell.c.html#1:8">8</a></p>
 
 
 </div>
@@ -846,7 +1033,7 @@ int main()
 </ul>
 
 <div class="codeblock">
-<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:3">3</a>} +=</span>
 <pre class="prettyprint lang-c">
 	struct sigaction signals_handler;
 	sigemptyset(&amp;signals_handler.sa_mask);
@@ -861,7 +1048,7 @@ int main()
 	sigaction(SIGTTOU, &amp;signals_handler, NULL);
 	sigaction(SIGTTIN, &amp;signals_handler, NULL);
 </pre>
-<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a> and <a href="minishell.c.html#1:8">8</a></p>
 
 
 </div>
@@ -869,14 +1056,14 @@ int main()
 </p>
 
 <div class="codeblock">
-<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:3">3</a>} +=</span>
 <pre class="prettyprint lang-c">
 	struct cmdline *commandline;
 
 	while ((commandline = prompt()))
 	{
 </pre>
-<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a> and <a href="minishell.c.html#1:8">8</a></p>
 
 
 </div>
@@ -884,11 +1071,11 @@ int main()
 </p>
 
 <div class="codeblock">
-<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:3">3</a>} +=</span>
 <pre class="prettyprint lang-c">
 		style(RESET, BLACK);
 </pre>
-<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a> and <a href="minishell.c.html#1:8">8</a></p>
 
 
 </div>
@@ -896,7 +1083,7 @@ int main()
 </p>
 
 <div class="codeblock">
-<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:3">3</a>} +=</span>
 <pre class="prettyprint lang-c">
 		char **first_command_args = *(commandline-&gt;seq);
 		char *first_command = first_command_args[0];
@@ -922,6 +1109,7 @@ int main()
 		if (streq(first_command, "sj"))
 		{
 			int job_index = get_job_index_from_arg(first_command_args[1]);
+			TRACE("stopping job %d, pid=", job_index, jobs[job_index].pid);
 			kill(-jobs[job_index].pid, SIGSTOP);
 			continue;
 		}
@@ -940,7 +1128,7 @@ int main()
 			continue;
 		}
 </pre>
-<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a> and <a href="minishell.c.html#1:8">8</a></p>
 
 
 </div>
@@ -948,7 +1136,7 @@ int main()
 </p>
 
 <div class="codeblock">
-<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:3">3</a>} +=</span>
 <pre class="prettyprint lang-c">
 		if (streq(first_command, "fg") || streq(first_command, "bg"))
 		{
@@ -966,7 +1154,7 @@ int main()
 			continue;
 		}
 </pre>
-<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a> and <a href="minishell.c.html#1:8">8</a></p>
 
 
 </div>
@@ -974,13 +1162,13 @@ int main()
 </p>
 
 <div class="codeblock">
-<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:3">3</a>} +=</span>
 <pre class="prettyprint lang-c">
 		int current_child_stdin = STDIN_FILENO;
 		int pipeline_stdout = STDOUT_FILENO;
 		int group_pid = 0;
 </pre>
-<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a> and <a href="minishell.c.html#1:8">8</a></p>
 
 
 </div>
@@ -988,7 +1176,7 @@ int main()
 </p>
 
 <div class="codeblock">
-<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:3">3</a>} +=</span>
 <pre class="prettyprint lang-c">
 		if (commandline-&gt;in)
 		{
@@ -1010,7 +1198,7 @@ int main()
 			}
 		}
 </pre>
-<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a> and <a href="minishell.c.html#1:8">8</a></p>
 
 
 </div>
@@ -1018,7 +1206,7 @@ int main()
 </p>
 
 <div class="codeblock">
-<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:3">3</a>} +=</span>
 <pre class="prettyprint lang-c">
 		char ***commands_left = commandline-&gt;seq;
 		while (*commands_left)
@@ -1028,7 +1216,7 @@ int main()
 			commands_left++; // XXX c'est vraiment dégueulasse d'itérer comme ça.
 		}
 </pre>
-<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a> and <a href="minishell.c.html#1:8">8</a></p>
 
 
 </div>
@@ -1036,7 +1224,7 @@ int main()
 </p>
 
 <div class="codeblock">
-<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:3">3</a>} +=</span>
 <pre class="prettyprint lang-c">
 
 		add_job(group_pid, commandline-&gt;seq);
@@ -1046,7 +1234,7 @@ int main()
 			switch_current_process(group_pid);
 		}
 </pre>
-<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a> and <a href="minishell.c.html#1:8">8</a></p>
 
 
 </div>
@@ -1054,7 +1242,7 @@ int main()
 </p>
 
 <div class="codeblock">
-<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:3">3</a>} +=</span>
 <pre class="prettyprint lang-c">
 	}
 
@@ -1067,7 +1255,7 @@ int main()
 	return EXIT_SUCCESS;
 }
 </pre>
-<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a> and <a href="minishell.c.html#1:8">8</a></p>
 
 
 </div>

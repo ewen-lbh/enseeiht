@@ -5,6 +5,118 @@
 
 @s Introduction
 
+La méthodologie de test a été d'interagir avec le shell et d'observer son comportement, en vérifiant que celui-ci était conforme aux spécifications.
+
+La structure et les choix d'immplémentations seront ensuite expliqués au fur et à mesure du code, en se basant sur le principe du [*literate programming*](https://fr.wikipedia.org/wiki/Programmation_litt%C3%A9raire).
+
+Tout le minishell est compris dans un seul fichier.
+
+@s Procédure des tests
+
+- Question 1
+
+--- {test}
+/home/ewen/enseeiht/os/projects
+🐚 ls
+...
+---
+
+- Question 3
+
+--- {test} +=
+/home/ewen/enseeiht/os/projects
+🐚 sleep 3
+
+(3 secondes plus tard)
+
+/home/ewen/enseeiht/os/projects
+🐚 ls
+---
+
+- Question 4
+
+--- {test} +=
+/home/ewen/enseeiht/os/projects
+🐚 cd ~
+
+/home/ewen/
+🐚 exit
+
+(le shell termine)
+---
+
+- Question 5 et 6
+
+--- {test} +=
+/home/ewen/enseeiht/os/projects
+🐚 sleep 600 &
+
+(immédiatement)
+
+/home/ewen/enseeiht/os/projects
+🐚 lj
+🏃‍♂️ 1 (26625) sleep
+
+/home/ewen/enseeiht/os/projects
+🐚 sj 1
+
+/home/ewen/enseeiht/os/projects
+🐚 fg 1
+(600 secondes après ...)
+
+/home/ewen/enseeiht/os/projects
+🐚 
+---
+
+- Question 7
+
+--- {test} +=
+/home/ewen/enseeiht/os/projects
+🐚 sleep 600
+
+(on envoie ^Z)
+
+/home/ewen/enseeiht/os/projects
+🐚 lj
+🛑 1 (26625) sleep
+---
+
+- Question 8
+
+--- {test} +=
+/home/ewen/enseeiht/os/projects
+🐚 sleep 600
+
+(on envoie ^C)
+
+/home/ewen/enseeiht/os/projects
+🐚 lj
+(rien)
+---
+
+- Question 9
+
+--- {test} +=
+/home/ewen/enseeiht/os/projects
+🐚 echo quoi > feur
+
+/home/ewen/enseeiht/os/projects
+🐚 cat < feur
+quoi
+---
+
+- Question 10 et 11
+
+--- {test} +=
+/home/ewen/enseeiht/os/projects
+🐚 ls | wc -l
+23
+
+/home/ewen/enseeiht/os/projects
+🐚 wget https://loca7.fr/appartements.json -O- | grep -o hasBicycleParking | uniq | wc -l
+1
+---
+
 @s Importations
 
 On commence par imporeter toutes les dépendances. 
@@ -185,14 +297,14 @@ int get_job_index_from_arg(char *arg)
 		return last_job_index();
 	}
 
-	return atoi(arg);
+	return atoi(arg) - 1;
 }
 
 void add_job(int pid, char ***commandline)
 {
 	int newJobIndex = last_job_index() + 1;
 	jobs[newJobIndex].pid = pid;
-	jobs[newJobIndex].running = false;
+	jobs[newJobIndex].running = true;
 	jobs[newJobIndex].command = malloc(sizeof(char) * (strlen(commandline[0][0]) + 1));
 	strcpy(jobs[newJobIndex].command, commandline[0][0]);
 	TRACE("added jobs[%d] (%d) %s", newJobIndex, pid, jobs[newJobIndex].command);
@@ -286,7 +398,11 @@ On stocke tout d'abord le PID du processus en premier plan dans une variable glo
 static int current_pid = 0;
 ---
 
-Ensuite, il nous faut une fonction pour envoyer un signal au processus en premier plan. On a des cas particulier, avec `SIGTSTP` qui devient `SIGSTOP` et `SIGINT` qui devient `SIGTERM`. // TODO
+Ensuite, il nous faut une fonction pour envoyer un signal au processus en premier plan. On a des cas particulier, avec `SIGTSTP` qui devient `SIGSTOP` et `SIGINT` qui devient `SIGTERM`.
+
+La raison pour ce changement est que `SIGTSTP` pourrait être ignoré par le processus auquel on envoie le signal, mais `SIGSTOP` ne peut pas l'être.
+
+De la même façon, `SIGINT` est la version "envoyée par le terminal" de `SIGTERM`. `SIGINT` peut être ignoré, mais `SIGTERM` ne peut pas l'être.
 
 L'utilisation du `-` dans le premier argument de `kill` signifie que l'on envoie le signal à tout les processus du *groupe* du PID donné.
 
@@ -577,6 +693,7 @@ On commence par gérer les commandes "spéciales" que le shell va interpréter d
 		if (streq(first_command, "sj"))
 		{
 			int job_index = get_job_index_from_arg(first_command_args[1]);
+			TRACE("stopping job %d, pid=", job_index, jobs[job_index].pid);
 			kill(-jobs[job_index].pid, SIGSTOP);
 			continue;
 		}

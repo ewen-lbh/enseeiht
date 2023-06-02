@@ -125,14 +125,14 @@ int get_job_index_from_arg(char *arg)
 		return last_job_index();
 	}
 
-	return atoi(arg);
+	return atoi(arg) - 1;
 }
 
 void add_job(int pid, char ***commandline)
 {
 	int newJobIndex = last_job_index() + 1;
 	jobs[newJobIndex].pid = pid;
-	jobs[newJobIndex].running = false;
+	jobs[newJobIndex].running = true;
 	jobs[newJobIndex].command = malloc(sizeof(char) * (strlen(commandline[0][0]) + 1));
 	strcpy(jobs[newJobIndex].command, commandline[0][0]);
 	TRACE("added jobs[%d] (%d) %s", newJobIndex, pid, jobs[newJobIndex].command);
@@ -300,12 +300,9 @@ void child_handler_action()
 		{
 			UNWRAP(remove_job(pid));
 			TRACE("job pid=%d removed", pid);
-			if (WEXITSTATUS(status) == 0)
-			{
+			if (WEXITSTATUS(status) == 0) {
 				// printf("✅ 0");
-			}
-			else
-			{
+			} else {
 				printf("❌ %d", WEXITSTATUS(status));
 			}
 		}
@@ -365,6 +362,7 @@ int main()
 		if (streq(first_command, "sj"))
 		{
 			int job_index = get_job_index_from_arg(first_command_args[1]);
+			TRACE("stopping job %d, pid=", job_index, jobs[job_index].pid);
 			kill(-jobs[job_index].pid, SIGSTOP);
 			continue;
 		}
@@ -443,3 +441,4 @@ int main()
 
 	return EXIT_SUCCESS;
 }
+
