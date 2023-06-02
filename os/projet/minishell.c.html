@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Minishell</title>
+<script>
+!function(){var q=null;window.PR_SHOULD_USE_CONTINUATION=!0;
+(function(){function R(a){function d(e){var b=e.charCodeAt(0);if(b!==92)return b;var a=e.charAt(1);return(b=r[a])?b:"0"<=a&&a<="7"?parseInt(e.substring(1),8):a==="u"||a==="x"?parseInt(e.substring(2),16):e.charCodeAt(1)}function g(e){if(e<32)return(e<16?"\\x0":"\\x")+e.toString(16);e=String.fromCharCode(e);return e==="\\"||e==="-"||e==="]"||e==="^"?"\\"+e:e}function b(e){var b=e.substring(1,e.length-1).match(/\\u[\dA-Fa-f]{4}|\\x[\dA-Fa-f]{2}|\\[0-3][0-7]{0,2}|\\[0-7]{1,2}|\\[\S\s]|[^\\]/g),e=[],a=
+b[0]==="^",c=["["];a&&c.push("^");for(var a=a?1:0,f=b.length;a<f;++a){var h=b[a];if(/\\[bdsw]/i.test(h))c.push(h);else{var h=d(h),l;a+2<f&&"-"===b[a+1]?(l=d(b[a+2]),a+=2):l=h;e.push([h,l]);l<65||h>122||(l<65||h>90||e.push([Math.max(65,h)|32,Math.min(l,90)|32]),l<97||h>122||e.push([Math.max(97,h)&-33,Math.min(l,122)&-33]))}}e.sort(function(e,a){return e[0]-a[0]||a[1]-e[1]});b=[];f=[];for(a=0;a<e.length;++a)h=e[a],h[0]<=f[1]+1?f[1]=Math.max(f[1],h[1]):b.push(f=h);for(a=0;a<b.length;++a)h=b[a],c.push(g(h[0])),
+h[1]>h[0]&&(h[1]+1>h[0]&&c.push("-"),c.push(g(h[1])));c.push("]");return c.join("")}function s(e){for(var a=e.source.match(/\[(?:[^\\\] ]|\\[\S\s])*]|\\u[\dA-Fa-f]{4}|\\x[\dA-Fa-f]{2}|\\\d+|\\[^\dux]|\(\?[!:=]|[()^]|[^()[\\^]+/g),c=a.length,d=[],f=0,h=0;f<c;++f){var l=a[f];l==="("?++h:"\\"===l.charAt(0)&&(l=+l.substring(1))&&(l<=h?d[l]=-1:a[f]=g(l))}for(f=1;f<d.length;++f)-1===d[f]&&(d[f]=++x);for(h=f=0;f<c;++f)l=a[f],l==="("?(++h,d[h]||(a[f]="(?:")):"\\"===l.charAt(0)&&(l=+l.substring(1))&&l<=h&&
+(a[f]="\\"+d[l]);for(f=0;f<c;++f)"^"===a[f]&&"^"!==a[f+1]&&(a[f]="");if(e.ignoreCase&&m)for(f=0;f<c;++f)l=a[f],e=l.charAt(0),l.length>=2&&e==="["?a[f]=b(l):e!=="\\"&&(a[f]=l.replace(/[A-Za-z]/g,function(a){a=a.charCodeAt(0);return"["+String.fromCharCode(a&-33,a|32)+"]"}));return a.join("")}for(var x=0,m=!1,j=!1,k=0,c=a.length;k<c;++k){var i=a[k];if(i.ignoreCase)j=!0;else if(/[a-z]/i.test(i.source.replace(/\\u[\da-f]{4}|\\x[\da-f]{2}|\\[^UXux]/gi,""))){m=!0;j=!1;break}}for(var r={b:8,t:9,n:10,v:11,
+f:12,r:13},n=[],k=0,c=a.length;k<c;++k){i=a[k];if(i.global||i.multiline)throw Error(""+i);n.push("(?:"+s(i)+")")}return RegExp(n.join("|"),j?"gi":"g")}function S(a,d){function g(a){var c=a.nodeType;if(c==1){if(!b.test(a.className)){for(c=a.firstChild;c;c=c.nextSibling)g(c);c=a.nodeName.toLowerCase();if("br"===c||"li"===c)s[j]="\n",m[j<<1]=x++,m[j++<<1|1]=a}}else if(c==3||c==4)c=a.nodeValue,c.length&&(c=d?c.replace(/\r\n?/g,"\n"):c.replace(/[\t\n\r ]+/g," "),s[j]=c,m[j<<1]=x,x+=c.length,m[j++<<1|1]=
+a)}var b=/(?:^|\s)nocode(?:\s|$)/,s=[],x=0,m=[],j=0;g(a);return{a:s.join("").replace(/\n$/,""),d:m}}function H(a,d,g,b){d&&(a={a:d,e:a},g(a),b.push.apply(b,a.g))}function T(a){for(var d=void 0,g=a.firstChild;g;g=g.nextSibling)var b=g.nodeType,d=b===1?d?a:g:b===3?U.test(g.nodeValue)?a:d:d;return d===a?void 0:d}function D(a,d){function g(a){for(var j=a.e,k=[j,"pln"],c=0,i=a.a.match(s)||[],r={},n=0,e=i.length;n<e;++n){var z=i[n],w=r[z],t=void 0,f;if(typeof w==="string")f=!1;else{var h=b[z.charAt(0)];
+if(h)t=z.match(h[1]),w=h[0];else{for(f=0;f<x;++f)if(h=d[f],t=z.match(h[1])){w=h[0];break}t||(w="pln")}if((f=w.length>=5&&"lang-"===w.substring(0,5))&&!(t&&typeof t[1]==="string"))f=!1,w="src";f||(r[z]=w)}h=c;c+=z.length;if(f){f=t[1];var l=z.indexOf(f),B=l+f.length;t[2]&&(B=z.length-t[2].length,l=B-f.length);w=w.substring(5);H(j+h,z.substring(0,l),g,k);H(j+h+l,f,I(w,f),k);H(j+h+B,z.substring(B),g,k)}else k.push(j+h,w)}a.g=k}var b={},s;(function(){for(var g=a.concat(d),j=[],k={},c=0,i=g.length;c<i;++c){var r=
+g[c],n=r[3];if(n)for(var e=n.length;--e>=0;)b[n.charAt(e)]=r;r=r[1];n=""+r;k.hasOwnProperty(n)||(j.push(r),k[n]=q)}j.push(/[\S\s]/);s=R(j)})();var x=d.length;return g}function v(a){var d=[],g=[];a.tripleQuotedStrings?d.push(["str",/^(?:'''(?:[^'\\]|\\[\S\s]|''?(?=[^']))*(?:'''|$)|"""(?:[^"\\]|\\[\S\s]|""?(?=[^"]))*(?:"""|$)|'(?:[^'\\]|\\[\S\s])*(?:'|$)|"(?:[^"\\]|\\[\S\s])*(?:"|$))/,q,"'\""]):a.multiLineStrings?d.push(["str",/^(?:'(?:[^'\\]|\\[\S\s])*(?:'|$)|"(?:[^"\\]|\\[\S\s])*(?:"|$)|`(?:[^\\`]|\\[\S\s])*(?:`|$))/,
+q,"'\"`"]):d.push(["str",/^(?:'(?:[^\n\r'\\]|\\.)*(?:'|$)|"(?:[^\n\r"\\]|\\.)*(?:"|$))/,q,"\"'"]);a.verbatimStrings&&g.push(["str",/^@"(?:[^"]|"")*(?:"|$)/,q]);var b=a.hashComments;b&&(a.cStyleComments?(b>1?d.push(["com",/^#(?:##(?:[^#]|#(?!##))*(?:###|$)|.*)/,q,"#"]):d.push(["com",/^#(?:(?:define|e(?:l|nd)if|else|error|ifn?def|include|line|pragma|undef|warning)\b|[^\n\r]*)/,q,"#"]),g.push(["str",/^<(?:(?:(?:\.\.\/)*|\/?)(?:[\w-]+(?:\/[\w-]+)+)?[\w-]+\.h(?:h|pp|\+\+)?|[a-z]\w*)>/,q])):d.push(["com",
+/^#[^\n\r]*/,q,"#"]));a.cStyleComments&&(g.push(["com",/^\/\/[^\n\r]*/,q]),g.push(["com",/^\/\*[\S\s]*?(?:\*\/|$)/,q]));if(b=a.regexLiterals){var s=(b=b>1?"":"\n\r")?".":"[\\S\\s]";g.push(["lang-regex",RegExp("^(?:^^\\.?|[+-]|[!=]=?=?|\\#|%=?|&&?=?|\\(|\\*=?|[+\\-]=|->|\\/=?|::?|<<?=?|>>?>?=?|,|;|\\?|@|\\[|~|{|\\^\\^?=?|\\|\\|?=?|break|case|continue|delete|do|else|finally|instanceof|return|throw|try|typeof)\\s*("+("/(?=[^/*"+b+"])(?:[^/\\x5B\\x5C"+b+"]|\\x5C"+s+"|\\x5B(?:[^\\x5C\\x5D"+b+"]|\\x5C"+
+s+")*(?:\\x5D|$))+/")+")")])}(b=a.types)&&g.push(["typ",b]);b=(""+a.keywords).replace(/^ | $/g,"");b.length&&g.push(["kwd",RegExp("^(?:"+b.replace(/[\s,]+/g,"|")+")\\b"),q]);d.push(["pln",/^\s+/,q," \r\n\t\u00a0"]);b="^.[^\\s\\w.$@'\"`/\\\\]*";a.regexLiterals&&(b+="(?!s*/)");g.push(["lit",/^@[$_a-z][\w$@]*/i,q],["typ",/^(?:[@_]?[A-Z]+[a-z][\w$@]*|\w+_t\b)/,q],["pln",/^[$_a-z][\w$@]*/i,q],["lit",/^(?:0x[\da-f]+|(?:\d(?:_\d+)*\d*(?:\.\d*)?|\.\d\+)(?:e[+-]?\d+)?)[a-z]*/i,q,"0123456789"],["pln",/^\\[\S\s]?/,
+q],["pun",RegExp(b),q]);return D(d,g)}function J(a,d,g){function b(a){var c=a.nodeType;if(c==1&&!x.test(a.className))if("br"===a.nodeName)s(a),a.parentNode&&a.parentNode.removeChild(a);else for(a=a.firstChild;a;a=a.nextSibling)b(a);else if((c==3||c==4)&&g){var d=a.nodeValue,i=d.match(m);if(i)c=d.substring(0,i.index),a.nodeValue=c,(d=d.substring(i.index+i[0].length))&&a.parentNode.insertBefore(j.createTextNode(d),a.nextSibling),s(a),c||a.parentNode.removeChild(a)}}function s(a){function b(a,c){var d=
+c?a.cloneNode(!1):a,e=a.parentNode;if(e){var e=b(e,1),g=a.nextSibling;e.appendChild(d);for(var i=g;i;i=g)g=i.nextSibling,e.appendChild(i)}return d}for(;!a.nextSibling;)if(a=a.parentNode,!a)return;for(var a=b(a.nextSibling,0),d;(d=a.parentNode)&&d.nodeType===1;)a=d;c.push(a)}for(var x=/(?:^|\s)nocode(?:\s|$)/,m=/\r\n?|\n/,j=a.ownerDocument,k=j.createElement("li");a.firstChild;)k.appendChild(a.firstChild);for(var c=[k],i=0;i<c.length;++i)b(c[i]);d===(d|0)&&c[0].setAttribute("value",d);var r=j.createElement("ol");
+r.className="linenums";for(var d=Math.max(0,d-1|0)||0,i=0,n=c.length;i<n;++i)k=c[i],k.className="L"+(i+d)%10,k.firstChild||k.appendChild(j.createTextNode("\u00a0")),r.appendChild(k);a.appendChild(r)}function p(a,d){for(var g=d.length;--g>=0;){var b=d[g];F.hasOwnProperty(b)?E.console&&console.warn("cannot override language handler %s",b):F[b]=a}}function I(a,d){if(!a||!F.hasOwnProperty(a))a=/^\s*</.test(d)?"default-markup":"default-code";return F[a]}function K(a){var d=a.h;try{var g=S(a.c,a.i),b=g.a;
+a.a=b;a.d=g.d;a.e=0;I(d,b)(a);var s=/\bMSIE\s(\d+)/.exec(navigator.userAgent),s=s&&+s[1]<=8,d=/\n/g,x=a.a,m=x.length,g=0,j=a.d,k=j.length,b=0,c=a.g,i=c.length,r=0;c[i]=m;var n,e;for(e=n=0;e<i;)c[e]!==c[e+2]?(c[n++]=c[e++],c[n++]=c[e++]):e+=2;i=n;for(e=n=0;e<i;){for(var p=c[e],w=c[e+1],t=e+2;t+2<=i&&c[t+1]===w;)t+=2;c[n++]=p;c[n++]=w;e=t}c.length=n;var f=a.c,h;if(f)h=f.style.display,f.style.display="none";try{for(;b<k;){var l=j[b+2]||m,B=c[r+2]||m,t=Math.min(l,B),A=j[b+1],G;if(A.nodeType!==1&&(G=x.substring(g,
+t))){s&&(G=G.replace(d,"\r"));A.nodeValue=G;var L=A.ownerDocument,o=L.createElement("span");o.className=c[r+1];var v=A.parentNode;v.replaceChild(o,A);o.appendChild(A);g<l&&(j[b+1]=A=L.createTextNode(x.substring(t,l)),v.insertBefore(A,o.nextSibling))}g=t;g>=l&&(b+=2);g>=B&&(r+=2)}}finally{if(f)f.style.display=h}}catch(u){E.console&&console.log(u&&u.stack||u)}}var E=window,y=["break,continue,do,else,for,if,return,while"],C=[[y,"auto,case,char,const,default,double,enum,extern,float,goto,inline,int,long,register,short,signed,sizeof,static,struct,switch,typedef,union,unsigned,void,volatile"],
+"catch,class,delete,false,import,new,operator,private,protected,public,this,throw,true,try,typeof"],M=[C,"alignof,align_union,asm,axiom,bool,concept,concept_map,const_cast,constexpr,decltype,delegate,dynamic_cast,explicit,export,friend,generic,late_check,mutable,namespace,nullptr,property,reinterpret_cast,static_assert,static_cast,template,typeid,typename,using,virtual,where"],V=[C,"abstract,assert,boolean,byte,extends,final,finally,implements,import,instanceof,interface,null,native,package,strictfp,super,synchronized,throws,transient"],
+N=[C,"abstract,as,base,bool,by,byte,checked,decimal,delegate,descending,dynamic,event,finally,fixed,foreach,from,group,implicit,in,interface,internal,into,is,let,lock,null,object,out,override,orderby,params,partial,readonly,ref,sbyte,sealed,stackalloc,string,select,uint,ulong,unchecked,unsafe,ushort,var,virtual,where"],C=[C,"debugger,eval,export,function,get,null,set,undefined,var,with,Infinity,NaN"],O=[y,"and,as,assert,class,def,del,elif,except,exec,finally,from,global,import,in,is,lambda,nonlocal,not,or,pass,print,raise,try,with,yield,False,True,None"],
+P=[y,"alias,and,begin,case,class,def,defined,elsif,end,ensure,false,in,module,next,nil,not,or,redo,rescue,retry,self,super,then,true,undef,unless,until,when,yield,BEGIN,END"],W=[y,"as,assert,const,copy,drop,enum,extern,fail,false,fn,impl,let,log,loop,match,mod,move,mut,priv,pub,pure,ref,self,static,struct,true,trait,type,unsafe,use"],y=[y,"case,done,elif,esac,eval,fi,function,in,local,set,then,until"],Q=/^(DIR|FILE|vector|(de|priority_)?queue|list|stack|(const_)?iterator|(multi)?(set|map)|bitset|u?(int|float)\d*)\b/,
+U=/\S/,X=v({keywords:[M,N,C,"caller,delete,die,do,dump,elsif,eval,exit,foreach,for,goto,if,import,last,local,my,next,no,our,print,package,redo,require,sub,undef,unless,until,use,wantarray,while,BEGIN,END",O,P,y],hashComments:!0,cStyleComments:!0,multiLineStrings:!0,regexLiterals:!0}),F={};p(X,["default-code"]);p(D([],[["pln",/^[^<?]+/],["dec",/^<!\w[^>]*(?:>|$)/],["com",/^<\!--[\S\s]*?(?:--\>|$)/],["lang-",/^<\?([\S\s]+?)(?:\?>|$)/],["lang-",/^<%([\S\s]+?)(?:%>|$)/],["pun",/^(?:<[%?]|[%?]>)/],["lang-",
+/^<xmp\b[^>]*>([\S\s]+?)<\/xmp\b[^>]*>/i],["lang-js",/^<script\b[^>]*>([\S\s]*?)(<\/script\b[^>]*>)/i],["lang-css",/^<style\b[^>]*>([\S\s]*?)(<\/style\b[^>]*>)/i],["lang-in.tag",/^(<\/?[a-z][^<>]*>)/i] ]),["default-markup","htm","html","mxml","xhtml","xml","xsl"]);p(D([["pln",/^\s+/,q," \t\r\n"],["atv",/^(?:"[^"]*"?|'[^']*'?)/,q,"\"'"] ],[["tag",/^^<\/?[a-z](?:[\w-.:]*\w)?|\/?>$/i],["atn",/^(?!style[\s=]|on)[a-z](?:[\w:-]*\w)?/i],["lang-uq.val",/^=\s*([^\s"'>]*(?:[^\s"'/>]|\/(?=\s)))/],["pun",/^[/<->]+/],
+["lang-js",/^on\w+\s*=\s*"([^"]+)"/i],["lang-js",/^on\w+\s*=\s*'([^']+)'/i],["lang-js",/^on\w+\s*=\s*([^\s"'>]+)/i],["lang-css",/^style\s*=\s*"([^"]+)"/i],["lang-css",/^style\s*=\s*'([^']+)'/i],["lang-css",/^style\s*=\s*([^\s"'>]+)/i] ]),["in.tag"]);p(D([],[["atv",/^[\S\s]+/] ]),["uq.val"]);p(v({keywords:M,hashComments:!0,cStyleComments:!0,types:Q}),["c","cc","cpp","cxx","cyc","m"]);p(v({keywords:"null,true,false"}),["json"]);p(v({keywords:N,hashComments:!0,cStyleComments:!0,verbatimStrings:!0,types:Q}),
+["cs"]);p(v({keywords:V,cStyleComments:!0}),["java"]);p(v({keywords:y,hashComments:!0,multiLineStrings:!0}),["bash","bsh","csh","sh"]);p(v({keywords:O,hashComments:!0,multiLineStrings:!0,tripleQuotedStrings:!0}),["cv","py","python"]);p(v({keywords:"caller,delete,die,do,dump,elsif,eval,exit,foreach,for,goto,if,import,last,local,my,next,no,our,print,package,redo,require,sub,undef,unless,until,use,wantarray,while,BEGIN,END",hashComments:!0,multiLineStrings:!0,regexLiterals:2}),["perl","pl","pm"]);p(v({keywords:P,
+hashComments:!0,multiLineStrings:!0,regexLiterals:!0}),["rb","ruby"]);p(v({keywords:C,cStyleComments:!0,regexLiterals:!0}),["javascript","js"]);p(v({keywords:"all,and,by,catch,class,else,extends,false,finally,for,if,in,is,isnt,loop,new,no,not,null,of,off,on,or,return,super,then,throw,true,try,unless,until,when,while,yes",hashComments:3,cStyleComments:!0,multilineStrings:!0,tripleQuotedStrings:!0,regexLiterals:!0}),["coffee"]);p(v({keywords:W,cStyleComments:!0,multilineStrings:!0}),["rc","rs","rust"]);
+p(D([],[["str",/^[\S\s]+/] ]),["regex"]);var Y=E.PR={createSimpleLexer:D,registerLangHandler:p,sourceDecorator:v,PR_ATTRIB_NAME:"atn",PR_ATTRIB_VALUE:"atv",PR_COMMENT:"com",PR_DECLARATION:"dec",PR_KEYWORD:"kwd",PR_LITERAL:"lit",PR_NOCODE:"nocode",PR_PLAIN:"pln",PR_PUNCTUATION:"pun",PR_SOURCE:"src",PR_STRING:"str",PR_TAG:"tag",PR_TYPE:"typ",prettyPrintOne:E.prettyPrintOne=function(a,d,g){var b=document.createElement("div");b.innerHTML="<pre>"+a+"</pre>";b=b.firstChild;g&&J(b,g,!0);K({h:d,j:g,c:b,i:1});
+return b.innerHTML},prettyPrint:E.prettyPrint=function(a,d){function g(){for(var b=E.PR_SHOULD_USE_CONTINUATION?c.now()+250:Infinity;i<p.length&&c.now()<b;i++){for(var d=p[i],j=h,k=d;k=k.previousSibling;){var m=k.nodeType,o=(m===7||m===8)&&k.nodeValue;if(o?!/^\??prettify\b/.test(o):m!==3||/\S/.test(k.nodeValue))break;if(o){j={};o.replace(/\b(\w+)=([\w%+\-.:]+)/g,function(a,b,c){j[b]=c});break}}k=d.className;if((j!==h||e.test(k))&&!v.test(k)){m=!1;for(o=d.parentNode;o;o=o.parentNode)if(f.test(o.tagName)&&
+o.className&&e.test(o.className)){m=!0;break}if(!m){d.className+=" prettyprinted";m=j.lang;if(!m){var m=k.match(n),y;if(!m&&(y=T(d))&&t.test(y.tagName))m=y.className.match(n);m&&(m=m[1])}if(w.test(d.tagName))o=1;else var o=d.currentStyle,u=s.defaultView,o=(o=o?o.whiteSpace:u&&u.getComputedStyle?u.getComputedStyle(d,q).getPropertyValue("white-space"):0)&&"pre"===o.substring(0,3);u=j.linenums;if(!(u=u==="true"||+u))u=(u=k.match(/\blinenums\b(?::(\d+))?/))?u[1]&&u[1].length?+u[1]:!0:!1;u&&J(d,u,o);r=
+{h:m,c:d,j:u,i:o};K(r)}}}i<p.length?setTimeout(g,250):"function"===typeof a&&a()}for(var b=d||document.body,s=b.ownerDocument||document,b=[b.getElementsByTagName("pre"),b.getElementsByTagName("code"),b.getElementsByTagName("xmp")],p=[],m=0;m<b.length;++m)for(var j=0,k=b[m].length;j<k;++j)p.push(b[m][j]);var b=q,c=Date;c.now||(c={now:function(){return+new Date}});var i=0,r,n=/\blang(?:uage)?-([\w.]+)(?!\S)/,e=/\bprettyprint\b/,v=/\bprettyprinted\b/,w=/pre|xmp/i,t=/^code$/i,f=/^(?:pre|code|xmp)$/i,
+h={};g()}};typeof define==="function"&&define.amd&&define("google-code-prettify",[],function(){return Y})})();}()
+</script>
+<style>
+/*! Color themes for Google Code Prettify | MIT License | github.com/jmblog/color-themes-for-google-code-prettify */
+.prettyprint {
+  background: #f7f3f7;
+  font-family: Menlo, "Bitstream Vera Sans Mono", "DejaVu Sans Mono", Monaco, Consolas, monospace;
+  border: 0 !important;
+}
+
+.pln {
+  color: #1b181b;
+}
+
+/* Specify class=linenums on a pre to get line numbering */
+ol.linenums {
+  margin-top: 0;
+  margin-bottom: 0;
+  color: #5a7b8c;
+}
+
+li.L0,
+li.L1,
+li.L2,
+li.L3,
+li.L4,
+li.L5,
+li.L6,
+li.L7,
+li.L8,
+li.L9 {
+  padding-left: 1em;
+  background-color: #f7f3f7;
+  list-style-type: decimal;
+}
+
+@media screen {
+
+  /* string content */
+
+  .str {
+    color: #918b3b;
+  }
+
+  /* keyword */
+
+  .kwd {
+    color: #7b59c0;
+  }
+
+  /* comment */
+
+  .com {
+    color: #5a7b8c;
+  }
+
+  /* type name */
+
+  .typ {
+    color: #516aec;
+  }
+
+  /* literal value */
+
+  .lit {
+    color: #a65926;
+  }
+
+  /* punctuation */
+
+  .pun {
+    color: #1b181b;
+  }
+
+  /* lisp open bracket */
+
+  .opn {
+    color: #1b181b;
+  }
+
+  /* lisp close bracket */
+
+  .clo {
+    color: #1b181b;
+  }
+
+  /* markup tag name */
+
+  .tag {
+    color: #ca402b;
+  }
+
+  /* markup attribute name */
+
+  .atn {
+    color: #a65926;
+  }
+
+  /* markup attribute value */
+
+  .atv {
+    color: #159393;
+  }
+
+  /* declaration */
+
+  .dec {
+    color: #a65926;
+  }
+
+  /* variable name */
+
+  .var {
+    color: #ca402b;
+  }
+
+  /* function name */
+
+  .fun {
+    color: #516aec;
+  }
+}
+body{min-width:200px;max-width:850px;margin:0 auto;padding:30px;}.chapter-nav{font-size: 10pt;}a:link,a:visited{color:#00f}.codeblock_name,code,pre.prettyprint{font-family:Monaco,"Lucida Console",monospace}body{font-size:14pt}.codeblock_name,.math,.seealso,code{font-size:10pt}.codeblock{page-break-inside:avoid;padding-bottom:15px}.math{text-indent:0}pre.prettyprint{font-size:10pt;padding:10px;border-radius:10px;border:none;white-space:pre-wrap}.codeblock_name{margin-top:1.25em;display:block}a:link{text-decoration:none}a:link:not(.lit):hover{color:#00f;text-decoration:underline}a:link:active{color:red}h4{padding-right:1.25em}h4.noheading{margin-bottom:0}h1{text-align:center}code{padding:2px}pre{-moz-tab-size:4;-o-tab-size:4;tab-size:4}p:not(.notp){margin:0;text-indent:2em}.two-col{list-style-type:none}.two-col li:before{content:'-';padding:5px;margin-right:5px;color:orange;background-color:#fff;display:inline-block}@media print{body{font-size:10pt}pre.prettyprint{font-size:8pt}.seealso{font-size:9pt}.codeblock_name,.math,code{font-size:8pt}.math{text-indent:0}}
+.seealso, .codeblock_name {
+    display: none;
+}
+</style>
+</head>
+<body onload="prettyPrint()">
+<section>
+<h1>Minishell</h1>
+<a name="1:1"><div class="section"><h4>1. Introduction</h4></a>
+</div>
+<a name="1:2"><div class="section"><h4>2. Importations</h4></a>
+<p>On commence par imporeter toutes les dépendances. 
+</p>
+
+<div class="codeblock">
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>}</span>
+<pre class="prettyprint lang-c">
+#define _POSIX_SOURCE
+#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdbool.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/wait.h&gt;
+#include &lt;string.h&gt;
+#include &lt;signal.h&gt;
+#include &lt;errno.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;sys/stat.h&gt;
+#include &lt;stdarg.h&gt;
+#include "readcmd.h"
+</pre>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+
+
+</div>
+</div>
+<a name="1:3"><div class="section"><h4>3. Fonctions utilitaires</h4></a>
+<p>Ensuite, on définit une macro spéciale permettant de checker la valeur de retour d'une expression, et d'afficher une erreur en indiquant d'où elle provient avec, puis ensuite de quitter le programme avec <code>EXIT_FAILURE</code>. Le nom est inspiré de la méthode <code>.unwrap()</code> en <a href="https://www.rust-lang.org/">Rust</a>.
+</p>
+
+<div class="codeblock">
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+#define UNWRAP(expression)   \
+	if ((expression) &lt; 0)    \
+	{                        \
+		perror(#expression); \
+		exit(EXIT_FAILURE);  \
+	}
+</pre>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+
+
+</div>
+<p>Ces deux enums, ainsi que la fonction <code>style</code>, permettent de mettre des couleurs et du formattage au texte du terminal, en utilisant le standard des <a href="https://en.wikipedia.org/wiki/ANSI_escape_code">séquences d'échappement ANSI</a>
+</p>
+
+<div class="codeblock">
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+enum style_tag
+{
+	RESET,
+	BOLD,
+	DIM,
+	ITALIC,
+	UNDERLINED,
+	SLOW_BLINK,
+	FAST_BLINK,
+	INVERTED,
+	HIDDEN,
+	CROSSED_OUT,
+};
+
+enum color_tag
+{
+	BLACK,
+	RED,
+	GREEN,
+	YELLOW,
+	BLUE,
+	MAGENTA,
+	CYAN,
+	WHITE,
+};
+
+void style(enum style_tag style_tag, enum color_tag color_tag)
+{
+	// TRACE("set style style=%d color=%d", style_tag, color_tag);
+	printf("\033[3%dm", color_tag);
+	printf("\033[%dm", style_tag);
+}
+</pre>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+
+
+</div>
+<p>On a ensuite une méthode <code>TRACE</code> permettant d'afficher des lignes de debug quand trace est activé (grâce à la commande <code>trace</code>).
+</p>
+
+<div class="codeblock">
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+static bool tracing = false;
+</pre>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+
+
+</div>
+<p>L'activation ou non est contrôlée par cette variable globale.
+</p>
+
+<div class="codeblock">
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+void TRACE(const char *format, ...)
+{
+	if (tracing)
+	{
+		printf("\033[0m\033[2m[trace] ");
+		va_list args;
+		va_start(args, format);
+		vprintf(format, args);
+		va_end(args);
+		printf("\033[0m\n");
+	}
+}
+</pre>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+
+
+</div>
+<p>Enfin, la fonction suivante permet de supporter le raccourci <code>~</code> dans les chemins, qui sera utile pour l'implémentation de <code>cd</code>.
+</p>
+
+<div class="codeblock">
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+char *expand_home_prefix(char *path)
+{
+	if (path[0] == '~')
+	{
+		char *home = getenv("HOME");
+		char *new_path = malloc(strlen(home) + strlen(path) + 1);
+		strcpy(new_path, home);
+		strcat(new_path, path + 1);
+		return new_path;
+	}
+
+	return path;
+}
+</pre>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+
+
+</div>
+</div>
+<a name="1:4"><div class="section"><h4>4. Gestion des jobs</h4></a>
+<p>Ensuite, il nous faut un moyen de stocker les jobs en cours.
+</p>
+<p>On stocke leur état avec un booléen <code>running</code>, et leur id interne au shell correspond simplement à l'indice du job dans l'array.
+</p>
+
+<div class="codeblock">
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+struct job
+{
+	pid_t pid;
+	bool running;
+	char *command;
+};
+
+static struct job jobs[999];
+</pre>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+
+
+</div>
+<p><code>streq</code> est une simple fonction utilitaire pour tester l'égalité entre deux chaînes de caractères.
+</p>
+
+<div class="codeblock">
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+bool streq(char *a, char *b)
+{
+	return strcmp(a, b) == 0;
+}
+</pre>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+
+
+</div>
+<p>Les fonctions suivantes sont responsables de la gestion des jobs: leur ajout, suppression, trouver leur index par leur PID, et récupérer le dernier job. Un job est considéré comme existant si sa commande n'est pas <code>NULL</code>.
+</p>
+<p>On pense donc bien à mettre <code>.command</code> à <code>NULL</code> quand on supprime un job.
+</p>
+
+<div class="codeblock">
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+int last_job_index()
+{
+	TRACE("get last job index");
+	int i = 0;
+	while (jobs[i].command != NULL)
+	{
+		i++;
+	}
+	TRACE("last job index is %d", i - 1);
+	return i - 1;
+}
+
+int job_index_by_pid(int pid)
+{
+	TRACE("get job index by pid %d", pid);
+	int i = 0;
+	while (jobs[i].command != NULL)
+	{
+		if (jobs[i].pid == pid)
+		{
+			TRACE("job index is %d", i);
+			return i;
+		}
+		i++;
+	}
+	TRACE("job index not found");
+	return -1;
+}
+
+// returns the last job index if NULL is given
+int get_job_index_from_arg(char *arg)
+{
+	if (arg == NULL)
+	{
+		return last_job_index();
+	}
+
+	return atoi(arg);
+}
+
+void add_job(int pid, char ***commandline)
+{
+	int newJobIndex = last_job_index() + 1;
+	jobs[newJobIndex].pid = pid;
+	jobs[newJobIndex].running = false;
+	jobs[newJobIndex].command = malloc(sizeof(char) * (strlen(commandline[0][0]) + 1));
+	strcpy(jobs[newJobIndex].command, commandline[0][0]);
+	TRACE("added jobs[%d] (%d) %s", newJobIndex, pid, jobs[newJobIndex].command);
+}
+
+int remove_job(int pid)
+{
+	TRACE("remove job %d", pid);
+	int i = job_index_by_pid(pid);
+	if (i == -1)
+	{
+		TRACE("job %d not found", pid);
+		return 0;
+	}
+
+	free(jobs[i].command);
+	jobs[i].command = NULL;
+	for (int j = i + 1; j &lt;= last_job_index(); j++)
+	{
+		jobs[j - 1] = jobs[j];
+	}
+	return 0;
+}
+</pre>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+
+
+</div>
+</div>
+<a name="1:5"><div class="section"><h4>5. Prompt</h4></a>
+<p>Une partie essentielle d'un shell, c'est ce qui apparaît avant l'entrée utilisateur quand le shell attend une commande de lui. C'est l'occasion d'afficher des informations utiles comme le répertoire de travail actuel, ou encore l'état d'un repo git si on se trouve à l'intérieur d'un, le niveau de batterie, etc. Il existe même des logiciels dédiés qui ne s'occupe que de la partie <em>affichage du prompt</em>, tel que <a href="https://starship.rs">Starship</a>
+</p>
+
+<div class="codeblock">
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+static bool got_signal;
+</pre>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+
+
+</div>
+<p>Ce booléen global permet de faire la différence entre un arrêt de <code>readcmd()</code> par un signal reçu et une erreur lors de la lecture de la ligne de commande, car <code>readcmd()</code> renvoie <code>-1</code> dans les deux cas.
+</p>
+<p>La fonction <code>prompt()</code> est responsable de l'affichage du prompt, et de la lecture de la ligne de commande tapée par l'utilisateur.
+</p>
+<p>Elle est donc également responsable de traiter les éventuelles erreurs lors de <code>readcmd()</code>, et d'attendre que l'on ne soit plus en train de traiter un signal avant de s'afficher.
+</p>
+<p>On a aussi décider de gérer la commande <code>exit</code> ici, puisque son traitement est le même que dans le cas ou <code>readcmd()</code> renvoie <code>NULL</code>.
+</p>
+
+<div class="codeblock">
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+struct cmdline *prompt()
+{
+	struct cmdline *commandline;
+	do
+	{
+		do
+		{
+			char working_directory[9999];
+			getcwd(working_directory, 9999);
+			style(ITALIC, MAGENTA);
+			printf("\n\n%s", working_directory);
+			style(RESET, BLACK);
+			printf("\n🐚 ");
+			style(BOLD, CYAN);
+			fflush(stdin);
+
+			got_signal = false;
+			commandline = readcmd();
+			style(RESET, BLACK);
+		} while (got_signal); // attendre de ne plus être en train de traiter un signal
+
+		if (commandline == NULL)
+		{
+			return NULL;
+		}
+
+		if (commandline-&gt;err)
+		{
+			printf("error: %s\n", commandline-&gt;err);
+			return NULL;
+		}
+	} while (*(commandline-&gt;seq) == NULL); // si on appuie sur rentrer sans rien rentrer, un nouveau prompt apparaît.
+
+	if (streq(**(commandline-&gt;seq), "exit"))
+	{
+		return NULL;
+	}
+
+	return commandline;
+}
+</pre>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+
+
+</div>
+</div>
+<a name="1:6"><div class="section"><h4>6. Gestion du processus en premier plan</h4></a>
+<p>On stocke tout d'abord le PID du processus en premier plan dans une variable globale.
+</p>
+
+<div class="codeblock">
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+static int current_pid = 0;
+</pre>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+
+
+</div>
+<p>Ensuite, il nous faut une fonction pour envoyer un signal au processus en premier plan. On a des cas particulier, avec <code>SIGTSTP</code> qui devient <code>SIGSTOP</code> et <code>SIGINT</code> qui devient <code>SIGTERM</code>. // TODO
+</p>
+<p>L'utilisation du <code>-</code> dans le premier argument de <code>kill</code> signifie que l'on envoie le signal à tout les processus du <em>groupe</em> du PID donné.
+</p>
+<p>On travaille sur des groupes pour envoyer le signal aux potentiels fils du processus, même lorsque celui-ci redéfinit le(s) handler(s) du signal que l'on envoie.
+</p>
+
+<div class="codeblock">
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+void send_signal_to_current_process(int signal)
+{
+	if (signal == SIGTSTP)
+	{
+		kill(-current_pid, SIGSTOP);
+	}
+	else if (signal == SIGINT)
+	{
+		kill(-current_pid, SIGTERM);
+	}
+	else
+	{
+		kill(-current_pid, signal);
+	}
+
+	got_signal = true;
+}
+</pre>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+
+
+</div>
+<p>Cette fonction change le processus en premier plan.
+Cela implique de:
+</p>
+<ol>
+<li>Mettre à jour notre variable globale <code>current_pid</code>
+</li>
+<li>Signaler ce changement au système via <code>tcsetpgrp</code> (ce qui met à jour le groupe de processus en premier plan)
+</li>
+<li>Attendre que l'on reçoive un signal // TODO
+</li>
+<li>De nouveau <code>tcstepgrp</code> // TODO
+</li>
+<li>// TODO
+</li>
+</ol>
+
+<div class="codeblock">
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+void switch_current_process(int pid)
+{
+	struct sigaction child_handler;
+	sigemptyset(&amp;child_handler.sa_mask);
+	child_handler.sa_flags = 0;
+
+	current_pid = pid;
+
+	tcsetpgrp(STDERR_FILENO, pid);
+
+	do
+	{
+		pause();
+	} while (current_pid &gt; 0);
+
+	tcsetpgrp(STDERR_FILENO, getpgrp());
+
+	child_handler.sa_handler = SIG_DFL;
+	sigaction(SIGTSTP, &amp;child_handler, NULL);
+	sigaction(SIGINT, &amp;child_handler, NULL);
+}
+</pre>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+
+
+</div>
+</div>
+<a name="1:7"><div class="section"><h4>7. Gestion des fils</h4></a>
+<p>Gérer les fils implique principalement deux choses:
+</p>
+<ul>
+<li>Les démarrer (<code>start_child</code>)
+</li>
+<li>Attendre qu'ils se terminent et réagir en fonction (<code>child_handler_action</code>)
+</li>
+</ul>
+<p>La fonction suivante permet de démarrer les fils.
+</p>
+
+<div class="codeblock">
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+int start_child(int *group_pid, int child_stdin, int child_stdout, char **args)
+{
+	int pid;
+	struct sigaction child_handler;
+	sigemptyset(&amp;child_handler.sa_mask);
+	child_handler.sa_flags = 0;
+
+</pre>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+
+
+</div>
+<p>On a choisit de créer les pipes de proche en proche: un enfant est démarré avec une entrée et une sortie souhaitée. Si la sortie n'est pas <code>stdout</code>, on crée un pipe et on écrit dedans. On passe ensuite le descripteur de lecture de ce pipe comme valeur de retour, afin que le père puisse passer ce descripteur au fils suivant.
+</p>
+<p>Le fait d'avoir ouvert un pipe pour le fils prochain est stocké dans le booléen <code>outputs_to_pipe</code>.
+</p>
+<p>Le premier fils a donc <code>stdin</code> comme entrée, et le dernier a <code>stdout</code> comme sortie.
+</p>
+
+<div class="codeblock">
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+	int pipe_to_next_child[2];
+	bool outputs_to_pipe = child_stdout &lt; 0;
+	if (outputs_to_pipe)
+	{
+		style(RESET, BLACK);
+		UNWRAP(pipe(pipe_to_next_child));
+		child_stdout = pipe_to_next_child[1];
+	}
+</pre>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+
+
+</div>
+<p>On crée le fils ici, après avoir ouvert le pipe (si nécéssaire).
+</p>
+
+<div class="codeblock">
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+	UNWRAP(pid = fork());
+
+	if (pid == 0)
+	{
+</pre>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+
+
+</div>
+<p>On ferme le côté lecture du pipe que l'on va donner au prochain fils, car l'on n'a pas besoin de le lire depuis ce fils-ci.
+</p>
+
+<div class="codeblock">
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+		if (outputs_to_pipe)
+		{
+			UNWRAP(close(pipe_to_next_child[0]));
+			child_stdout = pipe_to_next_child[1];
+		}
+</pre>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+
+
+</div>
+<p>On change le groupe du fils pour le rattacher au groupe du père.
+</p>
+
+<div class="codeblock">
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+		UNWRAP(setpgid(getpid(), *group_pid));
+</pre>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+
+
+</div>
+<p>On change les handlers de <code>SIGTSTP</code>, <code>SIGINT</code>, <code>SIGTTOU</code> et <code>SIGTTIN</code> pour les remettre à leur handler par défaut. // TODO pk
+</p>
+
+<div class="codeblock">
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+		child_handler.sa_handler = SIG_DFL;
+		sigaction(SIGTSTP, &amp;child_handler, NULL);
+		sigaction(SIGINT, &amp;child_handler, NULL);
+		sigaction(SIGTTOU, &amp;child_handler, NULL);
+		sigaction(SIGTTIN, &amp;child_handler, NULL);
+</pre>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+
+
+</div>
+<p>On change les entrées et sorties du fils pour qu'il utilise les descripteurs de fichiers que l'on a donné en paramètre (que ce soit des pipes ou stdin/out).
+</p>
+
+<div class="codeblock">
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+		UNWRAP(dup2(child_stdin, STDIN_FILENO));
+		UNWRAP(dup2(child_stdout, STDOUT_FILENO));
+</pre>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+
+
+</div>
+<p>Enfin, on exécute la commande.
+</p>
+
+<div class="codeblock">
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+		execvp(args[0], args);
+		perror("execvp");
+		exit(EXIT_FAILURE);
+	}
+</pre>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+
+
+</div>
+<p>Depuis le père, // TODO pk pas dans else{}? on met à jour le PID du groupe passé en argument lorsque celui-ci n'était pas connu // TODO
+</p>
+<p>On ferme ensuite les descripteurs:
+</p>
+<ul>
+<li>l'entrée du fils (sauf si celle-ci est l'entrée standard)
+</li>
+<li>le pipe ou le fichier (si il y a redirection dans un fichier), sauf si la sortie est la sortie standard.
+</li>
+</ul>
+<p>Enfin, on renvoie le descripteur d'entrée du prochain fils, qui est soit le pipe (si on a écrit dans un pipe), soit l'entrée standard.
+</p>
+
+<div class="codeblock">
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+	if (*group_pid == 0)
+	{
+		*group_pid = pid;
+	}
+
+	if (child_stdin != STDIN_FILENO)
+	{
+		UNWRAP(close(child_stdin));
+	}
+
+	if (outputs_to_pipe)
+	{
+		UNWRAP(close(pipe_to_next_child[1]));
+		return pipe_to_next_child[0];
+	}
+	else if (child_stdout != STDOUT_FILENO)
+	{
+		UNWRAP(close(child_stdout));
+	}
+
+	return STDIN_FILENO;
+}
+</pre>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+
+
+</div>
+<p>La fonction suivante est executée quand un fils est créé depuis notre shell, via l'assignation de la fonction comme handler de <code>SIGCHLD</code>.
+</p>
+<p>On attend que le fils se termine avec <code>waitpid</code>, et on agit en fonction du résultat:
+</p>
+<ul>
+<li>Si il a été stoppé (avec <code>WIFSTOPPED</code>), on met à jour le statut du job;
+</li>
+<li>Si il a été terminé, on affiche le code de retour, et on supprime le job de la liste des jobs.
+</li>
+</ul>
+<p>De plus, si le fils était le processus en premier plan, il faut mettre à jour <code>current_pid</code> pour le remettre à <code>0</code> (signifiant que le shell est en premier plan).
+</p>
+<p>Enfin, si <code>waitpid</code> a échoué, et que l'erreur n'est pas <code>ECHILD</code> (signifiant qu'il n'y a pas de fils à attendre // TODO), on affiche l'erreur.
+</p>
+
+<div class="codeblock">
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+void child_handler_action()
+{
+	int pid;
+	int status;
+	got_signal = true;
+
+	while ((pid = waitpid(-1, &amp;status, WNOHANG | WUNTRACED)) &gt; 0)
+	{
+		if (WIFSTOPPED(status))
+		{
+			jobs[job_index_by_pid(pid)].running = false;
+			TRACE("job %d stopped", pid);
+		}
+		else
+		{
+			UNWRAP(remove_job(pid));
+			TRACE("job pid=%d removed", pid);
+			if (WEXITSTATUS(status) == 0) {
+				printf("✅ 0");
+			} else {
+				printf("❌ %d", WEXITSTATUS(status));
+			}
+		}
+
+		if (pid == current_pid)
+		{
+			current_pid = 0;
+		}
+	}
+
+	if (pid &lt; 0 &amp;&amp; errno != ECHILD)
+	{
+		perror("waitpid");
+		exit(EXIT_FAILURE);
+	}
+}
+</pre>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+
+
+</div>
+</div>
+<a name="1:8"><div class="section"><h4>8. Boucle principale</h4></a>
+<p>Le point d'entrée du shell. La boucle "infinie" qui va demander à l'utilisateur d'entrer une commande, et l'exécuter.
+</p>
+
+<div class="codeblock">
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+int main()
+{
+</pre>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+
+
+</div>
+<p>On initialise les handlers de signaux:
+</p>
+<ul>
+<li><code>SIGCHLD</code> est handle par <code>child_handler_action</code>
+</li>
+<li><code>SIGTSTP</code>, <code>SIGINT</code>, <code>SIGTTOU</code> et <code>SIGTTIN</code> sont ignorés.
+</li>
+</ul>
+
+<div class="codeblock">
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+	struct sigaction signals_handler;
+	sigemptyset(&amp;signals_handler.sa_mask);
+	signals_handler.sa_flags = 0;
+
+	signals_handler.sa_handler = child_handler_action;
+	sigaction(SIGCHLD, &amp;signals_handler, NULL);
+
+	signals_handler.sa_handler = SIG_IGN;
+	sigaction(SIGTSTP, &amp;signals_handler, NULL);
+	sigaction(SIGINT, &amp;signals_handler, NULL);
+	sigaction(SIGTTOU, &amp;signals_handler, NULL);
+	sigaction(SIGTTIN, &amp;signals_handler, NULL);
+</pre>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+
+
+</div>
+<p>On commence la boucle principale. On stocke le résultat du prompt (c'est-à-dire la ligne de commande entrée par l'utilisateur) dans <code>commandline</code>.
+</p>
+
+<div class="codeblock">
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+	struct cmdline *commandline;
+
+	while ((commandline = prompt()))
+	{
+</pre>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+
+
+</div>
+<p>Malheureusement, réinitialiser le texte à la couleur par défaut ne fonctionne pas sans faire de retour à la ligne. Mais, juste après le prompt, je trouve un retour à la ligne vraiment pas esthétique. J'ai essayé un <code>fflush(stdin)</code>, qui n'a pas non plus réglé le problème.
+</p>
+
+<div class="codeblock">
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+		style(RESET, BLACK);
+</pre>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+
+
+</div>
+<p>On commence par gérer les commandes "spéciales" que le shell va interpréter directement, sans lancer de fils: <code>cd</code>, <code>lj</code>, <code>sj</code>, <code>susp, </code>trace<code>, </code>fg<code> et </code>bg`.
+</p>
+
+<div class="codeblock">
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+		char **first_command_args = *(commandline-&gt;seq);
+		char *first_command = first_command_args[0];
+
+		if (streq(first_command, "cd"))
+		{
+			if (chdir(expand_home_prefix(first_command_args[1])) &lt; 0)
+			{
+				perror("chdir");
+			}
+			continue;
+		}
+		if (streq(first_command, "lj"))
+		{
+			TRACE("listing jobs");
+			for (int i = 0; i &lt;= last_job_index(); i++)
+			{
+				printf("%s %d (%d) %s\n", jobs[i].running ? "🏃" : "🛑", i + 1, jobs[i].pid, jobs[i].command);
+			}
+			continue;
+		}
+
+		if (streq(first_command, "sj"))
+		{
+			int job_index = get_job_index_from_arg(first_command_args[1]);
+			kill(-jobs[job_index].pid, SIGSTOP);
+			continue;
+		}
+
+		if (streq(first_command, "susp"))
+		{
+			kill(getpid(), SIGSTOP);
+		}
+
+		if (streq(first_command, "trace"))
+		{
+			tracing = !tracing;
+			style(ITALIC, YELLOW);
+			printf("trace is %s.\n", tracing ? "on" : "off");
+			style(RESET, RESET);
+			continue;
+		}
+</pre>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+
+
+</div>
+<p>Les commandes <code>fg</code> et <code>bg</code> sont les mêmes: on envoie dans les deux cas un <code>SIGCONT</code> aux processus dans le groupe du job choisi. La différence est que <code>fg</code> va changer le processus en premier plan.
+</p>
+
+<div class="codeblock">
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+		if (streq(first_command, "fg") || streq(first_command, "bg"))
+		{
+			int job_index = get_job_index_from_arg(first_command_args[1]);
+			int pid = jobs[job_index].pid;
+
+			kill(-pid, SIGCONT);
+
+			if (streq(first_command, "fg"))
+			{
+				jobs[job_index].running = true;
+				switch_current_process(pid);
+			}
+
+			continue;
+		}
+</pre>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+
+
+</div>
+<p>On prépare ici la création du fils. On stocke l'entrée du fils actuel, qui est au départ <code>stdin</code>, et la sortie de la pipeline entière, qui sera <code>stdout</code>, sauf si redirection.
+</p>
+
+<div class="codeblock">
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+		int current_child_stdin = STDIN_FILENO;
+		int pipeline_stdout = STDOUT_FILENO;
+		int group_pid = 0;
+</pre>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+
+
+</div>
+<p>On gère la présence de redirections, en mettant à jour <code>current_child_stdin</code> et <code>pipeline_stdout</code>.
+</p>
+
+<div class="codeblock">
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+		if (commandline-&gt;in)
+		{
+			current_child_stdin = open(commandline-&gt;in, O_RDONLY);
+			if (current_child_stdin &lt; 0)
+			{
+				perror("open stdin redirector");
+				continue;
+			}
+		}
+
+		if (commandline-&gt;out)
+		{
+			pipeline_stdout = open(commandline-&gt;out, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			if (pipeline_stdout &lt; 0)
+			{
+				perror("open stdout redirector");
+				continue;
+			}
+		}
+</pre>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+
+
+</div>
+<p>On commence une boucle, qui va itérer sur chaque commande de la pipeline, en lançant un fils pour chaque commande. Seul le dernier fils aura <code>pipeline_stdout</code> comme sortie, les autres fils n'ont pas de sortie
+</p>
+
+<div class="codeblock">
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+		char ***commands_left = commandline-&gt;seq;
+		while (*commands_left)
+		{
+			bool is_last_command = *(commands_left + 1) == NULL;
+			current_child_stdin = start_child(&amp;group_pid, current_child_stdin, is_last_command ? pipeline_stdout : -1, *commands_left);
+			commands_left++; // XXX c'est vraiment dégueulasse d'itérer comme ça.
+		}
+</pre>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+
+
+</div>
+<p>On ajoute le PID du groupe à la liste des jobs, et on passe le processus en premier plan si celui-ci n'est pas mis en arrière-plan.
+</p>
+
+<div class="codeblock">
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+
+		add_job(group_pid, commandline-&gt;seq);
+
+		if (!commandline-&gt;backgrounded)
+		{
+			switch_current_process(group_pid);
+		}
+</pre>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+
+
+</div>
+<p>Enfin, quand on sort de la boucle principale (par une valeur de retour égale à <code>NULL</code> de la fonction <code>prompt</code>), on tue tout les jobs avec un <code>SIGKILL</code>, pour s'assurer de ne pas laisser des processus zombies // TODO confirmer.
+</p>
+
+<div class="codeblock">
+<span class="codeblock_name">{<strong>minishell.c</strong> <a href="minishell.c.html#1:2">2</a>} +=</span>
+<pre class="prettyprint lang-c">
+	}
+
+	// kill everyone
+	for (int i = 0; i &lt;= last_job_index(); i++)
+	{
+		kill(-jobs[i].pid, SIGKILL);
+	}
+
+	return EXIT_SUCCESS;
+}
+</pre>
+<p class="seealso">Added to in sections <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:3">3</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:4">4</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:5">5</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:6">6</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:7">7</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a>, <a href="minishell.c.html#1:8">8</a> and <a href="minishell.c.html#1:8">8</a></p>
+
+
+</div>
+
+</div>
+</body>

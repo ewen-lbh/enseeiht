@@ -12,14 +12,12 @@
 #include <sys/stat.h>
 #include <stdarg.h>
 #include "readcmd.h"
-
 #define UNWRAP(expression)   \
 	if ((expression) < 0)    \
 	{                        \
 		perror(#expression); \
 		exit(EXIT_FAILURE);  \
 	}
-
 enum style_tag
 {
 	RESET,
@@ -46,8 +44,13 @@ enum color_tag
 	WHITE,
 };
 
+void style(enum style_tag style_tag, enum color_tag color_tag)
+{
+	// TRACE("set style style=%d color=%d", style_tag, color_tag);
+	printf("\033[3%dm", color_tag);
+	printf("\033[%dm", style_tag);
+}
 static bool tracing = false;
-
 void TRACE(const char *format, ...)
 {
 	if (tracing)
@@ -60,7 +63,19 @@ void TRACE(const char *format, ...)
 		printf("\033[0m\n");
 	}
 }
+char *expand_home_prefix(char *path)
+{
+	if (path[0] == '~')
+	{
+		char *home = getenv("HOME");
+		char *new_path = malloc(strlen(home) + strlen(path) + 1);
+		strcpy(new_path, home);
+		strcat(new_path, path + 1);
+		return new_path;
+	}
 
+	return path;
+}
 struct job
 {
 	pid_t pid;
@@ -69,19 +84,10 @@ struct job
 };
 
 static struct job jobs[999];
-
-void style(enum style_tag style_tag, enum color_tag color_tag)
-{
-	// TRACE("set style style=%d color=%d", style_tag, color_tag);
-	printf("\033[3%dm", color_tag);
-	printf("\033[%dm", style_tag);
-}
-
 bool streq(char *a, char *b)
 {
 	return strcmp(a, b) == 0;
 }
-
 int last_job_index()
 {
 	TRACE("get last job index");
@@ -109,6 +115,17 @@ int job_index_by_pid(int pid)
 	}
 	TRACE("job index not found");
 	return -1;
+}
+
+// returns the last job index if NULL is given
+int get_job_index_from_arg(char *arg)
+{
+	if (arg == NULL)
+	{
+		return last_job_index();
+	}
+
+	return atoi(arg);
 }
 
 void add_job(int pid, char ***commandline)
@@ -139,9 +156,7 @@ int remove_job(int pid)
 	}
 	return 0;
 }
-
 static bool got_signal;
-
 struct cmdline *prompt()
 {
 	struct cmdline *commandline;
@@ -161,7 +176,7 @@ struct cmdline *prompt()
 			got_signal = false;
 			commandline = readcmd();
 			style(RESET, BLACK);
-		} while (got_signal);
+		} while (got_signal); // attendre de ne plus être en train de traiter un signal
 
 		if (commandline == NULL)
 		{
@@ -173,7 +188,7 @@ struct cmdline *prompt()
 			printf("error: %s\n", commandline->err);
 			return NULL;
 		}
-	} while (*(commandline->seq) == NULL);
+	} while (*(commandline->seq) == NULL); // si on appuie sur rentrer sans rien rentrer, un nouveau prompt apparaît.
 
 	if (streq(**(commandline->seq), "exit"))
 	{
@@ -182,14 +197,12 @@ struct cmdline *prompt()
 
 	return commandline;
 }
-
 static int current_pid = 0;
-
 void send_signal_to_current_process(int signal)
 {
 	if (signal == SIGTSTP)
 	{
-		kill(-current_pid, SIGTSTP);
+		kill(-current_pid, SIGSTOP);
 	}
 	else if (signal == SIGINT)
 	{
@@ -202,40 +215,6 @@ void send_signal_to_current_process(int signal)
 
 	got_signal = true;
 }
-
-void child_handler_action()
-{
-	int pid;
-	int status;
-	got_signal = true;
-
-	while ((pid = waitpid(-1, &status, WNOHANG | WUNTRACED)) > 0)
-	{
-		if (WIFSTOPPED(status))
-		{
-			jobs[job_index_by_pid(pid)].running = false;
-			TRACE("job %d stopped", pid);
-		}
-		else
-		{
-			UNWRAP(remove_job(pid));
-			TRACE("job pid=%d removed", pid);
-			if (WEXITSTATUS(status))
-		}
-
-		if (pid == current_pid)
-		{
-			current_pid = 0;
-		}
-	}
-
-	if (pid < 0 && errno != ECHILD)
-	{
-		perror("waitpid");
-		exit(EXIT_FAILURE);
-	}
-}
-
 void switch_current_process(int pid)
 {
 	struct sigaction child_handler;
@@ -257,7 +236,6 @@ void switch_current_process(int pid)
 	sigaction(SIGTSTP, &child_handler, NULL);
 	sigaction(SIGINT, &child_handler, NULL);
 }
-
 int start_child(int *group_pid, int child_stdin, int child_stdout, char **args)
 {
 	int pid;
@@ -273,7 +251,6 @@ int start_child(int *group_pid, int child_stdin, int child_stdout, char **args)
 		UNWRAP(pipe(pipe_to_next_child));
 		child_stdout = pipe_to_next_child[1];
 	}
-
 	UNWRAP(pid = fork());
 
 	if (pid == 0)
@@ -283,23 +260,18 @@ int start_child(int *group_pid, int child_stdin, int child_stdout, char **args)
 			UNWRAP(close(pipe_to_next_child[0]));
 			child_stdout = pipe_to_next_child[1];
 		}
-
 		UNWRAP(setpgid(getpid(), *group_pid));
-
 		child_handler.sa_handler = SIG_DFL;
 		sigaction(SIGTSTP, &child_handler, NULL);
 		sigaction(SIGINT, &child_handler, NULL);
 		sigaction(SIGTTOU, &child_handler, NULL);
 		sigaction(SIGTTIN, &child_handler, NULL);
-
 		UNWRAP(dup2(child_stdin, STDIN_FILENO));
 		UNWRAP(dup2(child_stdout, STDOUT_FILENO));
-
 		execvp(args[0], args);
 		perror("execvp");
 		exit(EXIT_FAILURE);
 	}
-
 	if (*group_pid == 0)
 	{
 		*group_pid = pid;
@@ -322,32 +294,42 @@ int start_child(int *group_pid, int child_stdin, int child_stdout, char **args)
 
 	return STDIN_FILENO;
 }
-
-// returns the last job index if NULL is given
-int get_job_index_from_arg(char *arg)
+void child_handler_action()
 {
-	if (arg == NULL)
+	int pid;
+	int status;
+	got_signal = true;
+
+	while ((pid = waitpid(-1, &status, WNOHANG | WUNTRACED)) > 0)
 	{
-		return last_job_index();
+		if (WIFSTOPPED(status))
+		{
+			jobs[job_index_by_pid(pid)].running = false;
+			TRACE("job %d stopped", pid);
+		}
+		else
+		{
+			UNWRAP(remove_job(pid));
+			TRACE("job pid=%d removed", pid);
+			if (WEXITSTATUS(status) == 0) {
+				printf("✅ 0");
+			} else {
+				printf("❌ %d", WEXITSTATUS(status));
+			}
+		}
+
+		if (pid == current_pid)
+		{
+			current_pid = 0;
+		}
 	}
 
-	return atoi(arg);
-}
-
-char *expand_home_prefix(char *path)
-{
-	if (path[0] == '~')
+	if (pid < 0 && errno != ECHILD)
 	{
-		char *home = getenv("HOME");
-		char *new_path = malloc(strlen(home) + strlen(path) + 1);
-		strcpy(new_path, home);
-		strcat(new_path, path + 1);
-		return new_path;
+		perror("waitpid");
+		exit(EXIT_FAILURE);
 	}
-
-	return path;
 }
-
 int main()
 {
 	struct sigaction signals_handler;
@@ -362,18 +344,11 @@ int main()
 	sigaction(SIGINT, &signals_handler, NULL);
 	sigaction(SIGTTOU, &signals_handler, NULL);
 	sigaction(SIGTTIN, &signals_handler, NULL);
-
 	struct cmdline *commandline;
 
 	while ((commandline = prompt()))
 	{
 		style(RESET, BLACK);
-		for (int _ = 0; _ < 50; _++)
-		{
-			printf("─");
-		}
-
-		printf("\n");
 		char **first_command_args = *(commandline->seq);
 		char *first_command = first_command_args[0];
 
@@ -415,7 +390,6 @@ int main()
 			style(RESET, RESET);
 			continue;
 		}
-
 		if (streq(first_command, "fg") || streq(first_command, "bg"))
 		{
 			int job_index = get_job_index_from_arg(first_command_args[1]);
@@ -431,11 +405,9 @@ int main()
 
 			continue;
 		}
-
 		int current_child_stdin = STDIN_FILENO;
 		int pipeline_stdout = STDOUT_FILENO;
 		int group_pid = 0;
-
 		if (commandline->in)
 		{
 			current_child_stdin = open(commandline->in, O_RDONLY);
@@ -455,7 +427,6 @@ int main()
 				continue;
 			}
 		}
-
 		char ***commands_left = commandline->seq;
 		while (*commands_left)
 		{
@@ -480,3 +451,4 @@ int main()
 
 	return EXIT_SUCCESS;
 }
+
