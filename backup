@@ -3,6 +3,7 @@ rclone sync --progress --filter-from ~/enseeiht/.rclonefilter --max-size=1G ~/en
 
 set wd=$(pwd)
 cd ~/enseeiht
+git pull --autofetch
 git add .
 git commit -m "backup at $(echo date --iso-8601)"
 git push 
