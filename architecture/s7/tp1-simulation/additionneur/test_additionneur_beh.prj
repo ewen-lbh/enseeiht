@@ -1,0 +1,4 @@
+vhdl work "../porte_ou.vhd"
+vhdl work "../demi_additionneur.vhd"
+vhdl work "../additionneur.vhd"
+vhdl work "../test_additionneur.vhd"

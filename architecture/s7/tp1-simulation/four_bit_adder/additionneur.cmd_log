@@ -1,0 +1,1 @@
+vhdtdtfi -prj four_bit_adder -o /home/elebihan/enseeiht/architecture/s7/tp1-simulation/four_bit_adder/additionneur.vhi -module additionneur -template /applications/Xilinx/xilinx_14.7/ISE//data/vhdlinst.tft -deleteonerror -lib work ../porte_ou.vhd -lib work ../demi_additionneur.vhd -lib work ../additionneur.vhd 
