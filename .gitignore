@@ -599,3 +599,10 @@ poetry.toml
 .tooling/hudson-credentials
 objet/projet-court/node_modules
 objet/projet-court/proofs
+
+architecture/s7/tp1-simulation/dec7seg/_ngo
+architecture/s7/tp1-simulation/dec7seg/_xmsgs
+architecture/s7/tp1-simulation/dec7seg/iseconfig
+architecture/s7/tp1-simulation/dec7seg/xlnx_auto_0_xdb
+architecture/s7/tp1-simulation/dec7seg/xst/work
+architecture/s7/tp1-simulation/dec7seg

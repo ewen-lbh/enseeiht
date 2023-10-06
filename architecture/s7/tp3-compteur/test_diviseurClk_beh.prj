@@ -1,0 +1,2 @@
+vhdl work "diviseurClk.vhd"
+vhdl work "test_diviseurClk.vhd"
