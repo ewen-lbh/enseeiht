@@ -1,12 +1,320 @@
-\documentclass{article}
-\input{/home/ewen/enseeiht/.tooling/template.tex}
+\documentclass[englishb]{article}
+\usepackage[T1]{fontenc}
+%\usepackage[latin1]{inputenc}
+%Pour utilisation sous unix
+\usepackage[utf8]{inputenc}
+%\usepackage[utf8x]{inputenc}
+\usepackage{a4wide}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{color}
+\usepackage{babel}
+\usepackage{subcaption}
+\usepackage{float}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{algpseudocode}
+
+\usepackage{algorithmicx}
+\usepackage{algorithm}
+
 \begin{document}
 
-\section{Étude des modulateurs en bande de base}
+\begin{figure}[t]
+\centering
+\includegraphics[width=5cm]{n7.png}
+\end{figure}
 
-\subsection{Modulateur 1}
+\title{\vspace{4cm} \textbf{Télécommunications - Transmission sur fréquence porteuse}}
+\author{Florent Puy, Ewen Le Bihan\\ }
+\date{\vspace{7cm} Department Sciences du numérique - Première année \\
+2022-2023 }
+
+\maketitle
+
+\newpage
+\tableofcontents
+
+
+\newpage
+
+\maketitle
+
+\section{Transmission avec transposition de fréquence}
+
+L'objectif de cette partie est d'implémenter une transmission DVB-S avec un mapping QPSK. Nous étudierons ensuite sa densité spectrale de puissance et enfin son teux d'erreur binaire en fonction de la puissance du bruit additif.
+
+\subsection{Implémentation}
+Pour implémenter cette chaine de transmission Q-PSK, nous utiliserons un filtre de mise en forme en racine de cosinus surélevé avec un roll-off de 0,35 et une transposition en fréquence. On suréchantillonnera notre signal en faisant intervenir un facteur de suréchantillonnage $N_s$.
+Nous avons $F_e=24 kHz$ la fréquence d'échantillonnage, $R_b = 3 kbits/s$ le débit binaire et $f_p = 2 kHz$ la fréquence proteuse. On introduira un bruit additif Gaussien dans le canal de propagation implémenté grace à la fonction $randn$ de Matlab. Ce bruit aura la puissance suivante:
+
+\begin{center}
+
+$$\sigma^2 _n = \frac{P_x N_s}{2log_2 (M) \frac{E_b}{N_0}}$$ Avec $P_x$ la puissance sur signal.
+
+\end{center}
 
 
 
+Les filtres utilisés sont adaptés et le signal est echantillonné aux instants optimaux. Nous suréchantillonnons avec la fonction $kron$ de Matlab. 
+
+
+
+%%%%%%%%%%% signaux en phase & quadrature %%%%%%%%%%%%%%%%
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.8]{signal_phase_quadrature.png}
+    
+    Figure 1: Tracé des signaux générés sur les voies en phase (bleu) et en quadrature (orange).
+\end{figure}
+
+
+
+%%%%%%%%%%% signal transmis sur porteuse %%%%%%%%%%%%%%%%
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.8]{signal_transpose_freq.png}
+    
+    Figure 2: Tracé du signal transmit sur fréquence porteuse.
+\end{figure}
+
+
+
+
+%%%%%%%%%%% DSP signaux en phase & en quadrature %%%%%%%%%
+
+%%SOS
+\subsection{Étude de la densité spectrale de puissance}
+Interressons-nous maintenant à la densité spectrale de puissance de ce signal. Nous pouvons aisément la calculer et la mettre en forme grace aux fonctions $pwelch$ et $fftshift$ de Matlab. Voici le résultat obtenu pour le signal précédent:
+%%%%%%%%%% DSP signal sur porteuse %%%%%%%%%%%%%%%
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.8]{DSP_signal_transpose.png}
+    
+Figure 3: Tracé de la densité spectrale de puissance du signal transmit sur fréquence porteuse.
+\end{figure}
+
+On observe deux pics en $f_p$ et $-f_p$, ce qui confirme que le signal est bien transmit sur fréquence porteuse et non sur bande de base, auquel cas nous aurions eu un unique pic en 0.
+
+\subsection{Étude du taux d'erreur binaire}
+Comparons maintenant le taux d'erreur binaire théorique de cette chaine de transmission au taux d'erreur binaire expérimental que nous obtenons. Nous ferons varier $\frac{E_b}{N_0}$ de 0 à 6.
+%%%%%%%%% TEB en fonction Eb/N0 entrée récepteur %%%%%%%%%%%%%%%
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.8]{tebs1.png}
+    
+Figure 4: Tracé du taux d'erreur binaire théorique (en bleu) et expérimental (en orange).
+\end{figure}
+
+On remarque que les deux tracés sont très proches, ce qui confirme la validité de notre chaine de transmission.
+
+
+\section{Chaine passe-pas équivalente à une chaine de transmission sur porteuse}
+
+Dans cette partie, nous implémenterons une chaine de transmission faisant intervenir un canal passe-bas théoriquement équivalent au canal de propagation de la chaine de transmission précédente. Nous nous pencherons tout d'abord sur l'implémentation d'une telle chaine de transmission, ensuite sur sa densité spectrale de puissace puis sur son taux d'erreur binaire.
+
+\subsection{Implémentation}
+Pour implémenter cette chaine de transmission à canal passe-bas équivalent, nous introduirons un bruit complexe additif dans le canal passe-bas. Il sera divisé en une partie réelle $n_I$ et une partie imaginaire $n_Q$. La puissance de ce bruit est la suivante:
+\begin{center}
+
+$$\sigma^2 _n = \frac{P_x N_s}{2log_2 (M) \frac{E_b}{N_0}}$$ Avec $P_x$ la puissance sur signal.
+
+\end{center}
+
+Voici le signal obtenu avec cette chaine de transmission :
+
+%%%%%%%%% Signaux en phase & quadrature %%%%%%%
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.8]{passe_bas_eq_phase_quad.png}
+    
+    Figure 5: Tracé du signal transmit avec la chaine passe-bas equivalente.
+\end{figure}
+
+
+\subsection{Étude de la densité spectrale de puissance et des constellations}
+Interressons-nous maintenant à la densité spectrale de puissance de ce signal. Comme, précédemment, utilisons la fonction $pwelch$ de Matlab pour la calculer.
+
+%%%%%%%%% DSP envoloppe complexe %%%%%%%%%
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.75]{DSP_env_complexe.png}
+    
+    Figure 6: Tracé de la densité spectrale de puissance du signal transmit avec la chaine passe-bas équivalente.
+\end{figure}
+
+La densité spectrale de puissance  de ce signal est centrée autour de 0 à l'inverse de celle du signal transmit sur fréquence porteuse qui est centrée autour des fréquences $f_p$ et $-f_p$. Il s’agit donc d’une transmission en bande de base, ce qui est en accord avec le résultat théorique.
+
+
+Penchons-nous maintenant sur les constellations obtenues en sortie de mapping et d'echantillonneur. Pour cela, nous utiliserons la fonction $scatterplot$ de Matlab. Voici les résultats obtenus en sortie de mapping:
+%%%%%%%%% Constellations en sortie de mapping pour plusieurs Eb/N0 %%%%%%%%%
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.6]{symboles.png}
+    
+    Figure 7: Tracé des symboles en sortie de mapping.
+\end{figure}
+
+
+On retrouve bien les quatres symboles de la transmission Q-PSK. 
+Regardons maintenant les constellations obtenues en sortie d'echantillonneur. La transmission étant désormais bruitée, nous afficherons des les résultats obtenus pour $\frac{E_b}{N_0}$ allant de 0 à 6.
+
+
+%%%%%%%%%%% FAIRE TABLEAU AVEC 6 CONSTELLATIONS
+%%%%%%%%% TEB pour Eb/Nà allant de 0 à 6 %%%%%%%%%
+
+\begin{figure}[H]
+    \centering
+   \begin{minipage}[b]{0.3\linewidth}
+      \centering \includegraphics[scale=0.35]{constellation_sortie_mapping_passe_bas_eq1.png}
+      $E_b/n_0=6$
+   \end{minipage}\hfill
+   \begin{minipage}[b]{0.3\linewidth}   
+      \centering \includegraphics[scale=0.35]{constellation_sortie_mapping_passe_bas_eq.png}
+      $E_b/n_0=5$
+   \end{minipage}
+   \begin{minipage}[b]{0.35\linewidth}   
+      \centering \includegraphics[scale=0.35]{constellation_sortie_mapping_passe_bas_eq3.png}
+      $E_b/n_0=4$
+   \end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+   \begin{minipage}[b]{0.3\linewidth}
+      \centering \includegraphics[scale=0.35]{constellation_sortie_mapping_passe_bas_eq4.png}
+      $E_b/n_0=3$
+   \end{minipage}\hfill
+   \begin{minipage}[b]{0.3\linewidth}   
+      \centering \includegraphics[scale=0.35]{constellation_sortie_mapping_passe_bas_eq5.png}
+      $E_b/n_0=2$
+   \end{minipage}
+   \begin{minipage}[b]{0.35\linewidth}   
+      \centering \includegraphics[scale=0.35]{constellation_sortie_mapping_passe_bas_eq6.png}
+      $E_b/n_0=1$
+   \end{minipage}
+   
+   Figure 8 à 13: Constellations après echantillonnage du signal transmit en 8-PSK pour $\frac{E_b}{N_0}\in [| 1,6 \right}|]$.
+\end{figure}
+
+
+
+%%%%%%%% Comparaison de ce TEB avec celui de la transposition en frequance %%%%%%%%%
+\subsection{Étude du taux d'erreur binaire}
+Pour finir, voici les taux d'erreur binaire de la transmission sur porteuse, du passe-bas équivalent et théorique superposés.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.8]{tab_comparaison_passe_bas_eq.png}
+    
+Figure 8: Tracé du taux d'erreur binaire théorique (en bleu), sur porteuse (en orange) et avec le passe-bas équivalent (en jaune).
+\end{figure}
+
+On remarquera que le taux d'erreur binaire issu de la chaine de transmission avec le canal passe-bas équivalent est très proche de celle sur fréquence porteuse. Ce résultat valide la conformité de notre simulation: cette chaine de transmission est bien équivalente à une transmission sur porteuse.
+
+\newpage
+
+\section{Comparaison entre le modulateur DVS-S et DVB-S2}
+Dans cette partie, nous allons implémenter un des modulateur du DVB-S2 et enfin, nous comparerons le modulateur DVB-S implémenté précédemment au modulateur DVB-S2.
+\subsection{Implémentation du DVB-S2}
+
+ Nous utiliserons cette fois ci un mapping 8-PSK avec un filtre de mise en forme en racine de cosinus surélevé avec un roll-off de 0,2. Nous utiliserons la fréquence d'échantillonnage $F_e=6kHz$ et le débit binaire $R_b=3kbps$.
+
+ Voici la constellation de la transmission 8-PSK utilisée, tracée avec $scatterplot$:
+%%%%% Tracé des constellations en sortie de mapping & sortie d'echantillonneur selon Eb/N0 %%%%%%%%%%
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.6]{constellation_8psk.png}
+\end{figure}
+
+En introduisant du bruit, voilà ce que deviennent ces constellations avec $scatterplot$:
+
+\begin{figure}[H]
+    \centering
+   \begin{minipage}[b]{0.40\linewidth}
+      \centering \includegraphics[scale=0.5]{8PSK_bruite.png}
+      $E_b/N_0=5$
+   \end{minipage}\hfill
+   \begin{minipage}[b]{0.48\linewidth}   
+      \centering \includegraphics[scale=0.5]{constellation 8-PSK_bruit.png}
+      $E_b/N_0=3$
+   \end{minipage}
+   
+   Figure 16 et 17: Constellations après echantillonnage du signal transmit en 8-PSK pour \frac{$E_b$}{$N_0$}\in [| 3,5 \right}|].
+\end{figure}
+
+On remarque l'impact du bruit sur les symboles recus.
+
+Enfin, voici un tracé des taux d'erreur binaires et expérimentaux obtenus avec cette chaine de transmission:
+%%%%%%%%% Tracé TEB selon Eb/N0 %%%%%%%%%%
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.8]{comparaison_teb_CVS_B_2.png}
+
+    Figure 18: TEBs théoriques et expérimentaux de la transmission avec un mapping 8-PSK.
+\end{figure}
+
+Le bruit théorique suivant la formule suivante:
+
+\begin{center}
+
+$$TEB_t_h=2(1-\frac{1}{M})Q(\frac{\sqrt{2\frac{E_b}{N_0}}}{\sigma_a log_2(M)})$$\\
+
+
+    
+    Avec M = 8, le nombre de symboles et $\sigma_a$ la puissance du bruit.
+    
+\end{center}
+%pskmod pour demapping
+
+\subsection{Comparaison}
+
+Tout d'abord, pour comparer nos deux chaines de transmission en terme d'efficacité en puissance, comparons leurs taux d'erreur binaire.
+
+
+\begin{figure}[H]
+   \begin{minipage}[b]{0.48\linewidth}
+      \centering \includegraphics[scale=0.5]{comparaison_teb_CVS_B_2.png}
+
+      Figure 19: TEBs théoriques et \\expérimentaux de la transmission avec un mapping 8-PSK.
+   \end{minipage}
+   \begin{minipage}[b]{0.48\linewidth}   
+      \centering \includegraphics[scale=0.5]{tebs1.png}
+
+      Figure 20: TEBs théoriques et \\expérimentaux de la transmission avec un mapping 4-PSK.
+   \end{minipage}
+\end{figure}
+
+On remarque par lecture graphique que le taux d'erreur binaire de la chaine avec un mapping 8-PSK est bien plus élevé que celui avec un mapping 4-PSK. Nous pouvons quantifier cela par le calcul des integrales entre 0 et 6 de ces fonctions.
+
+On a $$\int_{0}^{6}TEB_4_P_S_K \approx 0,32 > \int_{0}^{6}TEB_8_P_S_K \approx 0,17$$
+
+Cette différence est directement liée au nombre de sympoles. Plus il y en a, plus les distances entre deux symboles vont être faibles et donc plus la décision sera difficile lorsqu'il y aura du bruit.
+
+%en terme d'efficacité en puissance et efficacité spectrales
+En termes d'efficacité spectrale, le 8-PSK offre une meilleure efficacité que le 4-PSK. Cela est dû au fait que le 8-PSK peut transmettre plus de bits par symbole. En utilisant un mapping 8-PSK, on peut transmettre 3 bits par symbole contre deux pour un mapping 4-PSK. Cela signifie qu'un signal 8-PSK peut transmettre plus d'informations par unité de temps, d'où une meilleure efficacité spectrale.
+
+Voici les tracés des densités spectrales de puissance des deux signaux:
+
+\begin{figure}[H]
+   \begin{minipage}[b]{0.48\linewidth}
+      \centering \includegraphics[scale=0.5]{DSP_ENV_CPLX_dvbs2.png}
+
+      Figure 21: DSP du signal transmit avec un mapping 8-PSK.
+   \end{minipage}
+   \begin{minipage}[b]{0.48\linewidth}   
+      \centering \includegraphics[scale=0.5]{DSP_env_complexe.png}
+
+      Figure 22: DSP du signal transmit avec un mapping 4-PSK.
+   \end{minipage}
+\end{figure}
+%mettre les tracés
+
+\section{Conclusion}
+Pour conclure, ce TP/projet nous a permis à nous deux de bien mieux comprendre les signaux sur fréquence porteuse. Nous pouvons désormais adopter un regard critique au niveau de ces signaux et de leur chaines de transmission en sachant par exemple que le nombre de symbole fait diminuer l'efficacité en puissance et augmenter l'efficacité spectrale.
 
 \end{document}
